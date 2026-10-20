@@ -30,25 +30,25 @@ const pad = (n: number) => String(n).padStart(2, '0');
     <section class="relative px-4 pt-2 pb-14 md:px-8 lg:flex lg:h-[calc(100dvh-5.5rem)] lg:min-h-[640px] lg:flex-col lg:pb-8">
       <div class="mono flex items-center gap-4 text-[0.7rem] text-ink/55">
         <span>Лист 01</span>
-        <span class="rule h-px flex-1 bg-ink/30"></span>
+        <span class="h-px flex-1 bg-ink/30"></span>
         <span class="hidden sm:inline">Спецификация комплекса</span>
-        <span class="rule hidden h-px flex-1 bg-ink/30 sm:block" style="--d:120ms"></span>
+        <span class="hidden h-px flex-1 bg-ink/30 sm:block"></span>
         <span>Томск / 2026</span>
       </div>
 
       <div class="mt-8 grid gap-12 lg:mt-0 lg:min-h-0 lg:flex-1 lg:grid-cols-12 lg:items-center lg:gap-10">
         <div class="flex flex-col gap-9 lg:col-span-4">
           <h1 class="display text-[clamp(3rem,6.2vw,9rem)]">
-            <span class="block" data-reveal="mask">Больше</span>
-            <span class="block" data-reveal="mask" style="--i:1">чем</span>
-            <span class="block text-violet" data-reveal="mask" style="--i:2">прыжки</span>
+            <span class="block">Больше</span>
+            <span class="block">чем</span>
+            <span class="block text-violet">прыжки</span>
           </h1>
 
-          <ol class="mono grid grid-cols-2 gap-x-6 gap-y-2 text-[0.72rem] text-ink/70" data-reveal style="--i:3">
+          <ol class="mono grid grid-cols-2 gap-x-6 gap-y-2 text-[0.72rem] text-ink/70">
             {slogans.values.map((w, i) => <li class="flex gap-3 border-t border-ink/20 pt-2"><span class="text-ink/35">{pad(i + 1)}</span>{w}</li>)}
           </ol>
 
-          <div class="grid gap-7" data-reveal style="--i:4">
+          <div class="grid gap-7">
             <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
             <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
               <a href="#" class="mono group inline-flex items-center gap-4 bg-ink py-4 pr-5 pl-6 text-[0.78rem] font-semibold text-paper transition hover:bg-violet active:scale-[0.98]">
@@ -60,7 +60,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
           </div>
         </div>
 
-        <figure class="relative lg:col-span-8" data-reveal style="--i:1">
+        <figure class="relative lg:col-span-8">
           <span class="ruler mono absolute -top-6 inset-x-0 hidden justify-between text-[0.6rem] text-ink/45 md:flex" aria-hidden="true">
             {['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100 м'].map((t) => <span>{t}</span>)}
           </span>
@@ -70,7 +70,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
             <Image src={photos.arena} alt={alts.arena} widths={[800, 1200, 1700]} sizes="(min-width: 1024px) 64vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="size-full object-cover" />
             <div class="grid-overlay absolute inset-0" aria-hidden="true"></div>
             {callouts.map((c, i) => (
-              <span class="pin mono absolute" style={`left:${c.x}%;top:${c.y}%;--i:${i + 4}`} aria-hidden="true">{pad(i + 1)}</span>
+              <span class="pin mono absolute" style={`left:${c.x}%;top:${c.y}%`} aria-hidden="true">{pad(i + 1)}</span>
             ))}
           </div>
           </div>
@@ -89,7 +89,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <div class="mono mt-10 flex items-center gap-5 text-[0.68rem] text-ink/60 lg:mt-6" aria-hidden="true">
         <Icon name="mapPin" class="size-4 text-violet" />
         <span>{contacts.address}, {contacts.place}</span>
-        <span class="rule hidden h-px flex-1 bg-ink/30 md:block" style="--d:240ms"></span>
+        <span class="hidden h-px flex-1 bg-ink/30 md:block"></span>
         <Stripes class="hidden h-4 w-28 md:flex" />
       </div>
     </section>
@@ -205,28 +205,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .row:hover { background: var(--color-mist); padding-inline: 1rem; }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    /* Линии листа прорисовываются слева направо при загрузке. */
-    .js .rule {
-      transform-origin: left;
-      animation: draw 1.4s var(--ease-out-expo) both;
-      animation-delay: calc(300ms + var(--d, 0ms));
-    }
-
-    /* Выноски «вщёлкиваются» по очереди после появления фото. */
-    .js .pin {
-      animation: pop 0.7s var(--ease-out-expo) both;
-      animation-delay: calc(500ms + var(--i) * 140ms);
-    }
-  }
-
-  @keyframes draw {
-    from { transform: scaleX(0); }
-  }
-
-  @keyframes pop {
-    from { scale: 0; opacity: 0; }
-  }
 </style>
 
 <script>

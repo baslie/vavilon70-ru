@@ -24,15 +24,15 @@ const details = [
       <div class="flex flex-col justify-between gap-10 lg:col-span-4">
         <div>
           <h1 class="headline text-[clamp(2.75rem,4.7vw,7rem)]">
-            <span class="block" data-reveal="mask">Больше</span>
-            <span class="block" data-reveal="mask" style="--i:1">чем прыжки</span>
+            <span class="block">Больше</span>
+            <span class="block">чем прыжки</span>
           </h1>
-          <p class="label mt-6 flex flex-wrap gap-x-3 text-ink/60" data-reveal style="--i:2">
+          <p class="label mt-6 flex flex-wrap gap-x-3 text-ink/60">
             {slogans.values.map((w, i) => <>{i > 0 && <span class="text-ink/30">/</span>}<span>{w}</span></>)}
           </p>
         </div>
 
-        <div class="grid gap-7" data-reveal style="--i:3">
+        <div class="grid gap-7">
           <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
           <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
             <a href="#" class="label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
@@ -44,20 +44,20 @@ const details = [
         </div>
       </div>
 
-      <figure class="relative lg:col-span-5 lg:min-h-0" data-reveal style="--i:1">
+      <figure class="relative lg:col-span-5 lg:min-h-0">
         <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[4/5] w-full rounded-md object-cover lg:aspect-auto lg:h-full" />
       </figure>
 
       <aside class="flex flex-col gap-8 lg:col-span-3 lg:min-h-0" aria-label="Детали">
-        <div class="flex items-start justify-between" data-reveal style="--i:2">
+        <div class="flex items-start justify-between">
           <p class="label text-[0.95rem] leading-snug font-semibold tracking-[0.28em]">
             {slogans.motto.map((w) => <span class="block">{w}</span>)}
           </p>
           <Icon name="arrowUpRight" class="size-14 -mt-1" />
         </div>
         <ul class="hidden min-h-0 flex-1 flex-col gap-4 lg:flex">
-          {details.map((d, i) => (
-            <li class="flex min-h-0 flex-1 flex-col"  data-reveal style={`--i:${i + 3}`}>
+          {details.map((d) => (
+            <li class="flex min-h-0 flex-1 flex-col" >
               <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 rounded-md object-cover" />
               <p class="label mt-2 text-[0.65rem] text-ink/60">{d.caption}</p>
             </li>

@@ -19,15 +19,15 @@ const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 
   <main>
     <section class="grid gap-10 px-4 pt-4 pb-10 md:px-8 lg:h-[calc(100dvh-5.5rem)] lg:min-h-[620px] lg:grid-cols-12 lg:grid-rows-[1fr_auto] lg:gap-x-8 lg:gap-y-6 lg:pb-8">
       <div class="flex flex-col justify-center gap-10 lg:col-span-5">
-        <p class="label flex flex-wrap gap-x-3 text-paper/55" data-reveal>
+        <p class="label flex flex-wrap gap-x-3 text-paper/55">
           {slogans.values.map((w, i) => <>{i > 0 && <span class="text-paper/25">/</span>}<span>{w}</span></>)}
         </p>
         <h1 class="headline text-[clamp(2.75rem,5.6vw,8rem)]">
-          <span class="block" data-reveal="mask" style="--i:1">Больше</span>
-          <span class="block" data-reveal="mask" style="--i:2">чем прыжки</span>
+          <span class="block">Больше</span>
+          <span class="block">чем прыжки</span>
         </h1>
         <span class="-mt-4 h-1 w-12 bg-signal" aria-hidden="true"></span>
-        <div class="grid gap-8" data-reveal style="--i:3">
+        <div class="grid gap-8">
           <p class="max-w-[36ch] text-lg leading-relaxed text-paper/70">{hero.lead}</p>
           <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
             <a href="#" class="label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-paper hover:text-ink active:scale-[0.98]">
@@ -38,7 +38,7 @@ const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 
         </div>
       </div>
 
-      <figure class="relative isolate min-h-[420px] overflow-hidden rounded-md lg:col-span-7 lg:min-h-0" data-reveal style="--i:1">
+      <figure class="relative isolate min-h-[420px] overflow-hidden rounded-md lg:col-span-7 lg:min-h-0">
         <Image src={photos.texture} alt="" widths={[800, 1400]} sizes="(min-width: 1024px) 55vw, 100vw" loading="eager" class="absolute inset-0 -z-10 size-full object-cover" />
         <Image src={photos.jump} alt={alts.jump} widths={[800, 1200, 1600]} sizes="(min-width: 1024px) 55vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="absolute inset-y-0 right-0 h-full w-[88%] object-cover object-[65%_center] [clip-path:polygon(18%_0,100%_0,100%_100%,0_100%)]" />
         <figcaption class="label absolute bottom-5 left-5 flex items-center gap-2 text-paper/85"><Icon name="mapPin" class="size-4" />{contacts.place}</figcaption>

@@ -17,17 +17,17 @@ import { photos, alts } from '../data/photos';
     <section class="flex flex-col gap-8 px-4 pt-2 pb-12 md:px-8 lg:h-[calc(100dvh-5.5rem)] lg:min-h-[640px] lg:pb-8">
       <div class="flex items-end justify-between gap-6">
         <h1 class="headline whitespace-nowrap text-[clamp(2.4rem,9vw,13rem)] leading-[0.9]">
-          <span class="block" data-reveal="mask">Больше чем</span>
-          <span class="block" data-reveal="mask" style="--i:1">прыжки</span>
+          <span class="block">Больше чем</span>
+          <span class="block">прыжки</span>
         </h1>
-        <div class="hidden flex-col items-end gap-5 pb-3 lg:flex" data-reveal style="--i:2">
+        <div class="hidden flex-col items-end gap-5 pb-3 lg:flex">
           <Icon name="arrowUpRight" class="size-24" />
           <Stripes class="h-6 w-40" />
         </div>
       </div>
 
       <div class="grid gap-8 lg:min-h-0 lg:flex-1 lg:grid-cols-12">
-        <div class="flex flex-col justify-between gap-8 lg:col-span-3" data-reveal style="--i:3">
+        <div class="flex flex-col justify-between gap-8 lg:col-span-3">
           <div>
             <p class="label text-[0.9rem] leading-relaxed font-semibold tracking-[0.24em]">
               {slogans.character.map((w) => <span class="block">{w}</span>)}
@@ -42,7 +42,7 @@ import { photos, alts } from '../data/photos';
           </div>
         </div>
 
-        <figure class="relative lg:col-span-9 lg:min-h-0" data-reveal style="--i:2">
+        <figure class="relative lg:col-span-9 lg:min-h-0">
           <Image src={photos.jump} alt={alts.jump} widths={[800, 1300, 1800]} sizes="(min-width: 1024px) 75vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[16/10] w-full rounded-md object-cover object-[70%_center] lg:aspect-auto lg:h-full" />
           <figcaption class="label absolute right-5 bottom-5 rounded-md bg-mist px-4 py-3 text-ink">{contacts.address}<br />{contacts.place}</figcaption>
         </figure>

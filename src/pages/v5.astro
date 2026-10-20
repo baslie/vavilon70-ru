@@ -27,18 +27,18 @@ const ticker = [...slogans.motto, ...slogans.gravity];
       <div class="glow absolute inset-0 -z-10" aria-hidden="true"></div>
 
       <div class="flex items-start justify-between gap-6 px-4 pt-6 md:px-8">
-        <p class="label flex flex-wrap gap-x-3 text-paper/60" data-reveal>
+        <p class="label flex flex-wrap gap-x-3 text-paper/60">
           {slogans.values.map((w, i) => <>{i > 0 && <span class="text-signal">/</span>}<span>{w}</span></>)}
         </p>
-        <p class="label hidden items-center gap-2 text-right text-paper/70 md:flex" data-reveal style="--i:1"><Icon name="mapPin" class="size-4 text-violet" />{contacts.place}</p>
+        <p class="label hidden items-center gap-2 text-right text-paper/70 md:flex"><Icon name="mapPin" class="size-4 text-violet" />{contacts.place}</p>
       </div>
 
       <div class="relative z-10 flex flex-1 flex-col justify-center gap-8 px-4 py-16 md:px-8 lg:py-0">
         <h1 class="display text-[clamp(3.2rem,8.4vw,11rem)]">
-          <span class="block" data-reveal="mask" style="--i:1">Больше чем</span>
-          <span class="block text-violet" data-reveal="mask" style="--i:2">прыжки<span class="text-signal">.</span></span>
+          <span class="block">Больше чем</span>
+          <span class="block text-violet">прыжки<span class="text-signal">.</span></span>
         </h1>
-        <div class="grid max-w-[34rem] gap-8" data-reveal style="--i:3">
+        <div class="grid max-w-[34rem] gap-8">
           <p class="text-lg leading-relaxed text-paper/75">{hero.lead}</p>
           <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
             <a href="#" class="cta label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-paper hover:text-ink active:scale-[0.98]">
@@ -178,8 +178,6 @@ const ticker = [...slogans.motto, ...slogans.gravity];
 
   @media (prefers-reduced-motion: no-preference) {
     .marquee { animation: marquee 32s linear infinite; }
-    .js .photo { animation: dolly 2.4s var(--ease-out-expo) both; }
-    .js .outline { animation: rise 1.6s var(--ease-out-expo) 0.4s both; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -187,8 +185,6 @@ const ticker = [...slogans.motto, ...slogans.gravity];
   }
 
   @keyframes marquee { to { translate: -50% 0; } }
-  @keyframes dolly { from { scale: 1.12; filter: brightness(0.3); } }
-  @keyframes rise { from { translate: 0 40%; opacity: 0; } }
 </style>
 
 <script>
