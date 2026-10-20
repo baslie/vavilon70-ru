@@ -31,6 +31,14 @@ export const facts = [
   { value: '7+', unit: 'сценариев', label: 'авторских квестов и шоу для праздников' },
 ];
 
+// Блок безопасности из ТЗ, сокращён.
+export const safety = [
+  { title: 'Сертифицированное оборудование', text: 'Батуты и Ninja Park от российского производителя UniTramp по госстандартам.' },
+  { title: 'Проверка каждое утро', text: 'До прихода первого гостя специалист осматривает все зоны по чек-листу.' },
+  { title: 'Обученные инструкторы', text: 'Аттестация по страховке и удостоверение первой помощи у каждого.' },
+  { title: 'Чистота', text: 'Ежедневная уборка и обработка всех контактных поверхностей.' },
+];
+
 export type PhotoKey = 'jump' | 'jumpTall' | 'arena' | 'ninja' | 'football' | 'party' | 'coach' | 'texture' | 'textureAlt';
 
 export const directions: { title: string; text: string; photo?: PhotoKey }[] = [

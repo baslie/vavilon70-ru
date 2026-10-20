@@ -6,16 +6,8 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Icon from '../components/Icon.astro';
 import Stripes from '../components/Stripes.astro';
-import { hero, contacts, facts, slogans } from '../data/content';
+import { hero, contacts, facts, slogans, safety } from '../data/content';
 import { photos, alts } from '../data/photos';
-
-// Блок безопасности из ТЗ, сокращён.
-const safety = [
-  { title: 'Сертифицированное оборудование', text: 'Батуты и Ninja Park от российского производителя UniTramp по госстандартам.' },
-  { title: 'Проверка каждое утро', text: 'До прихода первого гостя специалист осматривает все зоны по чек-листу.' },
-  { title: 'Обученные инструкторы', text: 'Аттестация по страховке и удостоверение первой помощи у каждого.' },
-  { title: 'Чистота', text: 'Ежедневная уборка и обработка всех контактных поверхностей.' },
-];
 ---
 
 <Layout title="Вавилон. Вариант 3: постер" bodyClass="bg-mist text-ink">

@@ -1,0 +1,164 @@
+---
+// Вариант 6. «Плакат-манифест»: v3 «Постер», пересобранный по скиллу frontend-design.
+// Брутальный типографический плакат: сжатый гротеск во всю ширину, фото вплетено
+// между строк заголовка, наклонные плашки с цифрами, слова и плашки двигаются от скролла.
+import '@fontsource-variable/oswald';
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
+import Stripes from '../components/Stripes.astro';
+import { hero, contacts, facts, slogans, safety } from '../data/content';
+import { photos, alts } from '../data/photos';
+
+// Плашки фактов: цвет и наклон по очереди. Красный только под белым текстом крупного кегля.
+const plates = [
+  { bg: 'bg-violet text-paper', unit: 'text-paper/80', r: '-3deg' },
+  { bg: 'bg-ink text-paper', unit: 'text-violet', r: '2deg' },
+  { bg: 'bg-paper text-ink', unit: 'text-violet', r: '-1.5deg' },
+  { bg: 'bg-signal text-paper', unit: 'text-paper/85', r: '3deg' },
+];
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<Layout title="Вавилон. Вариант 6: плакат-манифест" bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <section class="relative isolate flex flex-col overflow-hidden px-4 pt-2 pb-6 md:px-8 lg:h-[calc(100dvh-5.5rem)] lg:min-h-[640px]">
+      <h1 class="poster contents">
+        <span class="line-a relative z-20 block text-[16vw] lg:text-[13.4vw]">Больше чем</span>
+
+        <span class="drift relative z-0 block lg:order-last lg:mt-auto">
+          <span class="line-b block pt-[0.16em] text-[22vw] lg:pt-0 lg:text-[20vw]">Прыжки</span>
+        </span>
+      </h1>
+
+      <figure class="photo relative z-10 mx-auto -mt-4 mb-10 w-[68vw] lg:absolute lg:top-[17%] lg:right-[6vw] lg:m-0 lg:w-[23vw]">
+        <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[500, 800, 1100]} sizes="(min-width: 1024px) 23vw, 68vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[3/4] w-full object-cover object-[50%_35%]" />
+        <figcaption class="label absolute -bottom-3 -left-3 bg-ink px-3 py-2 text-paper">{contacts.place}</figcaption>
+      </figure>
+
+      <div class="relative z-20 mt-2 grid gap-8 lg:mt-6 lg:max-w-[52vw] lg:grid-cols-[auto_1fr] lg:gap-12">
+        <div class="lift" style="--i:1">
+          <p class="label text-[0.85rem] leading-relaxed font-semibold tracking-[0.24em]">
+            {slogans.character.map((w) => <span class="block">{w}</span>)}
+          </p>
+          <span class="mt-4 block h-1.5 w-10 -skew-x-[28deg] bg-signal" aria-hidden="true"></span>
+        </div>
+        <div class="lift grid content-start gap-6" style="--i:2">
+          <p class="max-w-[32ch] text-lg leading-relaxed text-ink/80">{hero.lead}</p>
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
+            <a href="#" class="stamp label inline-flex items-center gap-3 bg-ink px-6 py-4 font-semibold text-paper transition hover:bg-violet active:scale-[0.98]">
+              {hero.primary}<Icon name="arrowUpRight" class="size-4" />
+            </a>
+            <a href="#" class="label font-semibold underline decoration-signal decoration-2 underline-offset-[6px]">{hero.secondary}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="overflow-hidden border-y-2 border-ink py-3" aria-hidden="true">
+      <p class="poster slide whitespace-nowrap text-[9vw] lg:text-[6vw]">
+        {[...slogans.character, ...slogans.character].map((w, i) => <span class:list={['pr-[0.35em]', i % 2 ? 'hollow' : '']}>{w}</span>)}
+      </p>
+    </div>
+
+    <section class="px-4 py-24 md:px-8" aria-label="Вавилон в цифрах">
+      <div class="flex items-end justify-between gap-6">
+        <p class="poster text-5xl sm:text-6xl md:text-8xl" data-reveal>В цифрах</p>
+        <Stripes class="mb-3 h-6 w-36" />
+      </div>
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        {facts.map((f, i) => (
+          <div class:list={['plate flex aspect-[5/4] flex-col sm:aspect-[4/5] justify-between p-6 md:p-8', plates[i].bg]} style={`--r:${plates[i].r}`}>
+            <span class="label opacity-70">{pad(i + 1)} / {pad(facts.length)}</span>
+            <div>
+              <p class="poster text-[clamp(5rem,9vw,10rem)] leading-[0.95]">{f.value}</p>
+              <p class:list={['label mt-3 font-semibold', plates[i].unit]}>{f.unit}</p>
+              <p class="mt-3 max-w-[26ch] text-sm leading-relaxed opacity-80">{f.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-ink text-paper">
+      <div class="grid gap-14 px-4 py-24 md:px-8 lg:grid-cols-12 lg:gap-8">
+        <div class="lg:col-span-5">
+          <h2 class="poster text-[clamp(4rem,7vw,8rem)] leading-[0.9]" data-reveal>Спокойно<br /><span class="text-violet">за детей</span></h2>
+          <figure class="relative mt-12 max-w-md -rotate-2" data-reveal style="--i:1">
+            <Image src={photos.coach} alt={alts.coach} widths={[600, 900]} sizes="(min-width: 1024px) 30vw, 100vw" class="aspect-[4/3] w-full object-cover" />
+            <span class="absolute -top-3 right-3 h-6 w-16 md:-right-3 -skew-x-[28deg] bg-signal" aria-hidden="true"></span>
+          </figure>
+        </div>
+        <ol class="lg:col-span-7 lg:col-start-6">
+          {safety.map((s, i) => (
+            <li class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-t border-paper/20 py-8 md:gap-x-10" data-reveal style={`--i:${i}`}>
+              <span class="poster hollow-light row-span-2 text-6xl md:text-8xl">{pad(i + 1)}</span>
+              <h3 class="poster self-end text-3xl leading-[0.95] md:text-5xl">{s.title}</h3>
+              <p class="max-w-[46ch] leading-relaxed text-paper/70">{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .poster {
+    font-family: 'Oswald Variable', var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 0.82;
+  }
+
+  .line-a,
+  .line-b { white-space: nowrap; }
+  .line-a { margin-left: -0.04em; }
+  .line-b { margin-left: -0.05em; line-height: 0.74; padding-bottom: 0.1em; }
+
+  .hollow {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--color-ink);
+  }
+  .hollow-light {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-violet);
+  }
+
+  .photo { rotate: -4deg; box-shadow: 0.9rem 0.9rem 0 var(--color-ink); }
+
+  .stamp { box-shadow: 0.35rem 0.35rem 0 var(--color-signal); }
+  .stamp:hover { box-shadow: 0.5rem 0.5rem 0 var(--color-signal); }
+
+  .plate { rotate: var(--r); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Строки заголовка въезжают с разных сторон, фото падает между ними. */
+    .js .line-a { animation: from-left 1.2s var(--ease-out-expo) both; }
+    .js .line-b { animation: from-right 1.3s var(--ease-out-expo) 0.15s both; }
+    .js .photo { animation: drop 1.1s var(--ease-out-expo) 0.35s both; }
+    .js .lift { animation: lift 1s var(--ease-out-expo) both; animation-delay: calc(0.5s + var(--i) * 0.12s); }
+
+    @supports (animation-timeline: view()) {
+      /* «ПРЫЖКИ» уезжает влево, пока уходит первый экран. */
+      .drift { animation: drift linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+      /* Лента слоганов едет от скролла, а не по таймеру. */
+      .slide { animation: slide linear both; animation-timeline: view(); }
+      /* Плашки выпрямлены, пока ниже экрана, и кренятся, когда въезжают. */
+      .plate { animation: tilt linear both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+    }
+  }
+
+  @keyframes from-left { from { translate: -35% 0; opacity: 0; } }
+  @keyframes from-right { from { translate: 35% 0; opacity: 0; } }
+  @keyframes drop { from { translate: 0 -30%; rotate: -14deg; opacity: 0; } }
+  @keyframes lift { from { translate: 0 1.5rem; opacity: 0; } }
+  @keyframes drift { to { translate: -12% 0; } }
+  @keyframes slide { from { translate: 0 0; } to { translate: -40% 0; } }
+  @keyframes tilt { from { rotate: 0deg; translate: 0 5rem; } }
+</style>

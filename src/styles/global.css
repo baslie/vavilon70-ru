@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* Дизайн-система по брендбуку формы (docs/photo_2): светло-серое поле, чёрный,
-   фиолетовый, красный, белый. Подробности и правила в docs/BRAND.md. */
+/* Дизайн-система по корпоративным цветам заказчика и брендбуку формы (docs/photo_2):
+   чёрный, фиолетовый, лайм, белый, красный на светло-сером поле. Правила в docs/BRAND.md. */
 @theme {
   --color-mist: #e7e7ea;
   --color-mist-deep: #d9d9de;
@@ -10,9 +10,9 @@
   --color-paper: #fafafa;
   --color-violet: #7d39eb;
   --color-violet-deep: #4c1fa3;
-  --color-signal: #ff2b2b;
+  --color-signal: #ff0000;
+  --color-lime: #c6ff33;
 
-  --font-logo: "Dela Gothic One", ui-sans-serif, sans-serif;
   --font-display: "Unbounded Variable", ui-sans-serif, sans-serif;
   --font-sans: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
 

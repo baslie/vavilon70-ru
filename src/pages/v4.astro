@@ -1,0 +1,256 @@
+---
+// Вариант 4. «Спецификация»: v1 «Брендбук», пересобранный по скиллу frontend-design.
+// Сайт как технический лист формы: волосяная сетка, метки обреза, линейка,
+// фото арены как чертёж с пронумерованными выносками, моноширинные подписи.
+import '@fontsource-variable/geologica/full.css';
+import '@fontsource-variable/jetbrains-mono';
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
+import Stripes from '../components/Stripes.astro';
+import { hero, contacts, facts, directions, slogans } from '../data/content';
+import { photos, alts } from '../data/photos';
+
+// Выноски на фото арены, координаты в процентах кадра 2200×1228.
+const callouts = [
+  { x: 44, y: 62, title: 'Батутная арена', text: '8 спортивных и 6 детских батутов' },
+  { x: 53, y: 31, title: 'Мини-футбол', text: 'Крытое поле с мягким газоном' },
+  { x: 71, y: 89, title: 'Поролоновая яма', text: 'Часть батутной арены' },
+  { x: 86, y: 63, title: 'Воздушная подушка', text: 'Часть батутной арены' },
+];
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<Layout title="Вавилон. Вариант 4: спецификация" bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <section class="relative px-4 pt-2 pb-14 md:px-8 lg:flex lg:h-[calc(100dvh-5.5rem)] lg:min-h-[640px] lg:flex-col lg:pb-8">
+      <div class="mono flex items-center gap-4 text-[0.7rem] text-ink/55">
+        <span>Лист 01</span>
+        <span class="rule h-px flex-1 bg-ink/30"></span>
+        <span class="hidden sm:inline">Спецификация комплекса</span>
+        <span class="rule hidden h-px flex-1 bg-ink/30 sm:block" style="--d:120ms"></span>
+        <span>Томск / 2026</span>
+      </div>
+
+      <div class="mt-8 grid gap-12 lg:mt-0 lg:min-h-0 lg:flex-1 lg:grid-cols-12 lg:items-center lg:gap-10">
+        <div class="flex flex-col gap-9 lg:col-span-4">
+          <h1 class="display text-[clamp(3rem,6.2vw,9rem)]">
+            <span class="block" data-reveal="mask">Больше</span>
+            <span class="block" data-reveal="mask" style="--i:1">чем</span>
+            <span class="block text-violet" data-reveal="mask" style="--i:2">прыжки</span>
+          </h1>
+
+          <ol class="mono grid grid-cols-2 gap-x-6 gap-y-2 text-[0.72rem] text-ink/70" data-reveal style="--i:3">
+            {slogans.values.map((w, i) => <li class="flex gap-3 border-t border-ink/20 pt-2"><span class="text-ink/35">{pad(i + 1)}</span>{w}</li>)}
+          </ol>
+
+          <div class="grid gap-7" data-reveal style="--i:4">
+            <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
+            <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
+              <a href="#" class="mono group inline-flex items-center gap-4 bg-ink py-4 pr-5 pl-6 text-[0.78rem] font-semibold text-paper transition hover:bg-violet active:scale-[0.98]">
+                {hero.primary}
+                <span class="grid size-6 place-items-center bg-paper text-ink transition-transform duration-500 group-hover:rotate-45"><Icon name="arrowUpRight" class="size-3.5" /></span>
+              </a>
+              <a href="#" class="mono text-[0.78rem] font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{hero.secondary}</a>
+            </div>
+          </div>
+        </div>
+
+        <figure class="relative lg:col-span-8" data-reveal style="--i:1">
+          <span class="ruler mono absolute -top-6 inset-x-0 hidden justify-between text-[0.6rem] text-ink/45 md:flex" aria-hidden="true">
+            {['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100 м'].map((t) => <span>{t}</span>)}
+          </span>
+          <div class="relative">
+          {['tl', 'tr', 'bl', 'br'].map((c) => <span class={`crop crop-${c}`} aria-hidden="true"></span>)}
+          <div class="relative aspect-[2200/1228] overflow-hidden bg-ink">
+            <Image src={photos.arena} alt={alts.arena} widths={[800, 1200, 1700]} sizes="(min-width: 1024px) 64vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="size-full object-cover" />
+            <div class="grid-overlay absolute inset-0" aria-hidden="true"></div>
+            {callouts.map((c, i) => (
+              <span class="pin mono absolute" style={`left:${c.x}%;top:${c.y}%;--i:${i + 4}`} aria-hidden="true">{pad(i + 1)}</span>
+            ))}
+          </div>
+          </div>
+
+          <figcaption class="mono mt-4 grid gap-x-6 gap-y-3 text-[0.68rem] leading-snug sm:grid-cols-2 xl:grid-cols-4">
+            {callouts.map((c, i) => (
+              <span class="flex gap-3 border-t border-ink/25 pt-2">
+                <span class="text-violet">{pad(i + 1)}</span>
+                <span><span class="block font-semibold text-ink">{c.title}</span><span class="text-ink/55">{c.text}</span></span>
+              </span>
+            ))}
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="mono mt-10 flex items-center gap-5 text-[0.68rem] text-ink/60 lg:mt-6" aria-hidden="true">
+        <Icon name="mapPin" class="size-4 text-violet" />
+        <span>{contacts.address}, {contacts.place}</span>
+        <span class="rule hidden h-px flex-1 bg-ink/30 md:block" style="--d:240ms"></span>
+        <Stripes class="hidden h-4 w-28 md:flex" />
+      </div>
+    </section>
+
+    <section class="px-4 py-20 md:px-8" aria-label="Вавилон в цифрах">
+      <div class="mono flex items-center gap-4 text-[0.7rem] text-ink/55">
+        <span>Лист 02</span><span class="h-px flex-1 bg-ink/30"></span><span>Параметры</span>
+      </div>
+      <dl class="mt-8">
+        {facts.map((f, i) => (
+          <div class="grid grid-cols-[2.5rem_1fr] items-baseline gap-x-4 gap-y-2 border-b border-ink/20 py-6 md:grid-cols-[3rem_minmax(0,1fr)_minmax(0,1fr)] lg:grid-cols-[4rem_minmax(0,5fr)_minmax(0,2fr)_minmax(0,4fr)]" data-reveal style={`--i:${i}`}>
+            <span class="mono text-[0.7rem] text-ink/40">{pad(i + 1)}</span>
+            <dd class="display text-[clamp(3rem,7vw,7.5rem)] leading-none" data-count={f.value}>{f.value}</dd>
+            <dt class="mono col-start-2 text-[0.8rem] font-semibold text-violet md:col-start-auto">{f.unit}</dt>
+            <dd class="col-start-2 max-w-[34ch] text-sm leading-relaxed text-ink/65 md:col-start-3 lg:col-start-auto">{f.label}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="bg-paper px-4 py-20 md:px-8">
+      <div class="mono flex items-center gap-4 text-[0.7rem] text-ink/55">
+        <span>Лист 03</span><span class="h-px flex-1 bg-ink/30"></span><span>Состав</span>
+      </div>
+      <h2 class="display mt-10 text-5xl md:text-7xl" data-reveal>Что внутри</h2>
+      <ul class="mt-12 border-t border-ink">
+        {directions.map((d, i) => (
+          <li data-reveal style={`--i:${i % 3}`}>
+            <a href="#" class="row group grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-4 gap-y-3 border-b border-ink/20 py-5 md:grid-cols-[3rem_minmax(0,4fr)_minmax(0,4fr)_9rem_auto] md:gap-x-8">
+              <span class="mono text-[0.7rem] text-ink/40">{pad(i + 1)}</span>
+              <span class="display text-2xl transition-colors group-hover:text-violet md:text-4xl">{d.title}</span>
+              <Icon name="arrowUpRight" class="size-6 transition-transform duration-500 group-hover:rotate-45 md:order-last" />
+              <span class="col-start-2 max-w-[40ch] text-sm leading-relaxed text-ink/65 md:col-start-auto">{d.text}</span>
+              <span class="hidden aspect-[4/3] overflow-hidden bg-ink md:block">
+                <Image src={d.photo ? photos[d.photo] : photos.textureAlt} alt="" widths={[300, 500]} sizes="10rem" class="size-full object-cover grayscale transition duration-700 group-hover:scale-110 group-hover:grayscale-0" />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .display {
+    font-family: 'Geologica Variable', var(--font-display);
+    font-weight: 800;
+    font-style: oblique 12deg;
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+    line-height: 0.88;
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono Variable', ui-monospace, monospace;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Метки обреза по углам кадра, как на печатном листе. */
+  .crop {
+    position: absolute;
+    z-index: 1;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-color: var(--color-ink);
+  }
+  .crop-tl { top: -0.6rem; left: -0.6rem; border-top-width: 1px; border-left-width: 1px; }
+  .crop-tr { top: -0.6rem; right: -0.6rem; border-top-width: 1px; border-right-width: 1px; }
+  .crop-bl { bottom: -0.6rem; left: -0.6rem; border-bottom-width: 1px; border-left-width: 1px; }
+  .crop-br { bottom: -0.6rem; right: -0.6rem; border-bottom-width: 1px; border-right-width: 1px; }
+
+  /* Сетка поверх фото: тонкие линии каждые 10% кадра. */
+  .grid-overlay {
+    background-image:
+      linear-gradient(to right, rgb(250 250 250 / 0.14) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(250 250 250 / 0.14) 1px, transparent 1px);
+    background-size: 10% 10%;
+    mix-blend-mode: overlay;
+  }
+
+  .ruler {
+    border-bottom: 1px solid rgb(14 14 17 / 0.3);
+    background-image: linear-gradient(to right, rgb(14 14 17 / 0.4) 1px, transparent 1px);
+    background-size: 2% 4px;
+    background-repeat: repeat-x;
+    background-position: bottom left;
+    padding-bottom: 0.35rem;
+  }
+
+  .pin {
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    translate: -50% -50%;
+    border-radius: 999px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-size: 0.68rem;
+    font-weight: 700;
+    box-shadow: 0 0 0 1px var(--color-ink), 0 0 0 6px rgb(250 250 250 / 0.25);
+  }
+
+  @media (min-width: 768px) {
+    .pin { width: 2.1rem; height: 2.1rem; }
+  }
+
+  .row { transition: background-color 0.4s var(--ease-out-expo), padding 0.4s var(--ease-out-expo); }
+
+  @media (hover: hover) {
+    .row:hover { background: var(--color-mist); padding-inline: 1rem; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Линии листа прорисовываются слева направо при загрузке. */
+    .js .rule {
+      transform-origin: left;
+      animation: draw 1.4s var(--ease-out-expo) both;
+      animation-delay: calc(300ms + var(--d, 0ms));
+    }
+
+    /* Выноски «вщёлкиваются» по очереди после появления фото. */
+    .js .pin {
+      animation: pop 0.7s var(--ease-out-expo) both;
+      animation-delay: calc(500ms + var(--i) * 140ms);
+    }
+  }
+
+  @keyframes draw {
+    from { transform: scaleX(0); }
+  }
+
+  @keyframes pop {
+    from { scale: 0; opacity: 0; }
+  }
+</style>
+
+<script>
+  // Счётчик фактов: числовая часть значения растёт от нуля, суффикс («-я», «+») остаётся.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        io.unobserve(entry.target);
+        const el = entry.target as HTMLElement;
+        const [, num, suffix] = el.dataset.count!.match(/^(\d+)(.*)$/) ?? [];
+        if (!num || reduce) continue;
+        const target = Number(num);
+        const start = performance.now();
+        const tick = (now: number) => {
+          const t = Math.min((now - start) / 1400, 1);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - t, 4))) + suffix;
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    },
+    { threshold: 0.6 },
+  );
+  document.querySelectorAll('[data-count]').forEach((el) => io.observe(el));
+</script>

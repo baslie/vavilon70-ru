@@ -13,7 +13,7 @@ const light = tone === 'light';
 ---
 
 <header class="flex h-22 items-center justify-between gap-6 px-4 md:px-8">
-  <Logo class="w-32 md:w-40" caption tone={tone} />
+  <Logo class="w-28 md:w-32" caption tone={tone} />
   <nav class:list={['label hidden items-center gap-7 lg:flex', light ? 'text-paper/75' : 'text-ink/70']} aria-label="Основное меню">
     {nav.map((item) => <a href="#" class:list={['transition-colors', light ? 'hover:text-paper' : 'hover:text-ink']}>{item}</a>)}
   </nav>
