@@ -5,7 +5,6 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Icon from '../components/Icon.astro';
-import Stripes from '../components/Stripes.astro';
 import { hero, contacts, facts, directions, slogans } from '../data/content';
 import { photos, alts } from '../data/photos';
 
@@ -46,8 +45,6 @@ const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 
 
       <div class="hidden items-center gap-6 lg:col-span-12 lg:flex" aria-hidden="true">
         <p class="label flex gap-6 text-paper/60">{slogans.motto.map((w) => <span>{w}</span>)}</p>
-        <span class="h-px flex-1 bg-paper/25"></span>
-        <Stripes class="h-6 w-44" onDark />
         <span class="h-px flex-1 bg-paper/25"></span>
         <Icon name="arrowUpRight" class="size-9" />
       </div>

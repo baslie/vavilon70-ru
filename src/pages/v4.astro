@@ -8,7 +8,6 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Icon from '../components/Icon.astro';
-import Stripes from '../components/Stripes.astro';
 import { hero, contacts, facts, directions, slogans } from '../data/content';
 import { photos, alts } from '../data/photos';
 
@@ -90,7 +89,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
         <Icon name="mapPin" class="size-4 text-violet" />
         <span>{contacts.address}, {contacts.place}</span>
         <span class="hidden h-px flex-1 bg-ink/30 md:block"></span>
-        <Stripes class="hidden h-4 w-28 md:flex" />
       </div>
     </section>
 

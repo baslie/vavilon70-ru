@@ -1,11 +1,10 @@
 ---
 // Вариант 1. «Брендбук»: раскладка доски с формой. Светлое поле, фото по центру,
-// справа колонка деталей, внизу полоса со слоганом.
+// справа колонка деталей, внизу строка со слоганом.
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Icon from '../components/Icon.astro';
-import Stripes from '../components/Stripes.astro';
 import { hero, contacts, facts, directions, slogans } from '../data/content';
 import { photos, alts } from '../data/photos';
 
@@ -66,10 +65,9 @@ const details = [
       </aside>
     </section>
 
-    <div class="grid items-center gap-6 px-4 py-6 md:grid-cols-[auto_1fr_auto_auto_1fr_auto] md:px-8" aria-hidden="true">
+    <div class="grid items-center gap-6 px-4 py-6 md:grid-cols-[auto_1fr_auto_1fr_auto] md:px-8" aria-hidden="true">
       <p class="label text-ink/70">Trampoline<br />park</p>
       <span class="hidden h-px bg-ink/40 md:block"></span>
-      <Stripes class="h-7 w-48" />
       <p class="label hidden text-ink/70 md:block">{slogans.gravity.map((w) => <span class="block">{w}</span>)}</p>
       <span class="hidden h-px bg-ink/40 md:block"></span>
       <Icon name="arrowUpRight" class="hidden size-10 md:block" />
