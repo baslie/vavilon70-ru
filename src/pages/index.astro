@@ -1,73 +1,84 @@
 ---
-// Витрина прототипов для заказчика: ссылки на варианты первого экрана.
+// Витрина прототипов для заказчика: шесть плиток на весь экран, ссылки на варианты первого экрана.
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
-import Logo from '../components/Logo.astro';
 import Icon from '../components/Icon.astro';
-import Stripes from '../components/Stripes.astro';
 import { photos } from '../data/photos';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const groups = [
-  {
-    title: 'Исходные',
-    note: 'В языке брендбука формы: Unbounded, Onest, спокойная сетка.',
-    variants: [
-      { href: `${base}/v1/`, num: '01', name: 'Брендбук', text: 'Раскладка доски с формой: светлое поле, фото по центру, справа колонка деталей.', photo: photos.jumpTall, bar: 'bg-violet' },
-      { href: `${base}/v2/`, num: '02', name: 'Форма', text: 'Тёмный, как сама футболка. Прыжок в косом кадре поверх ткани с молниями.', photo: photos.texture, bar: 'bg-signal' },
-      { href: `${base}/v3/`, num: '03', name: 'Постер', text: 'Огромный заголовок во всю ширину, широкое фото и столбик слов с красным тире.', photo: photos.jump, bar: 'bg-paper' },
-    ],
-  },
-  {
-    title: 'Через frontend-design',
-    note: 'Те же три идеи, доведённые до крайности. Палитра и логотип прежние, шрифты заголовков и движение новые.',
-    variants: [
-      { href: `${base}/v4/`, num: '04', name: 'Спецификация', twin: 'Брендбук', text: 'Технический лист: волосяная сетка, метки обреза, фото арены с пронумерованными выносками.', photo: photos.arena, bar: 'bg-violet' },
-      { href: `${base}/v5/`, num: '05', name: 'Ночная арена', twin: 'Форма', text: 'Кадр во весь экран, прожектор идёт за курсором, зерно плёнки и бегущая строка.', photo: photos.jump, bar: 'bg-signal' },
-      { href: `${base}/v6/`, num: '06', name: 'Плакат-манифест', twin: 'Постер', text: 'Сжатый гротеск во всю ширину, фото вплетено между строк, плашки кренятся от скролла.', photo: photos.jumpTall, bar: 'bg-paper' },
-    ],
-  },
+const variants = [
+  { href: `${base}/v1/`, num: '01', name: 'Брендбук', text: 'Раскладка доски с формой: светлое поле, фото по центру, справа колонка деталей.', photo: photos.jumpTall, bar: 'bg-violet' },
+  { href: `${base}/v2/`, num: '02', name: 'Форма', text: 'Тёмный, как сама футболка. Прыжок в косом кадре поверх ткани с молниями.', photo: photos.texture, bar: 'bg-signal' },
+  { href: `${base}/v3/`, num: '03', name: 'Постер', text: 'Огромный заголовок во всю ширину, широкое фото и столбик слов с красным тире.', photo: photos.jump, bar: 'bg-paper' },
+  { href: `${base}/v4/`, num: '04', name: 'Спецификация', twin: 'Брендбук', text: 'Технический лист: волосяная сетка, метки обреза, фото арены с пронумерованными выносками.', photo: photos.arena, bar: 'bg-violet' },
+  { href: `${base}/v5/`, num: '05', name: 'Ночная арена', twin: 'Форма', text: 'Кадр во весь экран, прожектор идёт за курсором, зерно плёнки и бегущая строка.', photo: photos.jump, bar: 'bg-signal' },
+  { href: `${base}/v6/`, num: '06', name: 'Плакат-манифест', twin: 'Постер', text: 'Сжатый гротеск во всю ширину, фото вплетено между строк, плашки кренятся от скролла.', photo: photos.jumpTall, bar: 'bg-paper' },
 ];
 ---
 
 <Layout title="Вавилон. Варианты первого экрана" bodyClass="bg-ink text-paper">
-  <main class="min-h-dvh">
-    <header class="grid gap-10 bg-mist px-5 py-8 text-ink md:grid-cols-12 md:gap-x-8 md:px-10 md:py-10 2xl:px-16">
-      <div class="flex items-start justify-between gap-6 md:col-span-12">
-        <Logo class="w-36 md:w-40" caption />
-        <Stripes class="h-5 w-32 md:h-6 md:w-40" />
-      </div>
-      <h1 class="headline max-w-[16ch] text-4xl md:col-span-7 md:text-6xl 2xl:text-7xl">Шесть вариантов первого экрана</h1>
-      <p class="max-w-[52ch] text-ink/70 md:col-span-5 md:self-end md:justify-self-end">Прототипы для выбора направления. Первые три в языке брендбука формы, следующие три — их смелые двойники. Фото временные, сгенерированы до съёмки в зале. Тексты и цифры из ТЗ.</p>
-    </header>
-
-    {groups.map((g, gi) => (
-      <section aria-labelledby={`group-${gi}`}>
-        <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-paper/15 px-5 py-4 md:px-10 2xl:px-16">
-          <h2 id={`group-${gi}`} class="label font-semibold">{g.title}</h2>
-          <p class="max-w-[60ch] text-sm text-paper/55">{g.note}</p>
-        </div>
-        <ol class="grid md:grid-cols-3">
-          {g.variants.map((v) => (
-            <li>
-              <a href={v.href} class="group relative flex aspect-[4/5] flex-col justify-between overflow-hidden bg-ink-soft p-5 md:aspect-[3/4] md:p-7 xl:aspect-[4/5] 2xl:aspect-square 2xl:p-10">
-                <Image src={v.photo} alt="" widths={[480, 800, 1200, 1600]} sizes="(min-width: 768px) 34vw, 100vw" class="absolute inset-0 size-full object-cover" />
-                <span class="absolute inset-0 bg-linear-to-t from-ink/90 via-ink/25 to-ink/10 transition-colors group-hover:from-ink/95 group-hover:via-ink/45"></span>
-                <span class="relative flex items-start justify-between">
-                  <span class:list={['mt-2 h-2 w-14 -skew-x-[28deg]', v.bar]}></span>
-                  <Icon name="arrowUpRight" class="size-7 transition-colors group-hover:text-signal md:size-8" />
-                </span>
-                <span class="relative block">
-                  <span class="block font-display text-sm font-bold text-paper/50">{v.num}</span>
-                  <span class="mt-1 block font-display text-2xl font-bold uppercase md:text-3xl 2xl:text-4xl">{v.name}</span>
-                  {'twin' in v && <span class="label mt-2 block text-lime">Двойник «{v.twin}»</span>}
-                  <span class="mt-3 block max-w-[42ch] text-sm leading-relaxed text-paper/75 2xl:text-base">{v.text}</span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ol>
-      </section>
-    ))}
+  <main>
+    <h1 class="sr-only">Вавилон: шесть вариантов первого экрана</h1>
+    <ol class="tiles grid md:h-dvh md:grid-cols-3 md:grid-rows-2">
+      {variants.map((v) => (
+        <li class="tile relative overflow-hidden bg-ink-soft">
+          <a href={v.href} class="flex aspect-[4/5] h-full flex-col justify-between p-5 md:aspect-auto md:p-6 2xl:p-10">
+            <Image src={v.photo} alt="" widths={[480, 800, 1200, 1600]} sizes="(min-width: 768px) 50vw, 100vw" class="tile-photo absolute inset-0 size-full object-cover" />
+            <span class="absolute inset-0 bg-linear-to-t from-ink/90 via-ink/20 to-ink/5"></span>
+            <span class="relative flex items-start justify-between">
+              <span class:list={['mt-2 h-2 w-14 -skew-x-[28deg]', v.bar]}></span>
+              <Icon name="arrowUpRight" class="tile-arrow size-7 2xl:size-8" />
+            </span>
+            <span class="relative block">
+              <span class="block font-display text-sm font-bold text-paper/50">{v.num}</span>
+              <span class="mt-1 block font-display text-2xl font-bold uppercase md:text-[clamp(1.25rem,2vw,2.5rem)]">{v.name}</span>
+              {'twin' in v && <span class="label mt-2 block text-lime">Двойник «{v.twin}»</span>}
+              <span class="tile-text block max-w-[42ch] text-sm leading-relaxed text-paper/80 2xl:text-base"><span class="block min-h-0 overflow-hidden"><span class="block pt-3">{v.text}</span></span></span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
   </main>
 </Layout>
+
+<style>
+  /* Плитка под курсором забирает место у соседей по строке и столбцу, остальные гаснут. */
+  @media (min-width: 48rem) and (hover: hover) {
+    .tiles {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      transition:
+        grid-template-columns 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+        grid-template-rows 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .tiles:has(> .tile:nth-child(3n + 1):is(:hover, :focus-within)) { grid-template-columns: 1.7fr 1fr 1fr; }
+    .tiles:has(> .tile:nth-child(3n + 2):is(:hover, :focus-within)) { grid-template-columns: 1fr 1.7fr 1fr; }
+    .tiles:has(> .tile:nth-child(3n):is(:hover, :focus-within)) { grid-template-columns: 1fr 1fr 1.7fr; }
+    .tiles:has(> .tile:nth-child(-n + 3):is(:hover, :focus-within)) { grid-template-rows: 1.4fr 1fr; }
+    .tiles:has(> .tile:nth-child(n + 4):is(:hover, :focus-within)) { grid-template-rows: 1fr 1.4fr; }
+
+    .tile-photo {
+      transition: filter 0.6s, scale 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .tiles:has(> .tile:is(:hover, :focus-within)) .tile:not(:hover, :focus-within) .tile-photo {
+      filter: grayscale(1) brightness(0.45);
+    }
+    .tile:is(:hover, :focus-within) .tile-photo { scale: 1.04; }
+
+    .tile-text {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s;
+    }
+    .tile:is(:hover, :focus-within) .tile-text { grid-template-rows: 1fr; opacity: 1; transition-delay: 0.1s; }
+
+    .tile-arrow { transition: color 0.3s, translate 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+    .tile:is(:hover, :focus-within) .tile-arrow { color: var(--color-signal); translate: 4px -4px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tiles, .tile-photo, .tile-text, .tile-arrow { transition: none; }
+  }
+</style>
