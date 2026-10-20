@@ -1,0 +1,26 @@
+# Зависимости и сборка
+node_modules/
+dist/
+build/
+.astro/
+.cache/
+
+# Окружение и секреты
+.env
+.env.*
+!.env.example
+
+# Системное
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Редакторы
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Логи
+*.log
+npm-debug.log*
+pnpm-debug.log*
