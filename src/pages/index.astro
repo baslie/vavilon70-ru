@@ -1,15 +1,17 @@
 ---
 // Витрина прототипов для заказчика: ссылки на варианты первого экрана.
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Logo from '../components/Logo.astro';
 import Icon from '../components/Icon.astro';
 import Stripes from '../components/Stripes.astro';
+import { photos } from '../data/photos';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const variants = [
-  { href: `${base}/v1/`, name: 'Брендбук', text: 'Раскладка доски с формой: светлое поле, фото по центру, справа колонка деталей.', swatch: 'bg-mist', bar: 'bg-violet' },
-  { href: `${base}/v2/`, name: 'Форма', text: 'Тёмный, как сама футболка. Прыжок в косом кадре поверх ткани с молниями.', swatch: 'bg-ink', bar: 'bg-signal' },
-  { href: `${base}/v3/`, name: 'Постер', text: 'Огромный заголовок во всю ширину, широкое фото и столбик слов с красным тире.', swatch: 'bg-paper', bar: 'bg-ink' },
+  { href: `${base}/v1/`, name: 'Брендбук', text: 'Раскладка доски с формой: светлое поле, фото по центру, справа колонка деталей.', photo: photos.jumpTall, bar: 'bg-violet' },
+  { href: `${base}/v2/`, name: 'Форма', text: 'Тёмный, как сама футболка. Прыжок в косом кадре поверх ткани с молниями.', photo: photos.texture, bar: 'bg-signal' },
+  { href: `${base}/v3/`, name: 'Постер', text: 'Огромный заголовок во всю ширину, широкое фото и столбик слов с красным тире.', photo: photos.jump, bar: 'bg-paper' },
 ];
 ---
 
@@ -26,7 +28,8 @@ const variants = [
       {variants.map((v, i) => (
         <li data-reveal style={`--i:${i + 2}`}>
           <a href={v.href} class="group flex h-full flex-col rounded-md border border-ink/15 bg-paper/60 p-3 transition hover:-translate-y-1 hover:border-ink/40">
-            <span class:list={['relative block aspect-[4/3] overflow-hidden rounded-md', v.swatch]}>
+            <span class="relative block aspect-[4/3] overflow-hidden rounded-md bg-ink">
+              <Image src={v.photo} alt="" widths={[400, 700]} sizes="(min-width: 768px) 30vw, 100vw" class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
               <span class:list={['absolute bottom-5 left-5 h-2 w-14 -skew-x-[28deg]', v.bar]}></span>
             </span>
             <span class="flex items-center justify-between px-2 pt-5 font-display text-lg font-bold uppercase">
