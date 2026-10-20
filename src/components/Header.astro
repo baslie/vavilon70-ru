@@ -1,0 +1,22 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, hero } from '../data/content';
+
+interface Props {
+  tone?: 'dark' | 'light';
+}
+
+// tone: цвет текста шапки. dark — на светлом фоне, light — на тёмном.
+const { tone = 'dark' } = Astro.props;
+const light = tone === 'light';
+---
+
+<header class="flex h-22 items-center justify-between gap-6 px-4 md:px-8">
+  <Logo class="w-32 md:w-40" caption tone={tone} />
+  <nav class:list={['label hidden items-center gap-7 lg:flex', light ? 'text-paper/75' : 'text-ink/70']} aria-label="Основное меню">
+    {nav.map((item) => <a href="#" class:list={['transition-colors', light ? 'hover:text-paper' : 'hover:text-ink']}>{item}</a>)}
+  </nav>
+  <a href="#" class:list={['label hidden rounded-md px-5 py-3 font-semibold transition active:scale-[0.98] sm:inline-flex', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']}>{hero.primary}</a>
+  <button class:list={['grid size-11 place-items-center rounded-md border lg:hidden', light ? 'border-paper/25' : 'border-ink/20']} aria-label="Открыть меню"><Icon name="list" /></button>
+</header>

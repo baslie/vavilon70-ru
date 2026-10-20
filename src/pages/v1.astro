@@ -1,0 +1,113 @@
+---
+// Вариант 1. «Брендбук»: раскладка доски с формой. Светлое поле, фото по центру,
+// справа колонка деталей, внизу полоса со слоганом.
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
+import Stripes from '../components/Stripes.astro';
+import { hero, contacts, facts, directions, slogans } from '../data/content';
+import { photos, alts } from '../data/photos';
+
+const details = [
+  { photo: photos.texture, caption: 'Фирменная графика' },
+  { photo: photos.ninja, caption: 'Ninja Park' },
+  { photo: photos.party, caption: 'Праздники' },
+];
+---
+
+<Layout title="Вавилон. Вариант 1: брендбук" bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <section class="grid gap-10 px-4 pt-4 pb-12 md:px-8 lg:h-[calc(100dvh-5.5rem)] lg:min-h-[620px] lg:grid-cols-12 lg:gap-8 lg:pb-8">
+      <div class="flex flex-col justify-between gap-10 lg:col-span-4">
+        <div>
+          <h1 class="headline text-[clamp(2.75rem,4.7vw,7rem)]">
+            <span class="block" data-reveal="mask">Больше</span>
+            <span class="block" data-reveal="mask" style="--i:1">чем прыжки</span>
+          </h1>
+          <p class="label mt-6 flex flex-wrap gap-x-3 text-ink/60" data-reveal style="--i:2">
+            {slogans.values.map((w, i) => <>{i > 0 && <span class="text-ink/30">/</span>}<span>{w}</span></>)}
+          </p>
+        </div>
+
+        <div class="grid gap-7" data-reveal style="--i:3">
+          <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
+          <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
+            <a href="#" class="label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
+              {hero.primary}<Icon name="arrowUpRight" class="size-4" />
+            </a>
+            <a href="#" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{hero.secondary}</a>
+          </div>
+          <p class="label flex items-start gap-3 text-ink/60"><Icon name="mapPin" class="mt-0.5 size-4 shrink-0 text-violet" /><span>{contacts.address}<br />{contacts.place}</span></p>
+        </div>
+      </div>
+
+      <figure class="relative lg:col-span-5 lg:min-h-0" data-reveal style="--i:1">
+        <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[4/5] w-full rounded-md object-cover lg:aspect-auto lg:h-full" />
+      </figure>
+
+      <aside class="flex flex-col gap-8 lg:col-span-3 lg:min-h-0" aria-label="Детали">
+        <div class="flex items-start justify-between" data-reveal style="--i:2">
+          <p class="label text-[0.95rem] leading-snug font-semibold tracking-[0.28em]">
+            {slogans.motto.map((w) => <span class="block">{w}</span>)}
+          </p>
+          <Icon name="arrowUpRight" class="size-14 -mt-1" />
+        </div>
+        <ul class="hidden min-h-0 flex-1 flex-col gap-4 lg:flex">
+          {details.map((d, i) => (
+            <li class="flex min-h-0 flex-1 flex-col"  data-reveal style={`--i:${i + 3}`}>
+              <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 rounded-md object-cover" />
+              <p class="label mt-2 text-[0.65rem] text-ink/60">{d.caption}</p>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </section>
+
+    <div class="grid items-center gap-6 px-4 py-6 md:grid-cols-[auto_1fr_auto_auto_1fr_auto] md:px-8" aria-hidden="true">
+      <p class="label text-ink/70">Trampoline<br />park</p>
+      <span class="hidden h-px bg-ink/40 md:block"></span>
+      <Stripes class="h-7 w-48" />
+      <p class="label hidden text-ink/70 md:block">{slogans.gravity.map((w) => <span class="block">{w}</span>)}</p>
+      <span class="hidden h-px bg-ink/40 md:block"></span>
+      <Icon name="arrowUpRight" class="hidden size-10 md:block" />
+    </div>
+
+    <section class="px-4 py-20 md:px-8" aria-label="Вавилон в цифрах">
+      <div class="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
+        {facts.map((f, i) => (
+          <div class="border-t border-ink/40 pt-6" data-reveal style={`--i:${i}`}>
+            <p class="headline text-5xl text-violet md:text-6xl">{f.value}</p>
+            <p class="label mt-3 font-semibold">{f.unit}</p>
+            <p class="mt-2 max-w-[26ch] text-sm leading-relaxed text-ink/65">{f.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="px-4 pb-28 md:px-8">
+      <div class="flex items-end justify-between gap-6">
+        <h2 class="headline text-4xl md:text-6xl" data-reveal>Что внутри</h2>
+        <span class="mb-2 h-1 w-10 bg-signal" aria-hidden="true"></span>
+      </div>
+      <ul class="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 min-[1800px]:grid-cols-6">
+        {directions.map((d, i) => (
+          <li data-reveal style={`--i:${i % 3}`}>
+            <a href="#" class="group block">
+              <span class="block overflow-hidden rounded-md bg-ink">
+                <Image src={d.photo ? photos[d.photo] : photos.textureAlt} alt="" widths={[480, 800]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw" class="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+              </span>
+              <span class="mt-4 flex items-center justify-between gap-4">
+                <span class="font-display text-xl font-bold uppercase tracking-tight">{d.title}</span>
+                <Icon name="arrowUpRight" class="size-5 transition-transform duration-500 group-hover:rotate-45" />
+              </span>
+              <span class="mt-2 block max-w-[38ch] text-sm leading-relaxed text-ink/65">{d.text}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</Layout>

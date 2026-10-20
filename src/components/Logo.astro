@@ -1,0 +1,44 @@
+---
+// Временный логотип-стикер по мотивам брендбука: чёрные буквы, белая и фиолетовая обводка.
+// Заменить на векторный логотип от заказчика, когда он будет.
+interface Props {
+  class?: string;
+  /** Подпись «спортивно-развлекательный комплекс» под знаком. */
+  caption?: boolean;
+  /** Цвет подписи: тёмная на светлом фоне, светлая на тёмном. */
+  tone?: 'dark' | 'light';
+}
+
+const { class: className = 'w-36', caption = false, tone = 'dark' } = Astro.props;
+const layers = [
+  { stroke: 'var(--color-violet)', width: 34 },
+  { stroke: '#fff', width: 16 },
+  { stroke: 'none', width: 0 },
+];
+---
+
+<a href={import.meta.env.BASE_URL} class:list={['inline-flex flex-col items-center gap-1.5', className]} aria-label="Вавилон, на главную">
+  <svg viewBox="0 0 640 132" class="w-full overflow-visible" aria-hidden="true">
+    {layers.map((l) => (
+      <text
+        x="320"
+        y="104"
+        text-anchor="middle"
+        textLength="600"
+        lengthAdjust="spacingAndGlyphs"
+        font-family="Dela Gothic One"
+        font-size="118"
+        fill="var(--color-ink)"
+        stroke={l.stroke}
+        stroke-width={l.width}
+        stroke-linejoin="round"
+        paint-order="stroke"
+      >ВАВИЛОН</text>
+    ))}
+  </svg>
+  {caption && (
+    <span class:list={['text-center text-[0.5rem] font-semibold uppercase leading-tight tracking-[0.08em]', tone === 'dark' ? 'text-ink' : 'text-paper']}>
+      Спортивно-развлекательный<br />комплекс
+    </span>
+  )}
+</a>

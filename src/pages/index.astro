@@ -1,0 +1,41 @@
+---
+// Витрина прототипов для заказчика: ссылки на варианты первого экрана.
+import Layout from '../layouts/Layout.astro';
+import Logo from '../components/Logo.astro';
+import Icon from '../components/Icon.astro';
+import Stripes from '../components/Stripes.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const variants = [
+  { href: `${base}/v1/`, name: 'Брендбук', text: 'Раскладка доски с формой: светлое поле, фото по центру, справа колонка деталей.', swatch: 'bg-mist', bar: 'bg-violet' },
+  { href: `${base}/v2/`, name: 'Форма', text: 'Тёмный, как сама футболка. Прыжок в косом кадре поверх ткани с молниями.', swatch: 'bg-ink', bar: 'bg-signal' },
+  { href: `${base}/v3/`, name: 'Постер', text: 'Огромный заголовок во всю ширину, широкое фото и столбик слов с красным тире.', swatch: 'bg-paper', bar: 'bg-ink' },
+];
+---
+
+<Layout title="Вавилон. Варианты первого экрана" bodyClass="bg-mist text-ink">
+  <main class="mx-auto flex min-h-dvh max-w-[1100px] flex-col justify-center px-4 py-16 md:px-8">
+    <div class="flex items-start justify-between gap-6">
+      <Logo class="w-40" caption />
+      <Stripes class="h-6 w-40" />
+    </div>
+    <h1 class="headline mt-16 max-w-[16ch] text-4xl md:text-6xl" data-reveal>Три варианта первого экрана</h1>
+    <p class="mt-6 max-w-[52ch] text-ink/70" data-reveal style="--i:1">Прототипы для выбора направления. Все три в языке брендбука формы. Фото временные, сгенерированы до съёмки в зале. Тексты и цифры из ТЗ.</p>
+
+    <ol class="mt-14 grid gap-4 md:grid-cols-3">
+      {variants.map((v, i) => (
+        <li data-reveal style={`--i:${i + 2}`}>
+          <a href={v.href} class="group flex h-full flex-col rounded-md border border-ink/15 bg-paper/60 p-3 transition hover:-translate-y-1 hover:border-ink/40">
+            <span class:list={['relative block aspect-[4/3] overflow-hidden rounded-md', v.swatch]}>
+              <span class:list={['absolute bottom-5 left-5 h-2 w-14 -skew-x-[28deg]', v.bar]}></span>
+            </span>
+            <span class="flex items-center justify-between px-2 pt-5 font-display text-lg font-bold uppercase">
+              {v.name}<Icon name="arrowUpRight" class="size-5 transition-transform duration-500 group-hover:rotate-45" />
+            </span>
+            <span class="px-2 pt-2 pb-3 text-sm leading-relaxed text-ink/65">{v.text}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </main>
+</Layout>

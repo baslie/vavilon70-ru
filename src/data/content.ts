@@ -1,0 +1,43 @@
+// Тексты прототипов. Факты и цифры только из docs/Описание_сайт_26-27.docx (2).pdf.
+
+export const nav = ['О центре', 'Услуги и цены', 'Праздники', 'Акции', 'Контакты'];
+
+export const hero = {
+  title: 'Больше чем прыжки',
+  lead: 'Батутная арена, первая в Томске Ninja Park, секции и праздники под ключ.',
+  primary: 'Забронировать',
+  secondary: 'Праздник под ключ',
+};
+
+// Слоганы с брендбука формы.
+export const slogans = {
+  values: ['Энергия', 'Движение', 'Люди', 'Вавилон'],
+  motto: ['Jump', 'Train', 'Play', 'Repeat'],
+  character: ['Арена', 'Характер', 'Движение', 'Команда', 'Вавилон'],
+  gravity: ['Energy', 'People', 'Gravity optional'],
+};
+
+export const contacts = {
+  address: 'пр. Ленина 217, стр. 2',
+  place: 'ТРЦ «Мегаполис», 1 этаж',
+  phone: '201-191',
+  phoneHref: 'tel:+73822201191',
+};
+
+export const facts = [
+  { value: '1300', unit: 'м²', label: 'экшн-пространства для спорта, игр и праздников' },
+  { value: '14', unit: 'батутов', label: '8 спортивных для фристайла и 6 в детской зоне' },
+  { value: '1-я', unit: 'в Томске', label: 'полоса препятствий Ninja Park с зачётом времени' },
+  { value: '7+', unit: 'сценариев', label: 'авторских квестов и шоу для праздников' },
+];
+
+export type PhotoKey = 'jump' | 'jumpTall' | 'arena' | 'ninja' | 'football' | 'party' | 'coach' | 'texture' | 'textureAlt';
+
+export const directions: { title: string; text: string; photo?: PhotoKey }[] = [
+  { title: 'Батутная арена', text: 'Спортивные и детские батуты, поролоновая яма и воздушная подушка.', photo: 'arena' },
+  { title: 'Ninja Park', text: 'Рукоходы, кольца и балансиры. Проходите на время или командой.', photo: 'ninja' },
+  { title: 'Мини-футбол', text: 'Крытое поле с мягким газоном для матчей и эстафет.', photo: 'football' },
+  { title: 'Секции', text: 'Фристайл, ОФП и Ninja с тренером для детей от 4 лет и взрослых.', photo: 'coach' },
+  { title: 'Праздники', text: 'Дни рождения, выпускные и корпоративы с ведущими.', photo: 'party' },
+  { title: 'Семейное кафе', text: 'Перекусить после тренировки или отметить день рождения.' },
+];

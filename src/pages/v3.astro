@@ -1,0 +1,90 @@
+---
+// Вариант 3. «Постер»: огромный заголовок во всю ширину, под ним широкое фото,
+// слева столбик слов с красным тире, как на брендбуке.
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
+import Stripes from '../components/Stripes.astro';
+import { hero, contacts, facts, slogans } from '../data/content';
+import { photos, alts } from '../data/photos';
+
+// Блок безопасности из ТЗ, сокращён.
+const safety = [
+  { title: 'Сертифицированное оборудование', text: 'Батуты и Ninja Park от российского производителя UniTramp по госстандартам.' },
+  { title: 'Проверка каждое утро', text: 'До прихода первого гостя специалист осматривает все зоны по чек-листу.' },
+  { title: 'Обученные инструкторы', text: 'Аттестация по страховке и удостоверение первой помощи у каждого.' },
+  { title: 'Чистота', text: 'Ежедневная уборка и обработка всех контактных поверхностей.' },
+];
+---
+
+<Layout title="Вавилон. Вариант 3: постер" bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <section class="flex flex-col gap-8 px-4 pt-2 pb-12 md:px-8 lg:h-[calc(100dvh-5.5rem)] lg:min-h-[640px] lg:pb-8">
+      <div class="flex items-end justify-between gap-6">
+        <h1 class="headline whitespace-nowrap text-[clamp(2.4rem,9vw,13rem)] leading-[0.9]">
+          <span class="block" data-reveal="mask">Больше чем</span>
+          <span class="block" data-reveal="mask" style="--i:1">прыжки</span>
+        </h1>
+        <div class="hidden flex-col items-end gap-5 pb-3 lg:flex" data-reveal style="--i:2">
+          <Icon name="arrowUpRight" class="size-24" />
+          <Stripes class="h-6 w-40" />
+        </div>
+      </div>
+
+      <div class="grid gap-8 lg:min-h-0 lg:flex-1 lg:grid-cols-12">
+        <div class="flex flex-col justify-between gap-8 lg:col-span-3" data-reveal style="--i:3">
+          <div>
+            <p class="label text-[0.9rem] leading-relaxed font-semibold tracking-[0.24em]">
+              {slogans.character.map((w) => <span class="block">{w}</span>)}
+            </p>
+            <span class="mt-4 block h-1 w-8 bg-signal" aria-hidden="true"></span>
+          </div>
+          <div class="grid gap-6">
+            <p class="max-w-[30ch] leading-relaxed text-ink/75">{hero.lead}</p>
+            <a href="#" class="label inline-flex items-center gap-3 justify-self-start rounded-md bg-ink px-6 py-4 font-semibold text-paper transition hover:bg-violet active:scale-[0.98]">
+              {hero.primary}<Icon name="arrowUpRight" class="size-4" />
+            </a>
+          </div>
+        </div>
+
+        <figure class="relative lg:col-span-9 lg:min-h-0" data-reveal style="--i:2">
+          <Image src={photos.jump} alt={alts.jump} widths={[800, 1300, 1800]} sizes="(min-width: 1024px) 75vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[16/10] w-full rounded-md object-cover object-[70%_center] lg:aspect-auto lg:h-full" />
+          <figcaption class="label absolute right-5 bottom-5 rounded-md bg-mist px-4 py-3 text-ink">{contacts.address}<br />{contacts.place}</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="px-4 py-20 md:px-8" aria-label="Вавилон в цифрах">
+      <div class="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
+        {facts.map((f, i) => (
+          <div data-reveal style={`--i:${i}`}>
+            <p class="headline text-[2.6rem] sm:text-6xl md:text-7xl">{f.value}</p>
+            <p class="label mt-3 font-semibold text-violet">{f.unit}</p>
+            <p class="mt-2 max-w-[26ch] text-sm leading-relaxed text-ink/65">{f.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-ink text-paper">
+      <div class="grid gap-12 px-4 py-24 md:px-8 lg:grid-cols-12 lg:gap-8">
+        <div class="lg:col-span-5">
+          <h2 class="headline text-5xl md:text-6xl" data-reveal>Спокойно<br />за детей</h2>
+          <Image src={photos.coach} alt={alts.coach} widths={[600, 900]} sizes="(min-width: 1024px) 40vw, 100vw" class="mt-10 aspect-[4/3] w-full rounded-md object-cover" data-reveal />
+        </div>
+        <ol class="grid content-end gap-x-10 gap-y-12 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
+          {safety.map((s, i) => (
+            <li class="border-t border-paper/20 pt-6" data-reveal style={`--i:${i}`}>
+              <span class="mb-5 block h-1 w-6 bg-signal" aria-hidden="true"></span>
+              <h3 class="font-display text-lg font-bold uppercase">{s.title}</h3>
+              <p class="mt-3 leading-relaxed text-paper/70">{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  </main>
+</Layout>

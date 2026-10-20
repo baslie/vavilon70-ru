@@ -1,0 +1,21 @@
+---
+// Иконки Phosphor (bold), вставляются инлайном и красятся через currentColor.
+import arrowUpRight from '@phosphor-icons/core/assets/bold/arrow-up-right-bold.svg?raw';
+import arrowRight from '@phosphor-icons/core/assets/bold/arrow-right-bold.svg?raw';
+import crown from '@phosphor-icons/core/assets/fill/crown-simple-fill.svg?raw';
+import mapPin from '@phosphor-icons/core/assets/bold/map-pin-bold.svg?raw';
+import phone from '@phosphor-icons/core/assets/bold/phone-bold.svg?raw';
+import list from '@phosphor-icons/core/assets/bold/list-bold.svg?raw';
+
+const icons = { arrowUpRight, arrowRight, crown, mapPin, phone, list };
+
+interface Props {
+  name: keyof typeof icons;
+  class?: string;
+}
+
+const { name, class: className = 'size-5' } = Astro.props;
+const svg = icons[name].replace('<svg ', `<svg aria-hidden="true" class="${className}" `);
+---
+
+<Fragment set:html={svg} />
