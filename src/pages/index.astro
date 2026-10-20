@@ -36,25 +36,25 @@ const groups = [
       <Logo class="w-40" caption />
       <Stripes class="h-6 w-40" />
     </div>
-    <h1 class="headline mt-16 max-w-[16ch] text-4xl md:text-6xl" data-reveal>Шесть вариантов первого экрана</h1>
-    <p class="mt-6 max-w-[52ch] text-ink/70" data-reveal style="--i:1">Прототипы для выбора направления. Первые три в языке брендбука формы, следующие три — их смелые двойники. Фото временные, сгенерированы до съёмки в зале. Тексты и цифры из ТЗ.</p>
+    <h1 class="headline mt-16 max-w-[16ch] text-4xl md:text-6xl">Шесть вариантов первого экрана</h1>
+    <p class="mt-6 max-w-[52ch] text-ink/70">Прототипы для выбора направления. Первые три в языке брендбука формы, следующие три — их смелые двойники. Фото временные, сгенерированы до съёмки в зале. Тексты и цифры из ТЗ.</p>
 
     {groups.map((g, gi) => (
       <section class="mt-14" aria-labelledby={`group-${gi}`}>
-        <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-ink/20 pt-4" data-reveal style={`--i:${gi * 4 + 2}`}>
+        <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-ink/20 pt-4">
           <h2 id={`group-${gi}`} class="label font-semibold">{g.title}</h2>
           <p class="max-w-[60ch] text-sm text-ink/60">{g.note}</p>
         </div>
         <ol class="mt-5 grid gap-4 md:grid-cols-3">
           {g.variants.map((v, i) => (
-            <li data-reveal style={`--i:${gi * 4 + i + 3}`}>
-              <a href={v.href} class="group flex h-full flex-col rounded-md border border-ink/15 bg-paper/60 p-3 transition hover:-translate-y-1 hover:border-ink/40">
+            <li>
+              <a href={v.href} class="flex h-full flex-col rounded-md border border-ink/15 bg-paper/60 p-3 hover:border-ink/40">
                 <span class="relative block aspect-[4/3] overflow-hidden rounded-md bg-ink">
-                  <Image src={v.photo} alt="" widths={[400, 700]} sizes="(min-width: 768px) 30vw, 100vw" class="size-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+                  <Image src={v.photo} alt="" widths={[400, 700]} sizes="(min-width: 768px) 30vw, 100vw" class="size-full object-cover" />
                   <span class:list={['absolute bottom-5 left-5 h-2 w-14 -skew-x-[28deg]', v.bar]}></span>
                 </span>
                 <span class="flex items-center justify-between px-2 pt-5 font-display text-lg font-bold uppercase">
-                  <span><span class="mr-2 text-ink/35">{v.num}</span>{v.name}</span><Icon name="arrowUpRight" class="size-5 transition-transform duration-500 group-hover:rotate-45" />
+                  <span><span class="mr-2 text-ink/35">{v.num}</span>{v.name}</span><Icon name="arrowUpRight" class="size-5" />
                 </span>
                 {'twin' in v && <span class="label px-2 pt-1 text-violet">Двойник «{v.twin}»</span>}
                 <span class="px-2 pt-2 pb-3 text-sm leading-relaxed text-ink/65">{v.text}</span>
