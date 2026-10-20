@@ -46,7 +46,7 @@ const groups = [
           <p class="max-w-[60ch] text-sm text-ink/60">{g.note}</p>
         </div>
         <ol class="mt-5 grid gap-4 md:grid-cols-3">
-          {g.variants.map((v, i) => (
+          {g.variants.map((v) => (
             <li>
               <a href={v.href} class="flex h-full flex-col rounded-md border border-ink/15 bg-paper/60 p-3 hover:border-ink/40">
                 <span class="relative block aspect-[4/3] overflow-hidden rounded-md bg-ink">
