@@ -1,0 +1,118 @@
+---
+// Вариант 7. «Согласованный»: блоки, которые выбрал заказчик 21.10.2026 (docs/BRAND.md).
+// Первый экран из v1, цифры и «Спокойно за детей» из v3, «Что внутри» из v2.
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
+import { hero, contacts, facts, directions, slogans, safety } from '../data/content';
+import { photos, alts } from '../data/photos';
+
+const details = [
+  { photo: photos.texture, caption: 'Фирменная графика' },
+  { photo: photos.ninja, caption: 'Ninja-трасса' },
+  { photo: photos.party, caption: 'Праздники' },
+];
+
+// Бенто: первая плитка крупная, кафе на фирменной ткани.
+const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2'];
+---
+
+<Layout title="Вавилон. Согласованный вариант" bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <section class="grid gap-10 px-4 pt-4 pb-12 md:px-8 lg:h-[calc(100dvh-5.5rem)] lg:min-h-[620px] lg:grid-cols-12 lg:gap-8 lg:pb-8">
+      <div class="flex flex-col justify-between gap-10 lg:col-span-4">
+        <div>
+          <h1 class="headline text-[clamp(2.75rem,4.7vw,7rem)]">
+            <span class="block">Больше</span>
+            <span class="block">чем прыжки</span>
+          </h1>
+          <p class="label mt-6 flex flex-wrap gap-x-3 text-ink/60">
+            {slogans.values.map((w, i) => <>{i > 0 && <span class="text-ink/30">/</span>}<span>{w}</span></>)}
+          </p>
+        </div>
+
+        <div class="grid gap-7">
+          <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
+          <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
+            <a href="#" class="label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
+              {hero.primary}<Icon name="arrowUpRight" class="size-4" />
+            </a>
+            <a href="#" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{hero.secondary}</a>
+          </div>
+          <p class="label flex items-start gap-3 text-ink/60"><Icon name="mapPin" class="mt-0.5 size-4 shrink-0 text-violet" /><span>{contacts.address}<br />{contacts.place}</span></p>
+        </div>
+      </div>
+
+      <figure class="relative lg:col-span-5 lg:min-h-0">
+        <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[4/5] w-full rounded-md object-cover lg:aspect-auto lg:h-full" />
+      </figure>
+
+      <aside class="flex flex-col gap-8 lg:col-span-3 lg:min-h-0" aria-label="Детали">
+        <div class="flex items-start justify-between">
+          <p class="label text-[0.95rem] leading-snug font-semibold tracking-[0.28em]">
+            {slogans.motto.map((w) => <span class="block">{w}</span>)}
+          </p>
+          <Icon name="arrowUpRight" class="size-14 -mt-1" />
+        </div>
+        <ul class="hidden min-h-0 flex-1 flex-col gap-4 lg:flex">
+          {details.map((d) => (
+            <li class="flex min-h-0 flex-1 flex-col">
+              <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 rounded-md object-cover" />
+              <p class="label mt-2 text-[0.65rem] text-ink/60">{d.caption}</p>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </section>
+
+    <section class="px-4 py-20 md:px-8" aria-label="Вавилон в цифрах">
+      <div class="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
+        {facts.map((f, i) => (
+          <div data-reveal style={`--i:${i}`}>
+            <p class="headline text-[2.6rem] sm:text-6xl md:text-7xl">{f.value}</p>
+            <p class="label mt-3 font-semibold text-violet">{f.unit}</p>
+            <p class="mt-2 max-w-[26ch] text-sm leading-relaxed text-ink/65">{f.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <div class="bg-ink text-paper">
+      <section class="grid gap-12 px-4 py-24 md:px-8 lg:grid-cols-12 lg:gap-8">
+        <div class="lg:col-span-5">
+          <h2 class="headline text-[2.6rem] sm:text-5xl md:text-6xl" data-reveal>Спокойно<br />за детей</h2>
+          <Image src={photos.coach} alt={alts.coach} widths={[600, 900]} sizes="(min-width: 1024px) 40vw, 100vw" class="mt-10 aspect-[4/3] w-full rounded-md object-cover" data-reveal />
+        </div>
+        <ol class="grid content-end gap-x-10 gap-y-12 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
+          {safety.map((s, i) => (
+            <li class="border-t border-paper/20 pt-6" data-reveal style={`--i:${i}`}>
+              <span class="mb-5 block h-1 w-6 bg-signal" aria-hidden="true"></span>
+              <h3 class="font-display text-lg font-bold uppercase">{s.title}</h3>
+              <p class="mt-3 leading-relaxed text-paper/70">{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="px-4 pt-8 pb-24 md:px-8">
+        <div class="flex items-end gap-6">
+          <h2 class="headline text-4xl md:text-6xl" data-reveal>Что внутри</h2>
+          <span class="mb-2 h-1 w-10 bg-signal" aria-hidden="true"></span>
+        </div>
+        <div class="mt-12 grid auto-rows-[260px] gap-3 md:grid-cols-6 md:auto-rows-[240px]">
+          {directions.map((d, i) => (
+            <a href="#" class:list={['group relative isolate flex flex-col justify-end overflow-hidden rounded-md p-6', spans[i]]} data-reveal style={`--i:${i % 3}`}>
+              <Image src={d.photo ? photos[d.photo] : photos.textureAlt} alt="" widths={[600, 1000]} sizes="(min-width: 768px) 50vw, 100vw" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent" aria-hidden="true"></div>
+              <h3 class="font-display text-xl font-bold uppercase md:text-2xl">{d.title}</h3>
+              <p class="mt-2 max-w-[34ch] text-sm leading-relaxed text-paper/75">{d.text}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>

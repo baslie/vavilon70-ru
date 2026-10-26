@@ -1,5 +1,5 @@
 ---
-// Витрина прототипов для заказчика: шесть плиток на весь экран, ссылки на варианты первого экрана.
+// Витрина прототипов для заказчика на весь экран: крупная плитка согласованного варианта и шесть вариантов первого экрана.
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
@@ -7,6 +7,7 @@ import { photos } from '../data/photos';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const variants = [
+  { href: `${base}/v7/`, num: '07', name: 'Согласованный', approved: true, text: 'Блоки, которые выбрал заказчик: первый экран из «Брендбука», цифры и безопасность из «Постера», «Что внутри» из «Формы».', photo: photos.jumpTall, bar: 'bg-lime' },
   { href: `${base}/v1/`, num: '01', name: 'Брендбук', text: 'Раскладка доски с формой: светлое поле, фото по центру, справа колонка деталей.', photo: photos.jumpTall, bar: 'bg-violet' },
   { href: `${base}/v2/`, num: '02', name: 'Форма', text: 'Тёмный, как сама футболка. Прыжок в косом кадре поверх ткани с молниями.', photo: photos.texture, bar: 'bg-signal' },
   { href: `${base}/v3/`, num: '03', name: 'Постер', text: 'Огромный заголовок во всю ширину, широкое фото и столбик слов с красным тире.', photo: photos.jump, bar: 'bg-paper' },
@@ -18,10 +19,10 @@ const variants = [
 
 <Layout title="Вавилон. Варианты первого экрана" bodyClass="bg-ink text-paper">
   <main>
-    <h1 class="sr-only">Вавилон: шесть вариантов первого экрана</h1>
-    <ol class="tiles grid md:h-dvh md:grid-cols-3 md:grid-rows-2">
+    <h1 class="sr-only">Вавилон: согласованный вариант и шесть вариантов первого экрана</h1>
+    <ol class="tiles grid md:h-dvh md:grid-cols-4 md:grid-rows-3">
       {variants.map((v) => (
-        <li class="tile relative overflow-hidden bg-ink-soft">
+        <li class:list={['tile relative overflow-hidden bg-ink-soft', 'approved' in v && 'md:col-span-2 md:row-span-3']}>
           <a href={v.href} class="flex aspect-[4/5] h-full flex-col justify-between p-5 md:aspect-auto md:p-6 2xl:p-10">
             <Image src={v.photo} alt="" widths={[480, 800, 1200, 1600]} sizes="(min-width: 768px) 50vw, 100vw" class="tile-photo absolute inset-0 size-full object-cover" />
             <span class="absolute inset-0 bg-linear-to-t from-ink/90 via-ink/20 to-ink/5"></span>
@@ -31,8 +32,9 @@ const variants = [
             </span>
             <span class="relative block">
               <span class="block font-display text-sm font-bold text-paper/50">{v.num}</span>
-              <span class="mt-1 block font-display text-2xl font-bold uppercase md:text-[clamp(1.25rem,2vw,2.5rem)]">{v.name}</span>
+              <span class:list={['mt-1 block font-display text-2xl font-bold uppercase', 'approved' in v ? 'md:text-[clamp(1.5rem,2.6vw,3.5rem)]' : 'md:text-[clamp(1.1rem,1.6vw,2.25rem)]']}>{v.name}</span>
               {'twin' in v && <span class="label mt-2 block text-lime">Двойник «{v.twin}»</span>}
+              {'approved' in v && <span class="label mt-2 block text-lime">Утверждено заказчиком</span>}
               <span class="tile-text block max-w-[42ch] text-sm leading-relaxed text-paper/80 2xl:text-base"><span class="block min-h-0 overflow-hidden"><span class="block pt-3">{v.text}</span></span></span>
             </span>
           </a>
