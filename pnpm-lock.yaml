@@ -41,6 +41,9 @@ importers:
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
+      typograf:
+        specifier: ^7.8.0
+        version: 7.8.0
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.10
@@ -1502,6 +1505,10 @@ packages:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  typograf@7.8.0:
+    resolution: {integrity: sha512-Eo+Fu7iM0ASkYOgsI3veGtdkxI+QhMgJBmyftB16Or+g6B2pC4NgsAPT7nP36BzVx7720IMmvkWf7N9O33HNHg==}
+    engines: {node: '>= 4'}
 
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
@@ -3190,6 +3197,8 @@ snapshots:
       semver: 7.8.5
 
   typescript@6.0.3: {}
+
+  typograf@7.8.0: {}
 
   ufo@1.6.4: {}
 
