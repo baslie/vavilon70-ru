@@ -1,8 +1,8 @@
 ---
-// Манифест из ТЗ: вводная фраза, шесть направлений и философия «Больше чем прыжки».
+// Манифест из ТЗ: вводная фраза и шесть направлений. Философия — отдельным светлым блоком Philosophy.astro.
 // Тёмное поле сразу под светлым первым экраном, как в порядке ТЗ. Справа от вводной фразы фото, чтобы не провисала пустота.
-// На общей сетке: вводная и фото 8 + 4, шесть пунктов по 4 колонки, философия 8 + 4 — фото, третья колонка
-// пунктов и текст философии стоят на одной вертикали.
+// На общей сетке: вводная и фото 8 + 4, шесть пунктов по 4 колонки — фото и третья колонка пунктов
+// стоят на одной вертикали.
 // Номера и подписи лаймом: фиолетовый 12px на тёмном не добирает контраста AA (docs/BRAND.md).
 import { Image } from 'astro:assets';
 import { manifest } from '../../data/content';
@@ -29,17 +29,4 @@ const pad = (n: number) => String(n).padStart(2, '0');
     ))}
   </ol>
 
-  <div class="grid-site mt-24 gap-y-10 lg:mt-32 lg:items-end">
-    <div class="lg:col-span-8" data-reveal>
-      <p class="label font-semibold text-lime">Наша философия</p>
-      <p class="headline mt-6 text-[clamp(2.6rem,6vw,6rem)]">
-        <span class="block">Больше</span>
-        <span class="block">чем прыжки</span>
-      </p>
-    </div>
-    <div class="lg:col-span-4" data-reveal style="--i:1">
-      <span class="mb-5 block h-1 w-6 bg-signal" aria-hidden="true"></span>
-      <p class="max-w-[34ch] text-lg leading-relaxed text-paper/75">{manifest.philosophy}</p>
-    </div>
-  </div>
 </section>

@@ -1,0 +1,21 @@
+---
+// Философия «Больше чем прыжки» на светлом поле, вводной к цифрам: без нижнего отступа,
+// чтобы читалась с блоком Facts одним целым. Сетка 8 + 4, как была в манифесте.
+import { manifest } from '../../data/content';
+---
+
+<section class="px-4 pt-24 md:px-8 lg:pt-32" aria-labelledby="philosophy-title">
+  <div class="grid-site gap-y-10 lg:items-end">
+    <div class="lg:col-span-8" data-reveal>
+      <p class="label font-semibold text-violet">Наша философия</p>
+      <h2 id="philosophy-title" class="headline mt-6 text-[clamp(2.6rem,6vw,6rem)]">
+        <span class="block">Больше</span>
+        <span class="block">чем прыжки</span>
+      </h2>
+    </div>
+    <div class="lg:col-span-4" data-reveal style="--i:1">
+      <span class="mb-5 block h-1 w-6 bg-signal" aria-hidden="true"></span>
+      <p class="max-w-[34ch] text-lg leading-relaxed text-ink/70">{manifest.philosophy}</p>
+    </div>
+  </div>
+</section>

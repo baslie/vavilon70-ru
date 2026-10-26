@@ -18,7 +18,7 @@ const { title = guide.title, items = guide.items, flush = false } = Astro.props;
 // Бенто на общей сетке с её зазором: крупная плитка 8 колонок, остальные по 4 — края плиток
 // совпадают с колонками цифр и манифеста. Кафе на фирменной ткани.
 const spans = ['md:col-span-8 md:row-span-2', ...Array(5).fill('md:col-span-4')];
-// Короткий заголовок прототипа — плакатным кеглем, длинный из ТЗ — мельче, тире в конце строки.
+// Короткий заголовок прототипа — плакатным кеглем, длинный из ТЗ — мельче и без красной черты.
 // Теги без капса: в слитных хештегах из ТЗ слова различаются только заглавными.
 const long = title.length > 20;
 ---
@@ -26,7 +26,7 @@ const long = title.length > 20;
 <section class:list={['bg-ink px-4 pb-24 text-paper md:px-8', flush ? 'pt-8' : 'pt-24']}>
   {long ? (
     <h2 class="headline max-w-[22ch] text-[1.9rem] leading-[1.05] sm:text-4xl md:text-5xl" data-reveal>
-      {title}<span class="ml-5 inline-block h-1 w-10 bg-signal align-middle" aria-hidden="true"></span>
+      {title}
     </h2>
   ) : (
     <div class="flex items-end gap-6">
