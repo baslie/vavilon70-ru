@@ -6,6 +6,17 @@ import Typograf from 'typograf';
 
 const locale = ['ru', 'en-US'];
 
+// Неразрывный пробел между числом и следующим словом: «6 ключевых», «14 батутов».
+// Встроенное common/nbsp/afterNumber выключено по умолчанию и не видит число сразу после тега
+// (<span>6 …): теги типограф подменяет метками, закрывающий символ метки — U+F000.
+const NBSP = String.fromCharCode(0xa0);
+const TAG_MARK = String.fromCharCode(0xf000);
+const numberWordRe = new RegExp(String.raw`(^|[\s${TAG_MARK}])(\d{1,5}) (?=[а-яёa-z])`, 'gi');
+Typograf.addRule({
+  name: 'common/nbsp/afterNumberWord',
+  handler: (s) => s.replace(numberWordRe, `$1$2${NBSP}`),
+});
+
 const text = new Typograf({ locale, htmlEntity: { type: 'name', onlyInvisible: true } });
 // Ручное отключение: <!--notypo-->…<!--/notypo-->.
 text.addSafeTag('<!--notypo-->', '<!--/notypo-->');
