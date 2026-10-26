@@ -2,6 +2,7 @@
 import '@fontsource-variable/unbounded';
 import '@fontsource-variable/onest';
 import '../styles/global.css';
+import { yclientsId } from '../data/booking';
 
 interface Props {
   title: string;
@@ -25,6 +26,8 @@ const {
     <meta name="robots" content="noindex" />
     <title>{title}</title>
     <script is:inline>document.documentElement.classList.add('js');</script>
+    {/* TODO: виджет онлайн-записи Yclients, включится, когда в src/data/booking.ts появится ID. */}
+    {yclientsId && <script is:inline async src={`https://w${yclientsId}.yclients.com/widgetJS`} charset="UTF-8"></script>}
   </head>
   <body class:list={['min-h-dvh overflow-x-clip font-sans', bodyClass]}>
     <slot />

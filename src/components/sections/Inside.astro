@@ -4,6 +4,7 @@
 import { Image } from 'astro:assets';
 import { directions } from '../../data/content';
 import { photos } from '../../data/photos';
+import { url } from '../../data/nav';
 
 // Бенто: первая плитка крупная, кафе на фирменной ткани.
 const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2'];
@@ -16,7 +17,7 @@ const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 
   </div>
   <div class="mt-12 grid auto-rows-[260px] gap-3 md:grid-cols-6 md:auto-rows-[240px]">
     {directions.map((d, i) => (
-      <a href="#" class:list={['group relative isolate flex flex-col justify-end overflow-hidden rounded-md p-6', spans[i]]} data-reveal style={`--i:${i % 3}`}>
+      <a href={url(d.path)} class:list={['group relative isolate flex flex-col justify-end overflow-hidden rounded-md p-6', spans[i]]} data-reveal style={`--i:${i % 3}`}>
         <Image src={d.photo ? photos[d.photo] : photos.textureAlt} alt="" widths={[600, 1000]} sizes="(min-width: 768px) 50vw, 100vw" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent" aria-hidden="true"></div>
         <h3 class="font-display text-xl font-bold uppercase md:text-2xl">{d.title}</h3>

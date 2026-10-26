@@ -1,0 +1,17 @@
+---
+// Кнопка онлайн-записи. Одна точка для шапки, первого экрана, CTA и мобильного меню.
+// Пока ID виджета Yclients нет, ведёт на телефон администратора.
+import { yclientsId } from '../data/booking';
+import { contacts } from '../data/content';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+// TODO: когда появится yclientsId, класс ms_booking открывает виджет Yclients
+// (скрипт подключается в Layout.astro).
+const widget = Boolean(yclientsId);
+---
+
+<a href={widget ? '#' : contacts.phoneHref} class:list={[className, widget && 'ms_booking']}><slot /></a>

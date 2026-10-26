@@ -1,12 +1,16 @@
 ---
 // Главная: согласованные блоки из v7 (docs/BRAND.md) и недостающие блоки из ТЗ.
-// Поля чередуются: светлый первый экран и цифры, тёмные безопасность и «Что внутри».
+// Поля чередуются: светлые первый экран и цифры, тёмные безопасность и «Что внутри»,
+// светлый манифест, тёмный призыв к действию, светлый подвал.
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/sections/Hero.astro';
 import Facts from '../components/sections/Facts.astro';
 import Safety from '../components/sections/Safety.astro';
 import Inside from '../components/sections/Inside.astro';
+import Manifest from '../components/sections/Manifest.astro';
+import PlanVisit from '../components/sections/PlanVisit.astro';
+import Footer from '../components/Footer.astro';
 ---
 
 <Layout title="Вавилон — спортивно-развлекательный комплекс в Томске" bodyClass="bg-mist text-ink">
@@ -17,5 +21,8 @@ import Inside from '../components/sections/Inside.astro';
     <Facts />
     <Safety />
     <Inside />
+    <Manifest />
+    <PlanVisit />
   </main>
+  <Footer />
 </Layout>

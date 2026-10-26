@@ -2,6 +2,8 @@
 // Первый экран из v1 «Брендбук», утверждён 21.10.2026: заголовок слева, фото по центру, справа слоган и три фото.
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
+import BookingLink from '../BookingLink.astro';
+import { partyRequest } from '../../data/nav';
 import { hero, contacts, slogans } from '../../data/content';
 import { photos, alts } from '../../data/photos';
 
@@ -27,10 +29,10 @@ const details = [
     <div class="grid gap-7">
       <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
       <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
-        <a href="#" class="label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
+        <BookingLink class="label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
           {hero.primary}<Icon name="arrowUpRight" class="size-4" />
-        </a>
-        <a href="#" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{hero.secondary}</a>
+        </BookingLink>
+        <a href={partyRequest} class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{hero.secondary}</a>
       </div>
       <p class="label flex items-start gap-3 text-ink/60"><Icon name="mapPin" class="mt-0.5 size-4 shrink-0 text-violet" /><span>{contacts.address}<br />{contacts.place}</span></p>
     </div>

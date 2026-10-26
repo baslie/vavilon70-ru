@@ -53,7 +53,7 @@ export const menu: NavItem[] = [
       {
         title: 'Взрослые мероприятия',
         links: [
-          { title: 'День рождения', href: url('/prazdniki/vzroslye/#den-rozhdeniya') },
+          { title: 'День рождения 18+', href: url('/prazdniki/vzroslye/#den-rozhdeniya') },
           { title: 'Тимбилдинг и корпоративы', href: url('/prazdniki/vzroslye/#korporativy') },
           { title: 'Ночная тренировка', href: url('/prazdniki/vzroslye/#nochnaya-trenirovka') },
         ],
