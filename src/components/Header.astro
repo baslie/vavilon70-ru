@@ -52,7 +52,7 @@ const light = tone === 'light';
   </nav>
 
   <div class="flex items-center gap-3">
-    <BookingLink class:list={['label hidden rounded-md px-5 py-3 font-semibold transition active:scale-[0.98] sm:inline-flex', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']}>{hero.primary}</BookingLink>
+    <BookingLink class:list={['btn-skew label hidden rounded-md px-5 py-3 font-semibold transition active:scale-[0.98] sm:inline-flex', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']}><span>{hero.primary}</span></BookingLink>
     <button type="button" class:list={['grid size-11 place-items-center rounded-md border lg:hidden', light ? 'border-paper/25 text-paper' : 'border-ink/20']} aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open><Icon name="list" /></button>
   </div>
 
@@ -88,8 +88,8 @@ const light = tone === 'light';
       ))}
     </ul>
     <div class="grid gap-5 border-t border-paper/15 px-4 py-8 md:px-8">
-      <BookingLink class="label inline-flex items-center justify-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
-        {hero.primary}<Icon name="arrowUpRight" class="size-4" />
+      <BookingLink class="btn-skew label inline-flex items-center justify-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
+        <span>{hero.primary}<Icon name="arrowUpRight" class="size-4" /></span>
       </BookingLink>
       <a href={contacts.phoneHref} class="font-display text-2xl font-bold">{contacts.phone}</a>
       <p class="label text-paper/60">{contacts.address}, {contacts.place}</p>

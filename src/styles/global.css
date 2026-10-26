@@ -51,6 +51,18 @@
     text-transform: uppercase;
   }
 
+  /* Кнопка-параллелограмм из варианта «Наклон» (/variants/captions/): скошен корпус,
+     содержимое во вложенном span скошено обратно и стоит прямо. */
+  .btn-skew {
+    transform: skewX(-12deg);
+  }
+  .btn-skew > span {
+    display: inline-flex;
+    align-items: center;
+    gap: inherit;
+    transform: skewX(12deg);
+  }
+
   /* Заголовок брендбука: широкий жирный гротеск с наклоном. */
   .headline {
     font-family: var(--font-display);

@@ -13,11 +13,11 @@ import { photos, alts } from '../../data/photos';
     <h2 class="headline text-[clamp(2rem,5vw,5.5rem)]" data-reveal>{planVisit.title}</h2>
     <p class="mt-8 max-w-[54ch] text-lg leading-relaxed text-paper/70" data-reveal style="--i:1">{planVisit.text}</p>
     <div class="mt-10 flex flex-wrap gap-3" data-reveal style="--i:2">
-      <BookingLink class="label inline-flex w-full items-center justify-center gap-3 rounded-md bg-violet px-4 py-4 font-semibold tracking-[0.12em] text-center sm:tracking-[0.22em] text-paper transition hover:bg-violet-deep active:scale-[0.98] sm:w-auto sm:px-6">
-        <Icon name="lightning" class="size-4" />{planVisit.book}
+      <BookingLink class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md bg-violet px-4 py-4 font-semibold tracking-[0.12em] text-center sm:tracking-[0.22em] text-paper transition hover:bg-violet-deep active:scale-[0.98] sm:w-auto sm:px-6">
+        <span><Icon name="lightning" class="size-4" />{planVisit.book}</span>
       </BookingLink>
-      <a href={partyRequest} class="label inline-flex w-full items-center justify-center gap-3 rounded-md border border-paper/30 px-4 py-4 tracking-[0.12em] text-center sm:tracking-[0.22em] sm:w-auto sm:px-6 font-semibold transition hover:border-paper hover:bg-paper hover:text-ink active:scale-[0.98]">
-        <Icon name="confetti" class="size-4" />{planVisit.party}
+      <a href={partyRequest} class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md border border-paper/30 px-4 py-4 tracking-[0.12em] text-center sm:tracking-[0.22em] sm:w-auto sm:px-6 font-semibold transition hover:border-paper hover:bg-paper hover:text-ink active:scale-[0.98]">
+        <span><Icon name="confetti" class="size-4" />{planVisit.party}</span>
       </a>
     </div>
     <p class="label mt-8 flex items-center gap-3 text-paper/60" data-reveal style="--i:3">
