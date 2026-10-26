@@ -1,0 +1,73 @@
+---
+// Витрина прототипов для заказчика на весь экран: крупная плитка согласованного варианта и шесть вариантов первого экрана.
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { photos } from '../../data/photos';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const variants = [
+  { href: `${base}/v7/`, num: '07', name: 'Согласованный', approved: true, text: 'Блоки, которые выбрал заказчик: первый экран из «Брендбука», цифры и безопасность из «Постера», «Что внутри» из «Формы».', photo: photos.jumpTall, bar: 'bg-lime' },
+  { href: `${base}/v1/`, num: '01', name: 'Брендбук', text: 'Раскладка доски с формой: светлое поле, фото по центру, справа колонка деталей.', photo: photos.jumpTall, bar: 'bg-violet' },
+  { href: `${base}/v2/`, num: '02', name: 'Форма', text: 'Тёмный, как сама футболка. Прыжок в косом кадре поверх ткани с молниями.', photo: photos.texture, bar: 'bg-signal' },
+  { href: `${base}/v3/`, num: '03', name: 'Постер', text: 'Огромный заголовок во всю ширину, широкое фото и столбик слов с красным тире.', photo: photos.jump, bar: 'bg-paper' },
+  { href: `${base}/v4/`, num: '04', name: 'Спецификация', twin: 'Брендбук', text: 'Технический лист: волосяная сетка, метки обреза, фото арены с пронумерованными выносками.', photo: photos.arena, bar: 'bg-violet' },
+  { href: `${base}/v5/`, num: '05', name: 'Ночная арена', twin: 'Форма', text: 'Кадр во весь экран, прожектор идёт за курсором, зерно плёнки и бегущая строка.', photo: photos.jump, bar: 'bg-signal' },
+  { href: `${base}/v6/`, num: '06', name: 'Плакат-манифест', twin: 'Постер', text: 'Сжатый гротеск во всю ширину, фото вплетено между строк, плашки кренятся от скролла.', photo: photos.jumpTall, bar: 'bg-paper' },
+];
+---
+
+<Layout title="Вавилон. Варианты первого экрана" bodyClass="bg-ink text-paper">
+  <main>
+    <h1 class="sr-only">Вавилон: согласованный вариант и шесть вариантов первого экрана</h1>
+    <ol class="tiles grid md:h-dvh md:grid-cols-4 md:grid-rows-3">
+      {variants.map((v) => (
+        <li class:list={['tile relative overflow-hidden bg-ink-soft', 'approved' in v && 'md:col-span-2 md:row-span-3']}>
+          <a href={v.href} class="flex aspect-[4/5] h-full flex-col justify-between p-5 md:aspect-auto md:p-6 2xl:p-10">
+            <Image src={v.photo} alt="" widths={[480, 800, 1200, 1600]} sizes="(min-width: 768px) 50vw, 100vw" class="tile-photo absolute inset-0 size-full object-cover" />
+            <span class="absolute inset-0 bg-linear-to-t from-ink/90 via-ink/20 to-ink/5"></span>
+            <span class="relative flex items-start justify-between">
+              <span class:list={['mt-2 h-2 w-14 -skew-x-[28deg]', v.bar]}></span>
+              <Icon name="arrowUpRight" class="tile-arrow size-7 2xl:size-8" />
+            </span>
+            <span class="relative block">
+              <span class="block font-display text-sm font-bold text-paper/50">{v.num}</span>
+              <span class:list={['mt-1 block font-display text-2xl font-bold uppercase', 'approved' in v ? 'md:text-[clamp(1.5rem,2.6vw,3.5rem)]' : 'md:text-[clamp(1.1rem,1.6vw,2.25rem)]']}>{v.name}</span>
+              {'twin' in v && <span class="label mt-2 block text-lime">Двойник «{v.twin}»</span>}
+              {'approved' in v && <span class="label mt-2 block text-lime">Утверждено заказчиком</span>}
+              <span class="tile-text block max-w-[42ch] text-sm leading-relaxed text-paper/80 2xl:text-base"><span class="block min-h-0 overflow-hidden"><span class="block pt-3">{v.text}</span></span></span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </main>
+</Layout>
+
+<style>
+  /* Сетка неподвижна: плитка под курсором остаётся в цвете и раскрывает описание, остальные гаснут. */
+  @media (min-width: 48rem) and (hover: hover) {
+    .tile-photo {
+      transition: filter 0.6s, scale 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .tiles:has(> .tile:is(:hover, :focus-within)) .tile:not(:hover, :focus-within) .tile-photo {
+      filter: grayscale(1) brightness(0.45);
+    }
+    .tile:is(:hover, :focus-within) .tile-photo { scale: 1.04; }
+
+    .tile-text {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s;
+    }
+    .tile:is(:hover, :focus-within) .tile-text { grid-template-rows: 1fr; opacity: 1; transition-delay: 0.1s; }
+
+    .tile-arrow { transition: color 0.3s, translate 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+    .tile:is(:hover, :focus-within) .tile-arrow { color: var(--color-signal); translate: 4px -4px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile-photo, .tile-text, .tile-arrow { transition: none; }
+  }
+</style>
