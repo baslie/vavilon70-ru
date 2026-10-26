@@ -33,7 +33,7 @@ const long = title.length > 20;
     <p class:list={['max-w-[40ch] font-display text-xl leading-snug md:text-2xl lg:col-span-6 lg:text-[1.9rem]', dark ? 'text-paper/85' : 'text-ink/85']} data-reveal>{safetyLead}</p>
     <ol class="grid gap-x-gutter gap-y-12 sm:grid-cols-2 lg:col-span-6 lg:grid-cols-subgrid">
       {items.map((s, i) => (
-        <li class:list={['border-t pt-6 lg:col-span-3', dark ? 'border-paper/20' : 'border-ink/15']} data-reveal style={`--i:${i}`}>
+        <li class="lg:col-span-3" data-reveal style={`--i:${i}`}>
           <span class="dash mb-5 block bg-signal" aria-hidden="true"></span>
           <h3 class="font-display text-lg font-bold uppercase">{s.title}</h3>
           <p class:list={['mt-3 leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>
