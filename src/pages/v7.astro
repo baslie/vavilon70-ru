@@ -1,23 +1,24 @@
 ---
 // Вариант 7. «Согласованный»: блоки, которые выбрал заказчик 21.10.2026 (docs/BRAND.md).
 // Первый экран из v1, цифры и «Спокойно за детей» из v3, «Что внутри» из v2.
-// Снимок утверждённого: собран из тех же секций, что и главная, но с прежними четырьмя цифрами.
+// Снимок утверждённого: собран из тех же секций, что и главная, но с прежними четырьмя цифрами,
+// заголовками и текстами прототипа (на главной с 26.10 тексты ТЗ).
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/sections/Hero.astro';
 import Facts from '../components/sections/Facts.astro';
 import Safety from '../components/sections/Safety.astro';
 import Inside from '../components/sections/Inside.astro';
-import { approvedFacts } from '../data/content';
+import { hero, approvedFacts, directions, safety } from '../data/content';
 ---
 
 <Layout title="Вавилон. Согласованный вариант" bodyClass="bg-mist text-ink">
   <Header />
 
   <main>
-    <Hero />
+    <Hero lead={hero.lead} />
     <Facts items={approvedFacts} />
-    <Safety />
-    <Inside />
+    <Safety title="Спокойно за детей" items={safety} tone="dark" />
+    <Inside title="Что внутри" items={directions} flush />
   </main>
 </Layout>

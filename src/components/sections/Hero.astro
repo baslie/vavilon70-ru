@@ -7,8 +7,15 @@ import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import BookingLink from '../BookingLink.astro';
 import { partyRequest } from '../../data/nav';
-import { hero, contacts, slogans } from '../../data/content';
+import { hero, homeLead, contacts, slogans } from '../../data/content';
 import { photos, alts } from '../../data/photos';
+
+interface Props {
+  /** Подзаголовок: на главной из ТЗ, в v7 прежний hero.lead. */
+  lead?: string;
+}
+
+const { lead = homeLead } = Astro.props;
 
 const details = [
   { photo: photos.arena, caption: 'Батутная арена' },
@@ -30,7 +37,7 @@ const details = [
     </div>
 
     <div class="grid gap-7">
-      <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
+      <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{lead}</p>
       <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
         <BookingLink class="btn-skew label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
           <span>{hero.primary}<Icon name="arrowUpRight" class="size-4" /></span>

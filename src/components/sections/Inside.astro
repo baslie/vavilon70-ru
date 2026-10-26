@@ -1,27 +1,46 @@
 ---
 // «Что внутри» из v2 «Форма»: тёмное бенто, крупная плитка батутной арены, подписи поверх фото.
-// Стоит сразу под «Спокойно за детей», поэтому верхний отступ короткий.
+// На главной это фотогид из ТЗ (заголовок, карточки и теги — guide), в v7 прежние directions.
 import { Image } from 'astro:assets';
-import { directions } from '../../data/content';
+import { guide, type GuideCard } from '../../data/content';
 import { photos } from '../../data/photos';
 import { url } from '../../data/nav';
 
+interface Props {
+  title?: string;
+  items?: GuideCard[];
+  /** Короткий верхний отступ, когда сверху стоит другой тёмный блок (v7). */
+  flush?: boolean;
+}
+
+const { title = guide.title, items = guide.items, flush = false } = Astro.props;
+
 // Бенто: первая плитка крупная, кафе на фирменной ткани.
 const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2'];
+// Короткий заголовок прототипа — плакатным кеглем, длинный из ТЗ — мельче, тире в конце строки.
+// Теги без капса: в слитных хештегах из ТЗ слова различаются только заглавными.
+const long = title.length > 20;
 ---
 
-<section class="bg-ink px-4 pt-8 pb-24 text-paper md:px-8">
-  <div class="flex items-end gap-6">
-    <h2 class="headline text-4xl md:text-6xl" data-reveal>Что внутри</h2>
-    <span class="mb-2 h-1 w-10 bg-signal" aria-hidden="true"></span>
-  </div>
+<section class:list={['bg-ink px-4 pb-24 text-paper md:px-8', flush ? 'pt-8' : 'pt-24']}>
+  {long ? (
+    <h2 class="headline max-w-[22ch] text-[1.9rem] leading-[1.05] sm:text-4xl md:text-5xl" data-reveal>
+      {title}<span class="ml-5 inline-block h-1 w-10 bg-signal align-middle" aria-hidden="true"></span>
+    </h2>
+  ) : (
+    <div class="flex items-end gap-6">
+      <h2 class="headline text-4xl md:text-6xl" data-reveal>{title}</h2>
+      <span class="mb-2 h-1 w-10 bg-signal" aria-hidden="true"></span>
+    </div>
+  )}
   <div class="mt-12 grid auto-rows-[260px] gap-3 md:grid-cols-6 md:auto-rows-[240px]">
-    {directions.map((d, i) => (
+    {items.map((d, i) => (
       <a href={url(d.path)} class:list={['group relative isolate flex flex-col justify-end overflow-hidden rounded-md p-6', spans[i]]} data-reveal style={`--i:${i % 3}`}>
         <Image src={d.photo ? photos[d.photo] : photos.textureAlt} alt="" widths={[600, 1000]} sizes="(min-width: 768px) 50vw, 100vw" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent" aria-hidden="true"></div>
+        {d.tag && <p class="mb-2 text-sm font-semibold text-lime">{d.tag}</p>}
         <h3 class="font-display text-xl font-bold uppercase md:text-2xl">{d.title}</h3>
-        <p class="mt-2 max-w-[34ch] text-sm leading-relaxed text-paper/75">{d.text}</p>
+        <p class="mt-2 max-w-[38ch] text-sm leading-relaxed text-paper/75">{d.text}</p>
       </a>
     ))}
   </div>

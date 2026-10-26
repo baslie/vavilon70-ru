@@ -1,7 +1,7 @@
 ---
-// Главная: согласованные блоки из v7 (docs/BRAND.md) и недостающие блоки из ТЗ.
-// Поля чередуются: светлые первый экран и цифры, тёмные безопасность и «Что внутри»,
-// светлый манифест, тёмный призыв к действию, светлый подвал.
+// Главная: согласованные блоки из v7 (docs/BRAND.md) с текстами ТЗ от 26.10, блоки в порядке ТЗ.
+// Поля чередуются: светлый первый экран, тёмный манифест, светлые цифры, тёмный фотогид,
+// светлая безопасность, тёмный призыв к действию, светлый подвал.
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/sections/Hero.astro';
@@ -18,10 +18,10 @@ import Footer from '../components/Footer.astro';
 
   <main>
     <Hero />
-    <Facts />
-    <Safety />
-    <Inside />
     <Manifest />
+    <Facts />
+    <Inside />
+    <Safety />
     <PlanVisit />
   </main>
   <Footer />

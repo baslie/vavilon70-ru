@@ -1,24 +1,40 @@
 ---
-// «Спокойно за детей» из v3 «Постер»: тёмный блок, фото тренера слева, справа вводный текст из ТЗ
+// «Спокойно за детей» из v3 «Постер»: фото тренера слева, справа вводный текст из ТЗ
 // на уровне заголовка и четыре пункта с красными тире на уровне низа фото.
+// На главной светлый вариант с заголовком и пунктами из ТЗ: заказчик просил спокойный тон «для родителей».
+// В v7 — тёмный, с прежними заголовком и пунктами.
 import { Image } from 'astro:assets';
-import { safety, safetyLead } from '../../data/content';
+import { safetyHome, safetyLead } from '../../data/content';
 import { photos, alts } from '../../data/photos';
+
+interface Props {
+  title?: string;
+  items?: { title: string; text: string }[];
+  tone?: 'dark' | 'light';
+}
+
+const { title = safetyHome.title, items = safetyHome.items, tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+// Короткий заголовок прототипа — плакатным кеглем в две строки, длинный из ТЗ — мельче:
+// кегль от ширины колонки, чтобы «Профессиональный» (около 15em с наклоном) не вылезал за неё.
+const long = title.length > 20;
 ---
 
-<section class="grid gap-12 bg-ink px-4 py-24 text-paper md:px-8 lg:grid-cols-12 lg:gap-8">
+<section class:list={['grid gap-12 px-4 py-24 md:px-8 lg:grid-cols-12 lg:gap-8', dark && 'bg-ink text-paper']}>
   <div class="lg:col-span-5">
-    <h2 class="headline text-[2.6rem] sm:text-5xl md:text-6xl" data-reveal>Спокойно<br />за детей</h2>
+    <h2 class:list={['headline', long ? 'text-[clamp(1.375rem,5.8vw,2.25rem)] leading-[1.05] lg:text-[2.3vw]' : 'text-[2.6rem] sm:text-5xl md:text-6xl']} data-reveal>
+      {long ? title : <>{title.slice(0, title.indexOf(' '))}<br />{title.slice(title.indexOf(' ') + 1)}</>}
+    </h2>
     <Image src={photos.coach} alt={alts.coach} widths={[600, 900]} sizes="(min-width: 1024px) 40vw, 100vw" class="mt-10 aspect-[4/3] w-full rounded-md object-cover" data-reveal />
   </div>
   <div class="flex flex-col justify-between gap-12 lg:col-span-6 lg:col-start-7">
-    <p class="max-w-[40ch] font-display text-xl leading-snug text-paper/85 md:text-2xl lg:text-[1.9rem]" data-reveal>{safetyLead}</p>
+    <p class:list={['max-w-[40ch] font-display text-xl leading-snug md:text-2xl lg:text-[1.9rem]', dark ? 'text-paper/85' : 'text-ink/85']} data-reveal>{safetyLead}</p>
     <ol class="grid gap-x-10 gap-y-12 sm:grid-cols-2">
-      {safety.map((s, i) => (
-        <li class="border-t border-paper/20 pt-6" data-reveal style={`--i:${i}`}>
+      {items.map((s, i) => (
+        <li class:list={['border-t pt-6', dark ? 'border-paper/20' : 'border-ink/15']} data-reveal style={`--i:${i}`}>
           <span class="mb-5 block h-1 w-6 bg-signal" aria-hidden="true"></span>
           <h3 class="font-display text-lg font-bold uppercase">{s.title}</h3>
-          <p class="mt-3 leading-relaxed text-paper/70">{s.text}</p>
+          <p class:list={['mt-3 leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>
         </li>
       ))}
     </ol>
