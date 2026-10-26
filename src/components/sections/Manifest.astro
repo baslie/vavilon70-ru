@@ -1,15 +1,20 @@
 ---
 // Манифест из ТЗ: вводная фраза, шесть направлений и философия «Больше чем прыжки».
-// Светлое поле после тёмных «Спокойно за детей» и «Что внутри».
+// Светлое поле после тёмных «Спокойно за детей» и «Что внутри». Справа от вводной фразы фото, чтобы не провисала пустота.
+import { Image } from 'astro:assets';
 import { manifest } from '../../data/content';
+import { photos, alts } from '../../data/photos';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
 <section id="o-centre" class="px-4 py-24 md:px-8" aria-labelledby="manifest-title">
-  <h2 id="manifest-title" class="max-w-[24ch] font-display text-[1.6rem] leading-[1.2] font-semibold sm:text-4xl lg:text-[2.9rem]" data-reveal>
-    {manifest.lead} <span class="text-violet">{manifest.accent}</span> {manifest.tail}
-  </h2>
+  <div class="grid gap-10 lg:grid-cols-12 lg:gap-8">
+    <h2 id="manifest-title" class="max-w-[24ch] font-display text-[1.6rem] leading-[1.2] font-semibold sm:text-4xl lg:col-span-7 lg:text-[2.9rem]" data-reveal>
+      {manifest.lead} <span class="text-violet">{manifest.accent}</span> {manifest.tail}
+    </h2>
+    <Image src={photos.football} alt={alts.football} widths={[600, 900]} sizes="(min-width: 1024px) 40vw, 100vw" class="aspect-[4/3] w-full rounded-md object-cover lg:col-span-5 lg:aspect-auto lg:h-full" data-reveal style="--i:1" />
+  </div>
 
   <ol class="mt-16 grid gap-x-10 gap-y-12 md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
     {manifest.items.map((item, i) => (
