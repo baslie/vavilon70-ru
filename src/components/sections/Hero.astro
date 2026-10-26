@@ -1,6 +1,7 @@
 ---
 // Первый экран из v1 «Брендбук», утверждён 21.10.2026: заголовок слева, фото по центру, справа три фото.
-// По замечаниям 26.10 справа остались только три фото: подписи на сиреневых плашках внутри кадра,
+// По замечаниям 26.10 справа остались только три фото: подписи внутри кадра по варианту 04 «Полоса»
+// из /variants/captions/ (скошенная сиреневая полоса над белым капсом на тёмном градиенте),
 // запись и телефон не дублируем — кнопка записи слева.
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
@@ -47,9 +48,13 @@ const details = [
   <aside class="hidden lg:col-span-3 lg:flex lg:min-h-0" aria-label="Детали">
     <ul class="flex min-h-0 flex-1 flex-col gap-4">
       {details.map((d) => (
-        <li class="relative flex min-h-0 flex-1">
-          <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 rounded-md object-cover" />
-          <p class="label absolute bottom-3 left-3 rounded-sm bg-violet px-3 py-1.5 text-[0.65rem] font-semibold text-paper">{d.caption}</p>
+        <li class="relative flex min-h-0 flex-1 overflow-hidden rounded-md">
+          <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 object-cover" />
+          <span class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-ink/85 to-transparent"></span>
+          <p class="absolute bottom-4 left-4">
+            <span class="block h-1.5 w-10 -skew-x-[28deg] bg-violet"></span>
+            <span class="label mt-2 block text-[0.7rem] font-semibold text-paper">{d.caption}</span>
+          </p>
         </li>
       ))}
     </ul>
