@@ -1,6 +1,7 @@
 ---
-// Первый экран из v1 «Брендбук», утверждён 21.10.2026: заголовок слева, фото по центру, справа запись и три фото.
-// Слоган JUMP / TRAIN / PLAY / REPEAT заменён на запись онлайн по замечанию 26.10.
+// Первый экран из v1 «Брендбук», утверждён 21.10.2026: заголовок слева, фото по центру, справа три фото.
+// По замечаниям 26.10 справа остались только три фото: подписи на сиреневых плашках внутри кадра,
+// запись и телефон не дублируем — кнопка записи слева.
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import BookingLink from '../BookingLink.astro';
@@ -43,22 +44,12 @@ const details = [
     <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[4/5] w-full rounded-md object-cover lg:aspect-auto lg:h-full" />
   </figure>
 
-  <aside class="flex flex-col gap-8 lg:col-span-3 lg:min-h-0" aria-label="Детали">
-    <div class="grid gap-3">
-      <BookingLink class="group flex items-start justify-between gap-6">
-        <span class="label text-[0.95rem] leading-snug font-semibold tracking-[0.28em]"><span class="block">Запись</span><span class="block">онлайн</span></span>
-        <Icon name="arrowUpRight" class="size-14 -mt-1 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-violet" />
-      </BookingLink>
-      <p class="label flex items-center gap-3 text-ink/60">
-        <Icon name="phone" class="size-4 text-violet" />Администратор
-        <a href={contacts.phoneHref} class="font-semibold text-ink underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{contacts.phone}</a>
-      </p>
-    </div>
-    <ul class="hidden min-h-0 flex-1 flex-col gap-4 lg:flex">
+  <aside class="hidden lg:col-span-3 lg:flex lg:min-h-0" aria-label="Детали">
+    <ul class="flex min-h-0 flex-1 flex-col gap-4">
       {details.map((d) => (
-        <li class="flex min-h-0 flex-1 flex-col">
+        <li class="relative flex min-h-0 flex-1">
           <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 rounded-md object-cover" />
-          <p class="label mt-2 text-[0.65rem] text-ink/60">{d.caption}</p>
+          <p class="label absolute bottom-3 left-3 rounded-sm bg-violet px-3 py-1.5 text-[0.65rem] font-semibold text-paper">{d.caption}</p>
         </li>
       ))}
     </ul>

@@ -16,7 +16,7 @@ const { items = facts } = Astro.props;
       <div data-reveal style={`--i:${i % (items.length === 4 ? 4 : 3)}`}>
         <p class="headline text-[2.6rem] sm:text-6xl md:text-7xl">{f.value}</p>
         <p class="label mt-3 font-semibold text-violet">{f.unit}</p>
-        <p class="mt-2 max-w-[26ch] text-sm leading-relaxed text-ink/65">{f.label}</p>
+        <p class="mt-2 text-sm leading-relaxed text-ink/65">{f.label}</p>
       </div>
     ))}
   </div>
