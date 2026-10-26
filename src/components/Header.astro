@@ -1,7 +1,11 @@
 ---
+// Шапка по ТЗ: «Услуги и цены» и «Праздники» раскрываются панелью на всю ширину,
+// на мобильном — полноэкранное меню. Пункты и адреса в src/data/nav.ts.
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { nav, hero } from '../data/content';
+import BookingLink from './BookingLink.astro';
+import { hero, contacts } from '../data/content';
+import { menu } from '../data/nav';
 
 interface Props {
   tone?: 'dark' | 'light';
@@ -12,11 +16,181 @@ const { tone = 'dark' } = Astro.props;
 const light = tone === 'light';
 ---
 
-<header class="flex h-22 items-center justify-between gap-6 px-4 md:px-8">
+<header class="site-header relative z-30 flex h-22 items-center justify-between gap-6 px-4 md:px-8">
   <Logo class="w-28 md:w-32" caption tone={tone} />
-  <nav class:list={['label hidden items-center gap-7 lg:flex', light ? 'text-paper/75' : 'text-ink/70']} aria-label="Основное меню">
-    {nav.map((item) => <a href="#" class:list={['transition-colors', light ? 'hover:text-paper' : 'hover:text-ink']}>{item}</a>)}
+
+  <nav class="hidden lg:block" aria-label="Основное меню">
+    <ul class:list={['label flex items-center gap-7', light ? 'text-paper/75' : 'text-ink/70']}>
+      {menu.map((item, i) => item.groups ? (
+        <li data-dropdown>
+          <button type="button" class:list={['inline-flex items-center gap-1.5 uppercase transition-colors aria-expanded:text-violet', light ? 'hover:text-paper' : 'hover:text-ink']} aria-expanded="false" aria-controls={`mega-${i}`}>
+            {item.title}<Icon name="caretDown" class="caret size-3" />
+          </button>
+          <div id={`mega-${i}`} class:list={['mega absolute inset-x-0 top-full border-t px-8 pt-10 pb-12 normal-case tracking-normal', light ? 'border-paper/10 bg-ink-soft text-paper' : 'border-ink/10 bg-paper text-ink shadow-[0_24px_48px_-24px_rgb(14_14_17/0.25)]']}>
+            <div class="grid grid-cols-12 gap-8">
+              <a href={item.href} class="group col-span-3 flex flex-col justify-between">
+                <span class="headline text-3xl xl:text-4xl">{item.title}</span>
+                <span class="label mt-8 inline-flex items-center gap-2 font-semibold">Весь раздел<Icon name="arrowUpRight" class="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></span>
+              </a>
+              <div class:list={['col-span-8 col-start-5 grid gap-8', item.groups.length === 4 ? 'grid-cols-4' : 'grid-cols-3']}>
+                {item.groups.map((g) => (
+                  <div class:list={['border-t pt-5', light ? 'border-paper/15' : 'border-ink/15']}>
+                    <p class:list={['label font-semibold', light ? 'text-lime' : 'text-violet']}>{g.title}</p>
+                    <ul class="mt-4 grid gap-3 text-[0.95rem]">
+                      {g.links.map((l) => <li><a href={l.href} class:list={['transition-colors hover:text-violet', light ? 'text-paper/80' : 'text-ink/80']}>{l.title}</a></li>)}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </li>
+      ) : (
+        <li><a href={item.href} class:list={['transition-colors', light ? 'hover:text-paper' : 'hover:text-ink']}>{item.title}</a></li>
+      ))}
+    </ul>
   </nav>
-  <a href="#" class:list={['label hidden rounded-md px-5 py-3 font-semibold transition active:scale-[0.98] sm:inline-flex', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']}>{hero.primary}</a>
-  <button class:list={['grid size-11 place-items-center rounded-md border lg:hidden', light ? 'border-paper/25' : 'border-ink/20']} aria-label="Открыть меню"><Icon name="list" /></button>
+
+  <div class="flex items-center gap-3">
+    <BookingLink class:list={['label hidden rounded-md px-5 py-3 font-semibold transition active:scale-[0.98] sm:inline-flex', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']}>{hero.primary}</BookingLink>
+    <button type="button" class:list={['grid size-11 place-items-center rounded-md border lg:hidden', light ? 'border-paper/25 text-paper' : 'border-ink/20']} aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open><Icon name="list" /></button>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ink text-paper lg:hidden" role="dialog" aria-modal="true" aria-label="Меню" hidden>
+    <div class="flex h-22 shrink-0 items-center justify-between px-4 md:px-8">
+      <Logo class="w-28 md:w-32" caption tone="light" />
+      <button type="button" class="grid size-11 place-items-center rounded-md border border-paper/25" aria-label="Закрыть меню" data-menu-close><Icon name="close" /></button>
+    </div>
+    <ul class="grow px-4 pt-4 pb-10 md:px-8">
+      {menu.map((item) => (
+        <li class="border-t border-paper/15">
+          {item.groups ? (
+            <details class="group">
+              <summary class="flex cursor-pointer list-none items-center justify-between py-5 font-display text-2xl font-bold uppercase [&::-webkit-details-marker]:hidden">
+                {item.title}<Icon name="caretDown" class="size-5 transition-transform group-open:rotate-180" />
+              </summary>
+              <div class="grid gap-7 pb-8 sm:grid-cols-2">
+                {item.groups.map((g) => (
+                  <div>
+                    <p class="label font-semibold text-lime">{g.title}</p>
+                    <ul class="mt-3 grid gap-3 text-lg text-paper/80">
+                      {g.links.map((l) => <li><a href={l.href} class="hover:text-paper">{l.title}</a></li>)}
+                    </ul>
+                  </div>
+                ))}
+                <a href={item.href} class="label inline-flex items-center gap-2 font-semibold sm:col-span-2">Весь раздел<Icon name="arrowUpRight" class="size-4" /></a>
+              </div>
+            </details>
+          ) : (
+            <a href={item.href} class="block py-5 font-display text-2xl font-bold uppercase">{item.title}</a>
+          )}
+        </li>
+      ))}
+    </ul>
+    <div class="grid gap-5 border-t border-paper/15 px-4 py-8 md:px-8">
+      <BookingLink class="label inline-flex items-center justify-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
+        {hero.primary}<Icon name="arrowUpRight" class="size-4" />
+      </BookingLink>
+      <a href={contacts.phoneHref} class="font-display text-2xl font-bold">{contacts.phone}</a>
+      <p class="label text-paper/60">{contacts.address}, {contacts.place}</p>
+    </div>
+  </div>
 </header>
+
+<style>
+  /* Фиолетовые подписи 12px на тёмном не добирают контраста AA, там подписи лаймовые (docs/BRAND.md). */
+  /* Панель меню: появляется сверху, без JS остаётся скрытой (пункты ведут на страницы разделов). */
+  .mega {
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 -8px;
+    transition: opacity 0.2s, translate 0.2s var(--ease-out-expo), visibility 0s 0.2s;
+  }
+  [data-dropdown][data-open] .mega {
+    visibility: visible;
+    opacity: 1;
+    translate: none;
+    transition: opacity 0.2s, translate 0.2s var(--ease-out-expo);
+  }
+  .caret { transition: rotate 0.2s; }
+  [data-dropdown][data-open] .caret { rotate: 180deg; }
+
+  .mobile-menu:not([hidden]) { animation: menu-in 0.25s var(--ease-out-expo); }
+  @keyframes menu-in {
+    from { opacity: 0; translate: 0 -12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mega, [data-dropdown][data-open] .mega, .caret { transition: none; }
+    .mobile-menu:not([hidden]) { animation: none; }
+  }
+</style>
+
+<script>
+  // Выпадающие панели: наведение (на устройствах с мышью), клик, клавиатура, Esc и клик мимо.
+  const dropdowns = [...document.querySelectorAll<HTMLElement>('[data-dropdown]')];
+  const hoverable = matchMedia('(hover: hover)');
+  let closeTimer: number | undefined;
+
+  const setOpen = (dd: HTMLElement, open: boolean) => {
+    dd.toggleAttribute('data-open', open);
+    dd.querySelector('button')?.setAttribute('aria-expanded', String(open));
+  };
+  const closeAll = (except?: HTMLElement) => dropdowns.forEach((dd) => dd !== except && setOpen(dd, false));
+
+  dropdowns.forEach((dd) => {
+    const button = dd.querySelector('button')!;
+    button.addEventListener('click', () => {
+      const open = !dd.hasAttribute('data-open');
+      closeAll(dd);
+      setOpen(dd, open);
+    });
+    dd.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse' || !hoverable.matches) return;
+      clearTimeout(closeTimer);
+      closeAll(dd);
+      setOpen(dd, true);
+    });
+    // Небольшая задержка, чтобы курсор успел дойти от пункта до панели.
+    dd.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse' || !hoverable.matches) return;
+      closeTimer = window.setTimeout(() => setOpen(dd, false), 200);
+    });
+    dd.addEventListener('focusout', (e) => {
+      if (!dd.contains(e.relatedTarget as Node)) setOpen(dd, false);
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('[data-dropdown]')) closeAll();
+  });
+
+  // Мобильное меню на весь экран: блокирует прокрутку страницы, закрывается по Esc, крестику и ссылке.
+  const panel = document.getElementById('mobile-menu')!;
+  const openButton = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
+  const closeButton = panel.querySelector<HTMLButtonElement>('[data-menu-close]')!;
+
+  const setMenu = (open: boolean) => {
+    panel.hidden = !open;
+    openButton.setAttribute('aria-expanded', String(open));
+    document.documentElement.classList.toggle('overflow-hidden', open);
+    (open ? closeButton : openButton).focus();
+  };
+  openButton.addEventListener('click', () => setMenu(true));
+  closeButton.addEventListener('click', () => setMenu(false));
+  panel.addEventListener('click', (e) => {
+    if ((e.target as Element).closest('a')) setMenu(false);
+  });
+  // Меню открыто, а окно растянули до десктопа: закрываем, чтобы не осталась блокировка прокрутки.
+  matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && !panel.hidden && setMenu(false));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (!panel.hidden) return setMenu(false);
+    const open = dropdowns.find((dd) => dd.hasAttribute('data-open'));
+    if (open) {
+      setOpen(open, false);
+      open.querySelector('button')?.focus();
+    }
+  });
+</script>
