@@ -17,6 +17,26 @@
   --font-sans: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Зазор между колонками сетки, равен полю страницы (px-4 md:px-8): gap-x-gutter, gap-gutter. */
+  --spacing-gutter: 1rem;
+}
+
+@media (width >= 48rem) {
+  :root {
+    --spacing-gutter: 2rem;
+  }
+}
+
+/* Общая сетка сайта: 12 колонок от lg, три колонки — span 4, четыре — span 3, две — span 6.
+   Вложенный блок на часть ширины встаёт на те же дорожки через lg:grid-cols-subgrid.
+   Ниже lg раскладку задаёт секция (одна или две колонки), зазор тот же. Правила в docs/BRAND.md. */
+@utility grid-site {
+  display: grid;
+  column-gap: var(--spacing-gutter);
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
 }
 
 @layer base {

@@ -15,8 +15,9 @@ interface Props {
 
 const { title = guide.title, items = guide.items, flush = false } = Astro.props;
 
-// Бенто: первая плитка крупная, кафе на фирменной ткани.
-const spans = ['md:col-span-4 md:row-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2', 'md:col-span-2'];
+// Бенто на общей сетке с её зазором: крупная плитка 8 колонок, остальные по 4 — края плиток
+// совпадают с колонками цифр и манифеста. Кафе на фирменной ткани.
+const spans = ['md:col-span-8 md:row-span-2', ...Array(5).fill('md:col-span-4')];
 // Короткий заголовок прототипа — плакатным кеглем, длинный из ТЗ — мельче, тире в конце строки.
 // Теги без капса: в слитных хештегах из ТЗ слова различаются только заглавными.
 const long = title.length > 20;
@@ -33,7 +34,7 @@ const long = title.length > 20;
       <span class="mb-2 h-1 w-10 bg-signal" aria-hidden="true"></span>
     </div>
   )}
-  <div class="mt-12 grid auto-rows-[260px] gap-3 md:grid-cols-6 md:auto-rows-[240px]">
+  <div class="grid-site mt-12 auto-rows-[260px] gap-y-gutter md:grid-cols-12 md:auto-rows-[240px]">
     {items.map((d, i) => (
       <a href={url(d.path)} class:list={['group relative isolate flex flex-col justify-end overflow-hidden rounded-md p-6', spans[i]]} data-reveal style={`--i:${i % 3}`}>
         <Image src={d.photo ? photos[d.photo] : photos.textureAlt} alt="" widths={[600, 1000]} sizes="(min-width: 768px) 50vw, 100vw" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 group-hover:scale-105" />

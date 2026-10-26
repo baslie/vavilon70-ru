@@ -3,6 +3,8 @@
 // на уровне заголовка и четыре пункта с красными тире на уровне низа фото.
 // На главной светлый вариант с заголовком и пунктами из ТЗ: заказчик просил спокойный тон «для родителей».
 // В v7 — тёмный, с прежними заголовком и пунктами.
+// Сетка: слева 5 колонок, 6-я — воздух, справа 6 колонок через subgrid, пункты по 3 —
+// на тех же вертикалях, что третья и четвёртая колонки четырёхколоночной раскладки.
 import { Image } from 'astro:assets';
 import { safetyHome, safetyLead } from '../../data/content';
 import { photos, alts } from '../../data/photos';
@@ -20,18 +22,18 @@ const dark = tone === 'dark';
 const long = title.length > 20;
 ---
 
-<section class:list={['grid gap-12 px-4 py-24 md:px-8 lg:grid-cols-12 lg:gap-8', dark && 'bg-ink text-paper']}>
+<section class:list={['grid-site gap-y-12 px-4 py-24 md:px-8', dark && 'bg-ink text-paper']}>
   <div class="lg:col-span-5">
     <h2 class:list={['headline', long ? 'text-[clamp(1.375rem,5.8vw,2.25rem)] leading-[1.05] lg:text-[2.3vw]' : 'text-[2.6rem] sm:text-5xl md:text-6xl']} data-reveal>
       {long ? title : <>{title.slice(0, title.indexOf(' '))}<br />{title.slice(title.indexOf(' ') + 1)}</>}
     </h2>
     <Image src={photos.coach} alt={alts.coach} widths={[600, 900]} sizes="(min-width: 1024px) 40vw, 100vw" class="mt-10 aspect-[4/3] w-full rounded-md object-cover" data-reveal />
   </div>
-  <div class="flex flex-col justify-between gap-12 lg:col-span-6 lg:col-start-7">
-    <p class:list={['max-w-[40ch] font-display text-xl leading-snug md:text-2xl lg:text-[1.9rem]', dark ? 'text-paper/85' : 'text-ink/85']} data-reveal>{safetyLead}</p>
-    <ol class="grid gap-x-10 gap-y-12 sm:grid-cols-2">
+  <div class="grid content-between gap-y-12 lg:col-span-6 lg:col-start-7 lg:grid-cols-subgrid">
+    <p class:list={['max-w-[40ch] font-display text-xl leading-snug md:text-2xl lg:col-span-6 lg:text-[1.9rem]', dark ? 'text-paper/85' : 'text-ink/85']} data-reveal>{safetyLead}</p>
+    <ol class="grid gap-x-gutter gap-y-12 sm:grid-cols-2 lg:col-span-6 lg:grid-cols-subgrid">
       {items.map((s, i) => (
-        <li class:list={['border-t pt-6', dark ? 'border-paper/20' : 'border-ink/15']} data-reveal style={`--i:${i}`}>
+        <li class:list={['border-t pt-6 lg:col-span-3', dark ? 'border-paper/20' : 'border-ink/15']} data-reveal style={`--i:${i}`}>
           <span class="mb-5 block h-1 w-6 bg-signal" aria-hidden="true"></span>
           <h3 class="font-display text-lg font-bold uppercase">{s.title}</h3>
           <p class:list={['mt-3 leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>

@@ -1,6 +1,6 @@
 ---
 // Цифры из v3 «Постер»: крупные чёрные цифры Unbounded, фиолетовая подпись капсом, без линий.
-// Четыре факта встают в ряд, шесть — сеткой 3×2.
+// На общей сетке: четыре факта встают в ряд по 3 колонки, шесть — сеткой 3×2 по 4 колонки.
 import { facts } from '../../data/content';
 
 interface Props {
@@ -8,12 +8,13 @@ interface Props {
 }
 
 const { items = facts } = Astro.props;
+const four = items.length === 4;
 ---
 
 <section class="px-4 py-20 md:px-8" aria-label="Вавилон в цифрах">
-  <div class:list={['grid grid-cols-2 gap-x-6 gap-y-12', items.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3 lg:gap-y-16']}>
+  <div class:list={['grid-site grid-cols-2 gap-y-12 lg:grid-cols-12', !four && 'lg:gap-y-16']}>
     {items.map((f, i) => (
-      <div data-reveal style={`--i:${i % (items.length === 4 ? 4 : 3)}`}>
+      <div class={four ? 'lg:col-span-3' : 'lg:col-span-4'} data-reveal style={`--i:${i % (four ? 4 : 3)}`}>
         <p class="headline text-[2.6rem] sm:text-6xl md:text-7xl">{f.value}</p>
         <p class="label mt-3 font-semibold text-violet">{f.unit}</p>
         <p class="mt-2 text-sm leading-relaxed text-ink/65">{f.label}</p>

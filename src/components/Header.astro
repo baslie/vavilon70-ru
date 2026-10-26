@@ -27,14 +27,15 @@ const light = tone === 'light';
             {item.title}<Icon name="caretDown" class="caret size-3" />
           </button>
           <div id={`mega-${i}`} class:list={['mega absolute inset-x-0 top-full border-t px-8 pt-10 pb-12 normal-case tracking-normal', light ? 'border-paper/10 bg-ink-soft text-paper' : 'border-ink/10 bg-paper text-ink shadow-[0_24px_48px_-24px_rgb(14_14_17/0.25)]']}>
-            <div class="grid grid-cols-12 gap-8">
+            {/* Общая сетка: четыре группы по 2 колонки с 5-й, три группы по 3 колонки с 4-й (subgrid). */}
+            <div class="grid-site">
               <a href={item.href} class="group col-span-3 flex flex-col justify-between">
                 <span class="headline text-3xl xl:text-4xl">{item.title}</span>
                 <span class="label mt-8 inline-flex items-center gap-2 font-semibold">Весь раздел<Icon name="arrowUpRight" class="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></span>
               </a>
-              <div class:list={['col-span-8 col-start-5 grid gap-8', item.groups.length === 4 ? 'grid-cols-4' : 'grid-cols-3']}>
+              <div class:list={['grid grid-cols-subgrid', item.groups.length === 4 ? 'col-span-8 col-start-5' : 'col-span-9 col-start-4']}>
                 {item.groups.map((g) => (
-                  <div class:list={['border-t pt-5', light ? 'border-paper/15' : 'border-ink/15']}>
+                  <div class:list={['border-t pt-5', item.groups.length === 4 ? 'col-span-2' : 'col-span-3', light ? 'border-paper/15' : 'border-ink/15']}>
                     <p class:list={['label font-semibold', light ? 'text-lime' : 'text-violet']}>{g.title}</p>
                     <ul class="mt-4 grid gap-3 text-[0.95rem]">
                       {g.links.map((l) => <li><a href={l.href} class:list={['transition-colors hover:text-violet', light ? 'text-paper/80' : 'text-ink/80']}>{l.title}</a></li>)}
