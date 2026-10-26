@@ -1,0 +1,51 @@
+---
+// Заглушки внутренних страниц по карте сайта из src/data/nav.ts (stubs), чтобы меню не вело в 404.
+// Заголовок и вводная из ТЗ, секции под якоря меню, ниже призыв к действию и подвал.
+// Настоящая страница по тому же адресу перекрывает этот маршрут.
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import PlanVisit from '../components/sections/PlanVisit.astro';
+import Footer from '../components/Footer.astro';
+import { contacts } from '../data/content';
+import { stubs, type Stub } from '../data/nav';
+
+export function getStaticPaths() {
+  return stubs.map((stub) => ({ params: { stub: stub.path.replace(/^\/|\/$/g, '') }, props: { stub } }));
+}
+
+const { stub } = Astro.props as { stub: Stub };
+const { name, title = name, lead, sections = [] } = stub;
+---
+
+<Layout title={`${name} — Вавилон`} bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <section class="grid-site gap-y-8 px-4 pt-16 pb-20 md:px-8 lg:pt-24">
+      <div class="lg:col-span-8">
+        {title !== name && <p class="label mb-6 font-semibold text-violet">{name}</p>}
+        <h1 class="headline text-[clamp(2.25rem,5vw,5.5rem)]">{title}</h1>
+      </div>
+      <div class="flex flex-col justify-end gap-6 lg:col-span-4">
+        {lead && <p class="text-lg leading-relaxed text-ink/75">{lead}</p>}
+        {sections.length === 0 && <p class="label text-ink/50">Раздел наполняется</p>}
+      </div>
+    </section>
+
+    {sections.map((s) => (
+      <section id={s.id} class="grid-site scroll-mt-24 gap-y-4 border-t border-ink/10 px-4 py-14 md:px-8">
+        <h2 class="headline text-3xl lg:col-span-8 xl:text-4xl">{s.title}</h2>
+        {s.id === 'zayavka' ? (
+          <p class="text-lg leading-relaxed text-ink/75 lg:col-span-4">
+            Форма заявки скоро появится. Рассчитать стоимость поможет администратор: <a href={contacts.phoneHref} class="font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{contacts.phone}</a>
+          </p>
+        ) : (
+          <p class="label text-ink/50 lg:col-span-4">Раздел наполняется</p>
+        )}
+      </section>
+    ))}
+
+    <PlanVisit />
+  </main>
+  <Footer />
+</Layout>

@@ -1,7 +1,5 @@
 // Тексты прототипов. Факты и цифры только из docs/TZ.md (редакция ТЗ от 26.10.2026).
 
-export const nav = ['О центре', 'Услуги и цены', 'Праздники', 'Акции', 'Контакты'];
-
 // Подзаголовок первого экрана главной, дословно из ТЗ. hero.lead остаётся у прототипов v1–v7.
 export const homeLead = 'Активный отдых, спортивные секции, полоса препятствий Ninja-трасса и праздники под ключ.';
 
@@ -68,7 +66,7 @@ export const directions: GuideCard[] = [
   { title: 'Батутная арена', text: 'Спортивные и детские батуты, поролоновая яма и воздушная подушка.', photo: 'arena', path: '/uslugi/svobodnye-pryzhki/' },
   { title: 'Ninja-трасса', text: 'Рукоходы, кольца и балансиры. Проходите на время или командой.', photo: 'ninja', path: '/uslugi/ninja-trassa/' },
   { title: 'Мини-футбол', text: 'Крытое поле с мягким газоном для матчей и эстафет.', photo: 'football', path: '/uslugi/mini-futbol/' },
-  { title: 'Секции', text: 'Фристайл, ОФП и Ninja с тренером для детей от 4 лет и взрослых.', photo: 'coach', path: '/trenirovki/detskie-sekcii/' },
+  { title: 'Секции', text: 'Фристайл, ОФП и Ninja с тренером для детей от 4 лет и взрослых.', photo: 'coach', path: '/uslugi/detskie-sekcii/' },
   { title: 'Праздники', text: 'Дни рождения, выпускные и корпоративы с ведущими.', photo: 'party', path: '/prazdniki/' },
   { title: 'Семейное кафе', text: 'Уютные банкетные зоны, пицца, бургеры и обзор на весь зал.', path: '/kafe/' },
 ];
@@ -82,7 +80,7 @@ export const guide: { title: string; items: GuideCard[] } = {
     { title: 'Мини-футбол', tag: '#МиниФутбол', text: 'Крытый газон для динамичных матчей и детских эстафет', photo: 'football', path: '/uslugi/mini-futbol/' },
     { title: 'Квесты и анимация', tag: '#АнимацияИИгры', text: 'Авторские программы с ведущими для дней рождения и праздников', photo: 'party', path: '/prazdniki/' },
     { title: 'Семейное кафе', tag: '#КафеИОтдых', text: 'Уютные банкетные зоны, пицца, бургеры и обзор на весь зал', path: '/kafe/' },
-    { title: 'Наша команда', tag: '#НашаКоманда', text: 'Опытные инструкторы, которые всегда рядом и следят за безопасностью', photo: 'coach', path: '/trenirovki/personalnye/' },
+    { title: 'Наша команда', tag: '#НашаКоманда', text: 'Опытные инструкторы, которые всегда рядом и следят за безопасностью', photo: 'coach', path: '/uslugi/personalnye-trenirovki/' },
   ],
 };
 

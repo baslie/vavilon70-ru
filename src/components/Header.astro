@@ -21,13 +21,13 @@ const light = tone === 'light';
   <Logo class="w-28 md:w-32" caption tone={tone} />
 
   <nav class="hidden lg:block" aria-label="Основное меню">
-    <ul class:list={['label flex items-center gap-7', light ? 'text-paper/75' : 'text-ink/70']}>
+    <ul class:list={['label flex items-center gap-5 whitespace-nowrap xl:gap-7', light ? 'text-paper/75' : 'text-ink/70']}>
       {menu.map((item, i) => item.groups ? (
         <li data-dropdown>
           <button type="button" class:list={['inline-flex items-center gap-1.5 uppercase transition-colors', light ? 'hover:text-paper aria-expanded:text-lime' : 'hover:text-ink aria-expanded:text-violet']} aria-expanded="false" aria-controls={`mega-${i}`}>
             {item.title}<Icon name="caretDown" class="caret size-3" />
           </button>
-          <div id={`mega-${i}`} class:list={['mega absolute inset-x-0 top-full border-t px-8 pt-10 pb-12 normal-case tracking-normal', light ? 'border-paper/10 bg-ink-soft text-paper' : 'border-ink/10 bg-paper text-ink shadow-[0_24px_48px_-24px_rgb(14_14_17/0.25)]']}>
+          <div id={`mega-${i}`} class:list={['mega absolute inset-x-0 top-full border-t px-8 pt-10 pb-12 normal-case tracking-normal whitespace-normal', light ? 'border-paper/10 bg-ink-soft text-paper' : 'border-ink/10 bg-paper text-ink shadow-[0_24px_48px_-24px_rgb(14_14_17/0.25)]']}>
             {/* Общая сетка: четыре группы по 2 колонки с 5-й, три группы по 3 колонки с 4-й (subgrid). */}
             <div class="grid-site">
               <a href={item.href} class="group col-span-3 flex flex-col justify-between">
@@ -54,8 +54,11 @@ const light = tone === 'light';
   </nav>
 
   <div class="flex items-center gap-3">
-    {/* Телефон вместо записи: запись есть на первом экране и в мобильном меню. На телефоне — только иконка. */}
-    <a href={contacts.phoneHref} class:list={['btn-skew label inline-flex size-11 items-center gap-2 justify-center rounded-md font-semibold transition active:scale-[0.98] sm:size-auto sm:px-5 sm:py-3', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']} aria-label={`Позвонить: ${contacts.phone}`}><span><Icon name="phone" class="size-4" /><span class="hidden sm:inline">{contacts.phone}</span></span></a>
+    {/* Телефон и запись по ТЗ. До lg запись в мобильном меню, телефон на мобильном — только иконка, на lg тоже: не хватает места рядом с меню. */}
+    <a href={contacts.phoneHref} class:list={['btn-skew label inline-flex size-11 items-center gap-2 justify-center rounded-md border font-semibold transition active:scale-[0.98] sm:size-auto sm:px-5 sm:py-3 lg:size-11 lg:p-0 xl:size-auto xl:px-5 xl:py-3', light ? 'border-paper/30 text-paper hover:border-paper' : 'border-ink/20 hover:border-ink']} aria-label={`Позвонить: ${contacts.phone}`}><span><Icon name="phone" class="size-4" /><span class="hidden sm:inline lg:hidden xl:inline">{contacts.phone}</span></span></a>
+    <BookingLink class="btn-skew label hidden items-center rounded-md bg-violet px-5 py-3 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98] lg:inline-flex">
+      <span>{hero.primary}</span>
+    </BookingLink>
     <button type="button" class:list={['grid size-11 place-items-center rounded-md border lg:hidden', light ? 'border-paper/25 text-paper' : 'border-ink/20']} aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open><Icon name="list" /></button>
   </div>
 
