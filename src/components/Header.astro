@@ -1,6 +1,7 @@
 ---
 // Шапка по ТЗ: «Услуги и цены» и «Праздники» раскрываются панелью на всю ширину,
 // на мобильном — полноэкранное меню. Пункты и адреса в src/data/nav.ts.
+// Шапка липкая: всегда сверху на сплошном фоне, после первого экрана отбрасывает тень (data-scrolled).
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import BookingLink from './BookingLink.astro';
@@ -16,7 +17,7 @@ const { tone = 'dark' } = Astro.props;
 const light = tone === 'light';
 ---
 
-<header class="site-header relative z-30 flex h-22 items-center justify-between gap-6 px-4 md:px-8">
+<header class:list={['site-header sticky top-0 z-30 flex h-22 items-center justify-between gap-6 px-4 transition-shadow duration-300 md:px-8', light ? 'bg-ink' : 'bg-mist']} data-header>
   <Logo class="w-28 md:w-32" caption tone={tone} />
 
   <nav class="hidden lg:block" aria-label="Основное меню">
@@ -53,7 +54,8 @@ const light = tone === 'light';
   </nav>
 
   <div class="flex items-center gap-3">
-    <BookingLink class:list={['btn-skew label hidden rounded-md px-5 py-3 font-semibold transition active:scale-[0.98] sm:inline-flex', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']}><span>{hero.primary}</span></BookingLink>
+    {/* Телефон вместо записи: запись есть на первом экране и в мобильном меню. На телефоне — только иконка. */}
+    <a href={contacts.phoneHref} class:list={['btn-skew label inline-flex size-11 items-center gap-2 justify-center rounded-md font-semibold transition active:scale-[0.98] sm:size-auto sm:px-5 sm:py-3', light ? 'bg-paper text-ink hover:bg-violet hover:text-paper' : 'bg-ink text-paper hover:bg-violet']} aria-label={`Позвонить: ${contacts.phone}`}><span><Icon name="phone" class="size-4" /><span class="hidden sm:inline">{contacts.phone}</span></span></a>
     <button type="button" class:list={['grid size-11 place-items-center rounded-md border lg:hidden', light ? 'border-paper/25 text-paper' : 'border-ink/20']} aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu" data-menu-open><Icon name="list" /></button>
   </div>
 
@@ -114,6 +116,7 @@ const light = tone === 'light';
     transition: opacity 0.2s, translate 0.2s var(--ease-out-expo);
   }
   .caret { transition: rotate 0.2s; }
+  .site-header[data-scrolled] { box-shadow: 0 12px 32px -20px rgb(14 14 17 / 0.35); }
   [data-dropdown][data-open] .caret { rotate: 180deg; }
 
   .mobile-menu:not([hidden]) { animation: menu-in 0.25s var(--ease-out-expo); }
@@ -165,6 +168,12 @@ const light = tone === 'light';
   document.addEventListener('click', (e) => {
     if (!(e.target as Element).closest('[data-dropdown]')) closeAll();
   });
+
+  // Тень у липкой шапки, когда под ней уже идёт контент.
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const onScroll = () => header.toggleAttribute('data-scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
   // Мобильное меню на весь экран: блокирует прокрутку страницы, закрывается по Esc, крестику и ссылке.
   const panel = document.getElementById('mobile-menu')!;

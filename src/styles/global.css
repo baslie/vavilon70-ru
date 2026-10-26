@@ -51,6 +51,8 @@
   /* Вёрстка на всю ширину окна. Базовый кегль растёт на широких экранах, поэтому
      вместе с ним масштабируются текст, отступы и сетка: 16px до 1440, ~20px на 2560. */
   html {
+    /* Якоря не прячутся под липкой шапкой (h-22). */
+    scroll-padding-top: 5.5rem;
     font-size: clamp(16px, 0.36vw + 10.8px, 22px);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -91,15 +93,16 @@
     transform: skewX(12deg);
   }
 
-  /* Заголовок брендбука: широкий жирный гротеск с наклоном. */
+  /* Заголовок брендбука: широкий жирный гротеск с наклоном. Наклон — синтетический курсив (у Unbounded
+     нет италика): буквы наклонены, а строки начинаются с одной вертикали. skewX на блоке сдвигал
+     каждую следующую строку влево, заказчик просил ровную выключку по левому краю. */
   .headline {
     font-family: var(--font-display);
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.03em;
     line-height: 0.95;
-    transform: skewX(-8deg);
-    transform-origin: left bottom;
+    font-style: italic;
   }
 }
 
