@@ -8,7 +8,7 @@ import Hero from '../components/sections/Hero.astro';
 import Facts from '../components/sections/Facts.astro';
 import Safety from '../components/sections/Safety.astro';
 import Inside from '../components/sections/Inside.astro';
-import { facts } from '../data/content';
+import { approvedFacts } from '../data/content';
 ---
 
 <Layout title="Вавилон. Согласованный вариант" bodyClass="bg-mist text-ink">
@@ -16,7 +16,7 @@ import { facts } from '../data/content';
 
   <main>
     <Hero />
-    <Facts items={facts.filter((f) => f.approved)} />
+    <Facts items={approvedFacts} />
     <Safety />
     <Inside />
   </main>

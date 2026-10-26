@@ -52,3 +52,6 @@ export const directions: { title: string; text: string; photo?: PhotoKey }[] = [
   { title: 'Праздники', text: 'Дни рождения, выпускные и корпоративы с ведущими.', photo: 'party' },
   { title: 'Семейное кафе', text: 'Уютные банкетные зоны, пицца, бургеры и обзор на весь зал.' },
 ];
+
+// Прототипы v1–v7 — снимки до 26.10, в них прежние четыре цифры.
+export const approvedFacts = facts.filter((f) => f.approved);
