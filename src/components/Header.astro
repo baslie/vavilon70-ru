@@ -1,7 +1,8 @@
 ---
 // Шапка по ТЗ: «Услуги и цены» и «Праздники» раскрываются панелью на всю ширину,
 // на мобильном — полноэкранное меню. Пункты и адреса в src/data/nav.ts.
-// Шапка липкая: всегда сверху на сплошном фоне, после первого экрана отбрасывает тень (data-scrolled).
+// Шапка липкая: всегда сверху на сплошном фоне. С началом прокрутки (data-scrolled) отбрасывает тень,
+// становится ниже, а логотип уменьшается и теряет подпись.
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import BookingLink from './BookingLink.astro';
@@ -17,17 +18,17 @@ const { tone = 'dark' } = Astro.props;
 const light = tone === 'light';
 ---
 
-<header class:list={['site-header sticky top-0 z-30 flex h-22 items-center justify-between gap-6 px-4 transition-shadow duration-300 md:px-8', light ? 'bg-ink' : 'bg-mist']} data-header>
+<header class:list={['site-header sticky top-0 z-30 flex h-22 items-center justify-between gap-6 px-4 md:px-8', light ? 'bg-ink' : 'bg-mist']} data-header>
   <Logo class="w-28 md:w-32" caption tone={tone} />
 
   <nav class="hidden lg:block" aria-label="Основное меню">
     <ul class:list={['label flex items-center gap-5 whitespace-nowrap xl:gap-7', light ? 'text-paper/75' : 'text-ink/70']}>
       {menu.map((item, i) => item.groups ? (
         <li data-dropdown>
-          <button type="button" class:list={['inline-flex items-center gap-1.5 uppercase transition-colors', light ? 'hover:text-paper aria-expanded:text-lime' : 'hover:text-ink aria-expanded:text-violet']} aria-expanded="false" aria-controls={`mega-${i}`}>
+          <button type="button" class:list={['relative inline-flex items-center gap-1.5 uppercase transition-colors', light ? 'hover:text-paper aria-expanded:text-lime' : 'hover:text-ink aria-expanded:text-violet']} aria-expanded="false" aria-controls={`mega-${i}`}>
             {item.title}<Icon name="caretDown" class="caret size-3" />
           </button>
-          <div id={`mega-${i}`} class:list={['mega absolute inset-x-0 top-full border-t px-8 pt-10 pb-12 normal-case tracking-normal whitespace-normal', light ? 'border-paper/10 bg-ink-soft text-paper' : 'border-ink/10 bg-paper text-ink shadow-[0_24px_48px_-24px_rgb(14_14_17/0.25)]']}>
+          <div id={`mega-${i}`} class:list={['mega absolute inset-x-0 top-full border-y px-8 pt-10 pb-12 normal-case tracking-normal whitespace-normal', light ? 'border-paper/10 bg-ink text-paper shadow-[0_24px_48px_-24px_rgb(0_0_0/0.6)]' : 'border-ink/10 bg-mist text-ink shadow-[0_24px_48px_-24px_rgb(14_14_17/0.25)]']}>
             {/* Общая сетка: четыре группы по 2 колонки с 5-й, три группы по 3 колонки с 4-й (subgrid). */}
             <div class="grid-site">
               <a href={item.href} class="group col-span-3 flex flex-col justify-between">
@@ -119,7 +120,47 @@ const light = tone === 'light';
     transition: opacity 0.2s, translate 0.2s var(--ease-out-expo);
   }
   .caret { transition: rotate 0.2s; }
-  .site-header[data-scrolled] { box-shadow: 0 12px 32px -20px rgb(14 14 17 / 0.35); }
+  /* Панель того же цвета, что и шапка. Чтобы было видно, к какому пункту она относится, под открытым
+     пунктом на нижней кромке шапки стоит фирменный штрих: красный на светлом, лаймовый на тёмном. */
+  [data-dropdown] button::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: calc((100% - var(--header-h)) / 2);
+    height: 0.375rem;
+    width: 2.5rem;
+    background: var(--dash-color);
+    transform: translateX(-50%) skewX(-28deg);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  [data-dropdown][data-open] button::after { opacity: 1; }
+
+  /* Компактная шапка: плашка 4rem, а недостающие 1.5rem уходят в отступ снизу, чтобы в потоке
+     шапка по-прежнему занимала 5.5rem и контент под ней не дёргался. */
+  .site-header {
+    --header-h: 5.5rem;
+    --dash-color: var(--color-signal);
+    transition: height 0.3s var(--ease-out-expo), margin-bottom 0.3s var(--ease-out-expo), box-shadow 0.3s;
+  }
+  .site-header.bg-ink { --dash-color: var(--color-lime); }
+  .site-header[data-scrolled] {
+    --header-h: 4rem;
+    height: 4rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 12px 32px -20px rgb(14 14 17 / 0.35);
+  }
+  /* Знак занимает верхние 77 из 111 единиц логотипа: сдвиг вниз ставит его по центру плашки. */
+  .site-header > :global(a:first-child) {
+    transform-origin: left center;
+    transition: scale 0.3s var(--ease-out-expo), translate 0.3s var(--ease-out-expo);
+  }
+  .site-header[data-scrolled] > :global(a:first-child) {
+    scale: 0.8;
+    translate: 0 12%;
+  }
+  .site-header :global([data-logo-caption]) { transition: opacity 0.2s; }
+  .site-header[data-scrolled] :global([data-logo-caption]) { opacity: 0; }
   [data-dropdown][data-open] .caret { rotate: 180deg; }
 
   .mobile-menu:not([hidden]) { animation: menu-in 0.25s var(--ease-out-expo); }
@@ -128,7 +169,7 @@ const light = tone === 'light';
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .mega, [data-dropdown][data-open] .mega, .caret { transition: none; }
+    .mega, [data-dropdown][data-open] .mega, .caret, .site-header, .site-header > :global(a:first-child), .site-header :global([data-logo-caption]) { transition: none; }
     .mobile-menu:not([hidden]) { animation: none; }
   }
 </style>

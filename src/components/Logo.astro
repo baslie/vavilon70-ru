@@ -22,6 +22,6 @@ const h = caption ? full : mark;
     {logo.backing && <path d={logo.backing} fill="#fff" />}
     <path d={logo.ring} fill="var(--color-violet)" fill-rule="evenodd" />
     <path d={logo.letters} fill={tone === 'dark' ? '#000' : '#fff'} fill-rule="evenodd" />
-    {caption && <path d={logo.caption} fill={tone === 'dark' ? '#1B1918' : '#fff'} fill-rule="evenodd" />}
+    {caption && <path data-logo-caption d={logo.caption} fill={tone === 'dark' ? '#1B1918' : '#fff'} fill-rule="evenodd" />}
   </svg>
 </a>
