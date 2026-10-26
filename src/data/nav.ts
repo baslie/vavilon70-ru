@@ -8,7 +8,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 export const url = (path: string) => `${base}${path}`;
 
 export type NavLink = { title: string; href: string };
-export type NavGroup = { title: string; links: NavLink[] };
+/** page: группа ведёт на якоря одной страницы. В подвале (карте страниц) вместо пунктов одна ссылка на неё. */
+export type NavGroup = { title: string; links: NavLink[]; page?: NavLink };
 export type NavItem = NavLink & { groups?: NavGroup[] };
 
 export const menu: NavItem[] = [
@@ -21,7 +22,7 @@ export const menu: NavItem[] = [
         title: 'Свободные посещения',
         links: [
           { title: 'Свободные прыжки', href: url('/uslugi/svobodnye-pryzhki/') },
-          { title: 'Ниндзя-трасса', href: url('/uslugi/ninja-trassa/') },
+          { title: 'Ninja-трасса', href: url('/uslugi/ninja-trassa/') },
           { title: 'Мини-футбол', href: url('/uslugi/mini-futbol/') },
         ],
       },
@@ -52,6 +53,7 @@ export const menu: NavItem[] = [
       },
       {
         title: 'Взрослые мероприятия',
+        page: { title: 'Взрослые мероприятия', href: url('/prazdniki/vzroslye/') },
         links: [
           { title: 'День рождения 18+', href: url('/prazdniki/vzroslye/#den-rozhdeniya') },
           { title: 'Тимбилдинг и корпоративы', href: url('/prazdniki/vzroslye/#korporativy') },
@@ -60,6 +62,7 @@ export const menu: NavItem[] = [
       },
       {
         title: 'Дополнительно',
+        page: { title: 'Дополнительные услуги', href: url('/prazdniki/dopolnitelno/') },
         links: [
           { title: 'Аквагрим', href: url('/prazdniki/dopolnitelno/#akvagrim') },
           { title: 'Фотограф', href: url('/prazdniki/dopolnitelno/#fotograf') },
@@ -67,6 +70,7 @@ export const menu: NavItem[] = [
       },
       {
         title: 'Семейное кафе',
+        page: { title: 'Семейное кафе', href: url('/kafe/') },
         links: [
           { title: 'Меню', href: url('/kafe/#menu') },
           { title: 'Тематическое украшение зоны кафе', href: url('/kafe/#ukrashenie') },
