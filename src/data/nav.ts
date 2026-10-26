@@ -8,8 +8,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 export const url = (path: string) => `${base}${path}`;
 
 export type NavLink = { title: string; href: string };
-/** page: группа ведёт на якоря одной страницы. В подвале (карте страниц) вместо пунктов одна ссылка на неё. */
-export type NavGroup = { title: string; links: NavLink[]; page?: NavLink };
+/** href: у группы есть своя страница (пункты — якоря на ней). В меню заголовок группы ведёт на неё,
+    в подвале группа сворачивается в одну эту ссылку: у каждой страницы одно название и в шапке, и в подвале. */
+export type NavGroup = { title: string; links: NavLink[]; href?: string };
 export type NavItem = NavLink & { groups?: NavGroup[] };
 
 export const menu: NavItem[] = [
@@ -53,7 +54,7 @@ export const menu: NavItem[] = [
       },
       {
         title: 'Взрослые мероприятия',
-        page: { title: 'Взрослые мероприятия', href: url('/prazdniki/vzroslye/') },
+        href: url('/prazdniki/vzroslye/'),
         links: [
           { title: 'День рождения 18+', href: url('/prazdniki/vzroslye/#den-rozhdeniya') },
           { title: 'Тимбилдинг и корпоративы', href: url('/prazdniki/vzroslye/#korporativy') },
@@ -61,8 +62,8 @@ export const menu: NavItem[] = [
         ],
       },
       {
-        title: 'Дополнительно',
-        page: { title: 'Дополнительные услуги', href: url('/prazdniki/dopolnitelno/') },
+        title: 'Дополнительные услуги',
+        href: url('/prazdniki/dopolnitelno/'),
         links: [
           { title: 'Аквагрим', href: url('/prazdniki/dopolnitelno/#akvagrim') },
           { title: 'Фотограф', href: url('/prazdniki/dopolnitelno/#fotograf') },
@@ -70,7 +71,7 @@ export const menu: NavItem[] = [
       },
       {
         title: 'Семейное кафе',
-        page: { title: 'Семейное кафе', href: url('/kafe/') },
+        href: url('/kafe/'),
         links: [
           { title: 'Меню', href: url('/kafe/#menu') },
           { title: 'Тематическое украшение зоны кафе', href: url('/kafe/#ukrashenie') },

@@ -3,15 +3,15 @@
 // На общей сетке четыре колонки по 3: контакты и три колонки разделов через subgrid.
 import Logo from './Logo.astro';
 import BookingLink from './BookingLink.astro';
-import { contacts, socials } from '../data/content';
+import { contacts, hero, socials } from '../data/content';
 import { menu } from '../data/nav';
 
 // Подвал — карта страниц из того же меню, что и шапка: по ссылке на страницу. Разделы с подменю
-// раскладываются в колонки, группа с якорями одной страницы сворачивается в ссылку на неё (page).
+// раскладываются в колонки, группа со своей страницей сворачивается в ссылку на неё (href).
 // Пункты без подменю — в колонку «Комплекс», кроме «Контактов»: подвал и есть контакты.
 const columns = menu
   .filter((item) => item.groups)
-  .map((item) => ({ ...item, links: item.groups!.flatMap((g) => (g.page ? [g.page] : g.links)) }));
+  .map((item) => ({ ...item, links: item.groups!.flatMap((g) => (g.href ? [{ title: g.title, href: g.href }] : g.links)) }));
 const complex = menu.filter((item) => !item.groups && !item.href.startsWith('#'));
 const year = new Date().getFullYear();
 ---
@@ -40,7 +40,7 @@ const year = new Date().getFullYear();
         <h2 class="label font-semibold text-violet">Комплекс</h2>
         <ul class="mt-5 grid gap-3 text-ink/75">
           {complex.map((l) => <li><a href={l.href} class="transition hover:text-ink">{l.title}</a></li>)}
-          <li><BookingLink class="transition hover:text-ink">Онлайн-запись</BookingLink></li>
+          <li><BookingLink class="transition hover:text-ink">{hero.primary}</BookingLink></li>
         </ul>
       </div>
     </nav>
