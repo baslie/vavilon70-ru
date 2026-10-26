@@ -20,7 +20,7 @@ const year = new Date().getFullYear();
       <p class="mt-10 text-lg leading-relaxed">{contacts.address}<br />{contacts.place}</p>
       <a href={contacts.phoneHref} class="mt-4 inline-block font-display text-3xl font-bold transition hover:text-violet">{contacts.phone}</a>
       <ul class="label mt-8 flex gap-6 font-semibold">
-        {socials.map((s) => <li><a href={s.href} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{s.title}</a></li>)}
+        {socials.map((s) => <li><a href={s.href} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{s.title}</a></li>)}
       </ul>
     </div>
 
