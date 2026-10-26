@@ -1,0 +1,59 @@
+---
+// Первый экран из v1 «Брендбук», утверждён 21.10.2026: заголовок слева, фото по центру, справа слоган и три фото.
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import { hero, contacts, slogans } from '../../data/content';
+import { photos, alts } from '../../data/photos';
+
+const details = [
+  { photo: photos.texture, caption: 'Фирменная графика' },
+  { photo: photos.ninja, caption: 'Ninja-трасса' },
+  { photo: photos.party, caption: 'Праздники' },
+];
+---
+
+<section class="grid gap-10 px-4 pt-4 pb-12 md:px-8 lg:h-[calc(100dvh-5.5rem)] lg:min-h-[620px] lg:grid-cols-12 lg:gap-8 lg:pb-8">
+  <div class="flex flex-col justify-between gap-10 lg:col-span-4">
+    <div>
+      <h1 class="headline text-[clamp(2.75rem,4.7vw,7rem)]">
+        <span class="block">Больше</span>
+        <span class="block">чем прыжки</span>
+      </h1>
+      <p class="label mt-6 flex flex-wrap gap-x-3 text-ink/60">
+        {slogans.values.map((w, i) => <>{i > 0 && <span class="text-ink/30">/</span>}<span>{w}</span></>)}
+      </p>
+    </div>
+
+    <div class="grid gap-7">
+      <p class="max-w-[34ch] text-lg leading-relaxed text-ink/75">{hero.lead}</p>
+      <div class="flex flex-wrap items-center gap-x-7 gap-y-4">
+        <a href="#" class="label inline-flex items-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98]">
+          {hero.primary}<Icon name="arrowUpRight" class="size-4" />
+        </a>
+        <a href="#" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-signal">{hero.secondary}</a>
+      </div>
+      <p class="label flex items-start gap-3 text-ink/60"><Icon name="mapPin" class="mt-0.5 size-4 shrink-0 text-violet" /><span>{contacts.address}<br />{contacts.place}</span></p>
+    </div>
+  </div>
+
+  <figure class="relative lg:col-span-5 lg:min-h-0">
+    <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[4/5] w-full rounded-md object-cover lg:aspect-auto lg:h-full" />
+  </figure>
+
+  <aside class="flex flex-col gap-8 lg:col-span-3 lg:min-h-0" aria-label="Детали">
+    <div class="flex items-start justify-between">
+      <p class="label text-[0.95rem] leading-snug font-semibold tracking-[0.28em]">
+        {slogans.motto.map((w) => <span class="block">{w}</span>)}
+      </p>
+      <Icon name="arrowUpRight" class="size-14 -mt-1" />
+    </div>
+    <ul class="hidden min-h-0 flex-1 flex-col gap-4 lg:flex">
+      {details.map((d) => (
+        <li class="flex min-h-0 flex-1 flex-col">
+          <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 rounded-md object-cover" />
+          <p class="label mt-2 text-[0.65rem] text-ink/60">{d.caption}</p>
+        </li>
+      ))}
+    </ul>
+  </aside>
+</section>
