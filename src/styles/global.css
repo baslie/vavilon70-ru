@@ -28,6 +28,12 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Скос .headline выносит угол блока на всю ширину за край экрана. overflow-x: clip на body
+     передаётся вьюпорту как hidden, и страницу всё равно можно сдвинуть; на main он режет честно. */
+  main {
+    overflow-x: clip;
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-violet);
     outline-offset: 3px;
