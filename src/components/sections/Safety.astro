@@ -34,7 +34,7 @@ const long = title.length > 20;
     <ol class="grid gap-x-gutter gap-y-12 sm:grid-cols-2 lg:col-span-6 lg:grid-cols-subgrid">
       {items.map((s, i) => (
         <li class:list={['border-t pt-6 lg:col-span-3', dark ? 'border-paper/20' : 'border-ink/15']} data-reveal style={`--i:${i}`}>
-          <span class="mb-5 block h-1 w-6 bg-signal" aria-hidden="true"></span>
+          <span class="dash mb-5 block bg-signal" aria-hidden="true"></span>
           <h3 class="font-display text-lg font-bold uppercase">{s.title}</h3>
           <p class:list={['mt-3 leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>
         </li>
