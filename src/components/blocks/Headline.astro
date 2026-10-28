@@ -1,7 +1,8 @@
 ---
 // Заголовок из данных (docs/BRAND.md, «Заголовки: ключ и контекст»). Короткий — целиком плакатом
 // .headline. Длинный делится по словарю src/data/headlines.ts: ключ плакатом, контекст до и после
-// него строчными и серым на своих строках. Заголовок остаётся одним элементом с цельным текстом.
+// него строчными и цветом акцента поля (tone: сиреневый на светлом, лайм на тёмном) на своих строках.
+// Заголовок остаётся одним элементом с цельным текстом.
 // Кегль подбирается по ключу: контекст мельче и в колонку влезает сам. Пробел между ключом и контекстом
 // после него — в sr-only: видимый типограф сделал бы неразрывным, и строка контекста начиналась бы с отступа.
 import { fitHeadline, splitHeadline } from '../../lib/headline';
@@ -13,20 +14,23 @@ interface Props {
   size: string;
   /** Ширина колонки в колонках сетки от lg. */
   span?: number;
+  /** Поле под заголовком: по нему цвет контекста. */
+  tone?: 'light' | 'dark';
   class?: string;
   [attr: string]: unknown;
 }
 
-const { text, as: Tag = 'h2', size, span = 12, class: cls, ...attrs } = Astro.props;
+const { text, as: Tag = 'h2', size, span = 12, tone = 'light', class: cls, ...attrs } = Astro.props;
 const split = splitHeadline(text);
+const context = ['headline-context', tone === 'dark' ? 'text-lime' : 'text-violet'];
 ---
 
 <Tag class:list={['headline headline-fit', cls]} style={fitHeadline(split?.key ?? text, size, span)} {...attrs}>
   {split ? (
     <>
-      {split.before && <span class="headline-context">{split.before} </span>}
+      {split.before && <span class:list={context}>{split.before} </span>}
       <span class="block">{split.key}{split.after && <span class="sr-only"> </span>}</span>
-      {split.after && <span class="headline-context">{split.after}</span>}
+      {split.after && <span class:list={context}>{split.after}</span>}
     </>
   ) : text}
 </Tag>

@@ -1,10 +1,11 @@
 ---
-// Услуга или секция по ТЗ на сетке 5 + воздух + 6, как блок безопасности. Слева плашки, заголовок,
-// «для кого», возраст и формат, расписание, справа цены и кнопка. Преимущества, «что входит» и фото
-// встают в ту колонку, где их не хватает: обе колонки должны закончиться на одной линии
-// (docs/BRAND.md, «Баланс блока»). Фото тянется на высоту ряда, последний блок короткой колонки
-// прижат к низу. На странице одной услуги заголовок, плашки и вводная уже в первом экране:
-// title заменяет заголовок, showIntro={false} убирает плашки и вводную.
+// Услуга или секция по ТЗ на сетке 5 + воздух + 6, как блок безопасности. Слева плашки, заголовок
+// и факты («для кого», возраст, формат, расписание) сеткой по два в ряд, справа цены и сразу под ними
+// кнопка. Преимущества, «что входит» и фото встают в ту колонку, где их не хватает: обе колонки должны
+// закончиться на одной линии (docs/BRAND.md, «Баланс блока»). Эластичны фото и карточки цен: в более
+// короткой колонке они тянутся до низа соседней, кнопка встаёт на линию её низа. Иначе последний блок
+// короткой колонки прижат к низу. На странице одной услуги заголовок, плашки и вводная уже в первом
+// экране: title заменяет заголовок, showIntro={false} убирает плашки и вводную.
 import Headline from './Headline.astro';
 import { Image } from 'astro:assets';
 import Badge from './Badge.astro';
@@ -29,54 +30,72 @@ const muted = dark ? 'text-paper/70' : 'text-ink/70';
 const accent = dark ? 'text-lime' : 'text-violet';
 const dash = dark ? 'bg-lime' : 'bg-signal';
 
+// Факты ячейками: вводная, строки meta, расписание. Пустое значение — серым.
+type Line = { prefix?: string; text: string; empty?: boolean };
+const facts: { label: string; lines: Line[] }[] = [
+  ...(showIntro && offer.intro ? [{ label: offer.intro.label, lines: [{ text: offer.intro.text }] }] : []),
+  ...(offer.meta ?? []).map((m) => ({ label: m.label, lines: [{ text: m.value ?? 'Уточняется', empty: !m.value }] })),
+  ...(offer.schedule
+    ? [{
+        label: 'Расписание',
+        lines: [
+          { text: offer.schedule.days ?? 'Дни уточняются — скоро в расписании', empty: !offer.schedule.days },
+          ...offer.schedule.slots.map((s) => ({ prefix: `${s.label}: `, text: formatTime(s.time), empty: !s.time })),
+        ],
+      }]
+    : []),
+];
+
 // Грубая высота блоков в пикселях на 1440: строки текста по длине, плюс подписи и отступы.
 // Точность не нужна, нужно понять, в какой колонке не хватает содержимого.
-type Key = 'head' | 'intro' | 'meta' | 'points' | 'includes' | 'photo' | 'deal';
+type Key = 'head' | 'facts' | 'points' | 'includes' | 'photo' | 'deal';
 const lines = (text: string | null | undefined, perLine: number) => Math.max(1, Math.ceil((text ?? '').length / perLine));
 const gap = 48;
+// Ячейка факта в полколонки: около 30 знаков в строке. Ряд — по высокой ячейке.
+const fact = (f: (typeof facts)[number]) => 34 + f.lines.reduce((h, l) => h + lines((l.prefix ?? '') + l.text, facts.length > 1 ? 30 : 60) * 26, 0);
+const factRows = Array.from({ length: Math.ceil(facts.length / 2) }, (_, i) => Math.max(...facts.slice(i * 2, i * 2 + 2).map(fact)));
 const height: Partial<Record<Key, number>> = {
-  head: (showIntro && offer.badges.length ? 64 : 0) + lines(title, 12) * 50 + (offer.subtitle ? 44 : 0),
-  intro: showIntro && offer.intro ? 34 + lines(offer.intro.text, 55) * 29 : undefined,
-  meta: offer.meta || offer.schedule
-    ? (offer.meta ?? []).reduce((h, m) => h + 58 + lines(m.value ?? 'Уточняется', 60) * 26, 0) + (offer.schedule ? 58 + (1 + offer.schedule.slots.length) * 26 : 0)
-    : undefined,
+  head: (showIntro && offer.badges.length ? 52 : 0) + lines(title, 12) * 50 + (offer.subtitle ? 44 : 0),
+  facts: facts.length ? factRows.reduce((h, r) => h + r, 0) + (factRows.length - 1) * 24 : undefined,
   points: offer.points ? 54 + offer.points.items.reduce((h, p) => h + 54 + lines(p.title, 40) * 28 + lines(p.text, 75) * 26 + 24, 0) : undefined,
   includes: offer.includes ? 54 + offer.includes.items.reduce((h, item) => h + lines(item, 60) * 28 + 16, 0) : undefined,
   photo: photo ? 288 : undefined,
-  deal: (offer.soon ? 72 + gap : 0) + 52,
+  deal: (offer.soon ? 72 + 32 : 0) + 52,
 };
 // Цены карточками (PriceTable): рядов карточек 1–2, высота ряда — по самой высокой карточке.
-// В узкой карточке (по три в ряд) цены «Будни / Выходные» встают столбиком.
+// Цены «Будни / Выходные» считаем столбиком: так их ставят узкая карточка и растянутая.
 if (offer.prices) {
   const t = offer.prices;
   const two = (t.columns?.length ?? 0) > 1;
   const byColumn = two && t.rows.length === 1;
   const n = byColumn ? 2 : t.rows.length;
-  const narrow = n === 3 || n >= 5;
   const card = (r: (typeof t.rows)[number]) => {
-    const price = (two && !byColumn ? 22 : 0) + 36 + (r.old || r.oldWeekend ? 24 : 0);
-    return 48 + 28 + (r.note && !byColumn ? 26 : 0) + 24 + (two && !byColumn && narrow ? price * 2 + 16 : price);
+    const price = (two && !byColumn ? 22 : 0) + 36;
+    return 48 + 28 + (r.note && !byColumn ? 26 : 0) + 24 + (two && !byColumn ? price * 2 + 16 : price);
   };
   const rows = n <= 3 ? 1 : 2;
-  height.deal = height.deal! + (t.caption || byColumn ? 32 : 0) + rows * Math.max(...t.rows.map(card)) + (rows - 1) * 12 + gap;
+  height.deal = height.deal! + (t.caption || byColumn ? 32 : 0) + rows * Math.max(...t.rows.map(card)) + (rows - 1) * 12 + 32;
 }
 const has = (k: Key) => height[k] !== undefined;
 const sum = (keys: Key[]) => keys.reduce((h, k) => h + (height[k] ?? 0), 0) + Math.max(0, keys.length - 1) * gap;
 
 // Перебираем, куда поставить переносные блоки (их не больше трёх), и берём раскладку, где колонки
-// ближе по высоте. Фото тянется, поэтому в короткой колонке оно разницу съедает целиком.
+// ближе по высоте. Фото тянется, поэтому в короткой колонке оно разницу съедает целиком. Карточки цен
+// тоже тянутся, но слишком высокие пустеют: растяжение считаем с малым весом.
 // При равенстве — привычный порядок: списки справа, фото слева.
 const movable = (['points', 'includes', 'photo'] as Key[]).filter(has);
 let best = { left: [] as Key[], right: [] as Key[], score: Infinity };
 for (let mask = 0; mask < 1 << movable.length; mask++) {
   const toLeft = movable.filter((_, i) => mask & (1 << i));
   const toRight = movable.filter((k) => !toLeft.includes(k));
-  const left = (['head', 'intro', 'meta'] as Key[]).filter(has).concat(toLeft);
+  const left = (['head', 'facts'] as Key[]).filter(has).concat(toLeft);
   const right = toRight.includes('photo') ? ['photo' as Key, ...toRight.filter((k) => k !== 'photo'), 'deal' as Key] : [...toRight, 'deal' as Key];
   const [l, r] = [sum(left), sum(right)];
-  const elastic = (toLeft.includes('photo') && l <= r) || (toRight.includes('photo') && r <= l);
+  const diff = Math.abs(l - r);
+  const photoElastic = (toLeft.includes('photo') && l <= r) || (toRight.includes('photo') && r <= l);
+  const pricesElastic = !!offer.prices && !toRight.includes('photo') && r <= l;
   const habit = (toLeft.includes('points') ? 1 : 0) + (toLeft.includes('includes') ? 1 : 0) + (toRight.includes('photo') ? 1 : 0);
-  const score = (elastic ? 0 : Math.abs(l - r)) + Math.max(l, r) * 0.05 + habit * 10;
+  const score = (photoElastic ? 0 : pricesElastic ? diff * 0.2 : diff) + Math.max(l, r) * 0.05 + habit * 10;
   if (score < best.score) best = { left, right, score };
 }
 const columns = [best.left, best.right];
@@ -93,38 +112,25 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
           case 'head':
             return (
               <div class:list={[anchor]}>
-                {showIntro && offer.badges.length > 0 && <div class="mb-8 flex flex-wrap gap-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
-                <Headline text={title} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
+                {showIntro && offer.badges.length > 0 && <div class="mb-6 flex flex-wrap gap-x-6 gap-y-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
+                <Headline text={title} tone={tone} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
                 {offer.subtitle && <p class:list={['label mt-5 font-semibold', accent]} data-reveal>{offer.subtitle}</p>}
               </div>
             );
-          case 'intro':
+          // Факты в ряд по два: «Для кого» рядом с возрастом, а не столбиком под ним.
+          case 'facts':
             return (
-              <div class:list={[anchor]} data-reveal>
-                <p class:list={['label font-semibold', accent]}>{offer.intro!.label}</p>
-                <p class:list={['mt-3 max-w-[60ch] text-lg leading-relaxed', dark ? 'text-paper/85' : 'text-ink/85']}>{offer.intro!.text}</p>
-              </div>
-            );
-          case 'meta':
-            return (
-              <dl class:list={['grid gap-6', anchor]} data-reveal>
-                {offer.meta?.map((m) => (
+              <dl class:list={['grid gap-x-gutter gap-y-6', facts.length > 1 && 'sm:grid-cols-2', anchor]} data-reveal>
+                {facts.map((f) => (
                   <div>
-                    <dt class:list={['label font-semibold', accent]}>{m.label}</dt>
-                    <dd class:list={['mt-2 leading-relaxed', m.value ? '' : muted]}>{m.value ?? 'Уточняется'}</dd>
-                  </div>
-                ))}
-                {offer.schedule && (
-                  <div>
-                    <dt class:list={['label font-semibold', accent]}>Расписание</dt>
+                    <dt class:list={['label font-semibold', accent]}>{f.label}</dt>
                     <dd class="mt-2 leading-relaxed">
-                      <span class:list={[!offer.schedule.days && muted]}>{offer.schedule.days ?? 'Дни уточняются — скоро в расписании'}</span>
-                      {offer.schedule.slots.map((s) => (
-                        <span class="block">{s.label}: <span class:list={[!s.time && muted]}>{formatTime(s.time)}</span></span>
+                      {f.lines.map((l) => (
+                        <span class="block">{l.prefix}<span class:list={[l.empty && muted]}>{l.text}</span></span>
                       ))}
                     </dd>
                   </div>
-                )}
+                ))}
               </dl>
             );
           case 'points':
@@ -161,20 +167,23 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
                 <Image src={photos[offer.photo]} alt={alts[offer.photo]} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 45vw, 100vw" class="absolute inset-0 size-full object-cover" />
               </div>
             );
-          // Если в колонке одни цены: таблица сверху, напротив заголовка, кнопка внизу, на линии низа соседней колонки.
-          case 'deal':
+          // Цены и кнопка одной группой, без разрыва. В колонке без фото карточки тянутся до низа
+          // соседней колонки, иначе группа прижата к низу.
+          case 'deal': {
+            const stretch = !!offer.prices && !col.includes('photo');
             return (
-              <div class:list={['flex flex-col gap-10 lg:gap-12', col.length > 1 ? 'lg:mt-auto' : 'lg:flex-1']}>
-                {offer.prices && <div data-reveal><PriceTable table={offer.prices} tone={tone} /></div>}
+              <div class:list={['flex flex-col gap-8', stretch ? 'lg:flex-1' : col.length > 1 && 'lg:mt-auto']}>
+                {offer.prices && <div class="lg:flex lg:flex-1 lg:flex-col" data-reveal><PriceTable table={offer.prices} tone={tone} stretch={stretch} /></div>}
                 {offer.soon && (
                   <p class:list={['font-display text-2xl leading-snug font-bold uppercase', accent]} data-reveal>{offer.soon}</p>
                 )}
-                <div class:list={['flex flex-wrap items-center gap-x-7 gap-y-4', col.length === 1 && 'lg:mt-auto']} data-reveal>
+                <div class="flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal>
                   <Button href={offer.cta.href} icon="lightning">{offer.cta.label}</Button>
                   <slot />
                 </div>
               </div>
             );
+          }
         }
       })}
     </div>

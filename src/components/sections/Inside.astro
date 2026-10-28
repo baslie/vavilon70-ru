@@ -27,7 +27,7 @@ const long = title.length > 20;
 
 <section class:list={['bg-ink px-4 pb-24 text-paper md:px-8', flush ? 'pt-8' : 'pt-24']}>
   {long ? (
-    <Headline text={title} size="clamp(1.9rem,4vw,3.75rem)" span={8} class="leading-[1.02]" data-reveal />
+    <Headline text={title} tone="dark" size="clamp(1.9rem,4vw,3.75rem)" span={8} class="leading-[1.02]" data-reveal />
   ) : (
     <div class="flex items-end gap-6">
       <h2 class="headline text-4xl md:text-6xl" data-reveal>{title}</h2>

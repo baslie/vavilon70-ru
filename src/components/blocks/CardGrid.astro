@@ -28,7 +28,7 @@ const sizes = { 3: '25vw', 4: '33vw', 6: '50vw' };
 ---
 
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <Headline text={title} size="clamp(1.9rem,3.6vw,3.75rem)" class="leading-[1.02]" data-reveal />
+  <Headline text={title} tone={tone} size="clamp(1.9rem,3.6vw,3.75rem)" class="leading-[1.02]" data-reveal />
   <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-2">
     {items.map((c, i) => (
       <li class={spanClass[span(i)]} data-reveal style={`--i:${i % 3}`}>

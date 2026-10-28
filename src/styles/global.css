@@ -93,8 +93,8 @@
     transform: skewX(12deg);
   }
 
-  /* Контекст длинного заголовка (Headline.astro): строчными, полужирным, вдвое мельче ключа
-     и цветом текста на 60 %. Отдельного цвета нет: на светлом поле серый ink, на тёмном — paper. */
+  /* Контекст длинного заголовка (Headline.astro): строчными, полужирным, вдвое мельче ключа.
+     Цвет — акцент поля, его ставит Headline: сиреневый на светлом, лайм на тёмном. */
   .headline-context {
     display: block;
     max-width: 28ch;
@@ -104,7 +104,6 @@
     letter-spacing: -0.01em;
     line-height: 1.15;
     text-transform: none;
-    color: color-mix(in oklab, currentColor 60%, transparent);
     &:first-child {
       margin-bottom: 0.5em;
     }

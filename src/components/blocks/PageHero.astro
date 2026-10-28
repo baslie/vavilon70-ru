@@ -40,7 +40,7 @@ const size = poster > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : poster <= 14 ? 'clamp(2
     </nav>
     <div class="grid gap-8">
       <Headline as="h1" text={title} size={size} span={6} class={poster > 40 ? 'max-w-[24ch] leading-[1.02]' : 'max-w-[18ch]'} />
-      {badges.length > 0 && <div class="flex flex-wrap gap-2">{badges.map((b) => <Badge>{b}</Badge>)}</div>}
+      {badges.length > 0 && <div class="flex flex-wrap gap-x-6 gap-y-2">{badges.map((b) => <Badge>{b}</Badge>)}</div>}
       {lead && <p class="max-w-[60ch] text-lg leading-relaxed text-ink/75">{lead}</p>}
       {Astro.slots.has('default') && <div class="flex flex-wrap items-center gap-x-7 gap-y-4"><slot /></div>}
     </div>

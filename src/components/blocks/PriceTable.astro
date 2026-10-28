@@ -3,19 +3,23 @@
 // не разъезжаются по краям, каждая цена стоит рядом со своей подписью.
 // Строк несколько — карточка на строку («1 час», «2 часа»), внутри цены «Будни / Выходные» группой
 // слева. Строка одна, а колонок две (комплексный билет) — карточка на колонку, название строки уходит
-// в подпись над карточками. Зачёркнутая старая цена под новой, пояснение под названием.
+// в подпись над карточками. Зачёркнутая старая цена в строку с новой, чтобы цены соседних карточек
+// стояли на одной линии; пояснение под названием.
 // Пустая цена (null) — «Уточняется» или своя подпись (table.empty).
 // Ряды полные (docs/BRAND.md, «Баланс блока»): 2 и 4 карточки — по две в ряд, 3 и 6 — по три,
-// 5 — три и две пошире.
+// 5 — три и две пошире. stretch: от lg карточки тянутся на высоту родителя (эластичные цены в Offer),
+// название остаётся сверху, цены уходят вниз и встают столбиком, крупнее: в соседних карточках они
+// на одной линии, сколько бы места ни было по ширине.
 import { formatPrice, type Price } from '../../lib/format';
 import type { PriceTable } from '../../data/services';
 
 interface Props {
   table: PriceTable;
   tone?: 'light' | 'dark';
+  stretch?: boolean;
 }
 
-const { table, tone = 'light' } = Astro.props;
+const { table, tone = 'light', stretch = false } = Astro.props;
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/60' : 'text-ink/60';
 const two = (table.columns?.length ?? 0) > 1;
@@ -37,26 +41,27 @@ const cards: Card[] = byColumn
     }));
 const caption = byColumn ? [table.caption, row.label].filter(Boolean).join(' · ') : table.caption;
 const n = cards.length;
-const span = (i: number) => (n === 1 ? 'sm:col-span-6' : n === 3 || n === 6 || (n === 5 && i < 3) ? 'sm:col-span-2' : 'sm:col-span-3');
+const narrow = (i: number) => n === 3 || n === 6 || (n === 5 && i < 3);
+const span = (i: number) => (n === 1 ? 'sm:col-span-6' : narrow(i) ? 'sm:col-span-2' : 'sm:col-span-3');
 ---
 
-<div>
+<div class:list={[stretch && 'lg:flex lg:flex-1 lg:flex-col']}>
   {caption && <p class:list={['label mb-4 font-semibold', dark ? 'text-lime' : 'text-violet']}>{caption}</p>}
   {byColumn && row.note && <p class:list={['-mt-2 mb-4 text-sm', muted]}>{row.note}</p>}
-  <ul class="grid gap-3 sm:grid-cols-6">
+  <ul class:list={['grid gap-3 sm:grid-cols-6', stretch && 'lg:flex-1 lg:auto-rows-fr']}>
     {cards.map((c, i) => (
-      <li class:list={['flex flex-col gap-6 rounded-md p-5 md:p-6', span(i), dark ? 'bg-ink-soft' : 'bg-paper']}>
+      <li class:list={['flex flex-col justify-between gap-6 rounded-md p-5 md:p-6', span(i), dark ? 'bg-ink-soft' : 'bg-paper']}>
         <div>
-          <p class="font-display text-lg leading-tight font-bold uppercase md:text-xl">{c.title}</p>
+          <p class:list={['font-display text-lg leading-tight font-bold uppercase', narrow(i) ? 'hyphens-auto break-words' : 'md:text-xl']}>{c.title}</p>
           {c.note && <p class:list={['mt-1.5 text-sm leading-snug', muted]}>{c.note}</p>}
         </div>
-        <dl class="flex flex-wrap gap-x-10 gap-y-4">
+        <dl class:list={['flex flex-wrap gap-x-10 gap-y-4', stretch && 'lg:flex-col lg:gap-y-5']}>
           {c.prices.map((p) => (
             <div>
               <dt class:list={p.label ? ['label mb-1.5 font-semibold', muted] : 'sr-only'}>{p.label ?? 'Цена'}</dt>
-              <dd class="whitespace-nowrap">
-                <span class:list={p.price === null ? ['text-sm font-semibold', muted] : 'font-display text-2xl font-bold md:text-3xl'}>{formatPrice(p.price, table.empty)}</span>
-                {p.old && <span class:list={['mt-1 block text-sm', muted]}><span class="sr-only">вместо </span><s>{formatPrice(p.old)}</s></span>}
+              <dd class="flex flex-wrap items-baseline gap-x-2.5">
+                <span class:list={['whitespace-nowrap', p.price === null ? ['text-sm font-semibold', muted] : ['font-display text-2xl font-bold md:text-3xl', stretch && !narrow(i) && 'lg:text-4xl']]}>{formatPrice(p.price, table.empty)}</span>
+                {p.old && <span class:list={['text-sm whitespace-nowrap', muted]}><span class="sr-only">вместо </span><s>{formatPrice(p.old)}</s></span>}
               </dd>
             </div>
           ))}

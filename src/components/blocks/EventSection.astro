@@ -20,7 +20,7 @@ const muted = dark ? 'text-paper/70' : 'text-ink/70';
 <section id={event.id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <div class="lg:col-span-5">
     <p class:list={['label font-semibold', dark ? 'text-lime' : 'text-violet']} data-reveal>{event.title}</p>
-    <Headline text={event.tagline} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="mt-6 leading-[1.02]" data-reveal />
+    <Headline text={event.tagline} tone={tone} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="mt-6 leading-[1.02]" data-reveal />
     <p class:list={['mt-6 max-w-[52ch] text-lg leading-relaxed', muted]} data-reveal>{event.text}</p>
   </div>
   {event.points && (

@@ -28,7 +28,7 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
 <section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <div class="flex flex-col gap-10 lg:col-span-5">
     <div>
-      <Headline text={form.title} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
+      <Headline text={form.title} tone={tone} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
       <p class:list={['mt-6 max-w-[48ch] text-lg leading-relaxed', muted]} data-reveal>{form.text}</p>
     </div>
     <div class="lg:mt-auto" data-reveal>

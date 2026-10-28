@@ -1,11 +1,13 @@
 ---
-// Плашка из ТЗ: «Популярный выбор», «18+», «1,5 часа». Наклейка со скосом, как у кнопок: сплошная
-// заливка без рамки, на светлом поле сиреневая, на тёмном лаймовая (docs/BRAND.md, «Акценты»).
+// Плашка из ТЗ: «Популярный выбор», «18+», «1,5 часа». Фирменный штрих и подпись капсом без заливки:
+// заливка со скосом путалась с кнопкой. На светлом поле штрих красный, текст сиреневый, на тёмном
+// оба лаймовые (docs/BRAND.md, «Акценты»).
 interface Props {
   tone?: 'light' | 'dark';
 }
 
 const { tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
 ---
 
-<span class:list={['btn-skew label ml-1 inline-flex items-center rounded-sm px-3 py-1.5 font-bold', tone === 'dark' ? 'bg-lime text-ink' : 'bg-violet text-paper']}><span><slot /></span></span>
+<span class:list={['label inline-flex items-center gap-3 font-semibold', dark ? 'text-lime' : 'text-violet']}><span class:list={['dash block w-5 shrink-0', dark ? 'bg-lime' : 'bg-signal']} aria-hidden="true"></span><slot /></span>

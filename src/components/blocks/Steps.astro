@@ -23,7 +23,7 @@ const span = (i: number) => (n === 4 || (n === 5 && i > 2) ? 'lg:col-span-3' : '
 
 <section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <div class="flex flex-col gap-8 lg:col-span-4">
-    <Headline text={title} size="clamp(1.9rem,3.6vw,3.75rem)" span={4} class="leading-[1.02]" data-reveal />
+    <Headline text={title} tone={tone} size="clamp(1.9rem,3.6vw,3.75rem)" span={4} class="leading-[1.02]" data-reveal />
     {lead && <p class:list={['max-w-[60ch] text-lg leading-relaxed lg:mt-auto', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
   </div>
   <ol class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-8 lg:grid-cols-6">
