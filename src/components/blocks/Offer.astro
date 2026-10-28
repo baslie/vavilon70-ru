@@ -43,8 +43,23 @@ const height: Partial<Record<Key, number>> = {
   points: offer.points ? 54 + offer.points.items.reduce((h, p) => h + 54 + lines(p.title, 40) * 28 + lines(p.text, 75) * 26 + 24, 0) : undefined,
   includes: offer.includes ? 54 + offer.includes.items.reduce((h, item) => h + lines(item, 60) * 28 + 16, 0) : undefined,
   photo: photo ? 288 : undefined,
-  deal: (offer.prices ? (offer.prices.columns ? 36 : 0) + (offer.prices.caption ? 32 : 0) + offer.prices.rows.reduce((h, r) => h + (r.note || r.old ? 96 : 74), 0) + gap : 0) + (offer.soon ? 72 + gap : 0) + 52,
+  deal: (offer.soon ? 72 + gap : 0) + 52,
 };
+// Цены карточками (PriceTable): рядов карточек 1–2, высота ряда — по самой высокой карточке.
+// В узкой карточке (по три в ряд) цены «Будни / Выходные» встают столбиком.
+if (offer.prices) {
+  const t = offer.prices;
+  const two = (t.columns?.length ?? 0) > 1;
+  const byColumn = two && t.rows.length === 1;
+  const n = byColumn ? 2 : t.rows.length;
+  const narrow = n === 3 || n >= 5;
+  const card = (r: (typeof t.rows)[number]) => {
+    const price = (two && !byColumn ? 22 : 0) + 36 + (r.old || r.oldWeekend ? 24 : 0);
+    return 48 + 28 + (r.note && !byColumn ? 26 : 0) + 24 + (two && !byColumn && narrow ? price * 2 + 16 : price);
+  };
+  const rows = n <= 3 ? 1 : 2;
+  height.deal = height.deal! + (t.caption || byColumn ? 32 : 0) + rows * Math.max(...t.rows.map(card)) + (rows - 1) * 12 + gap;
+}
 const has = (k: Key) => height[k] !== undefined;
 const sum = (keys: Key[]) => keys.reduce((h, k) => h + (height[k] ?? 0), 0) + Math.max(0, keys.length - 1) * gap;
 

@@ -1,7 +1,12 @@
 ---
-// Таблица цен из ТЗ: одна колонка или «Будни / Выходные», зачёркнутая старая цена, пояснение
-// под строкой. Пустая цена (null) — подпись «Уточняется» или своя (table.empty).
-// Столбцы цен сжаты по содержимому: лишнюю ширину забирает название, цены держатся группой справа.
+// Цены из ТЗ карточками тарифов, а не таблицей на всю колонку: на широком экране название и цена
+// не разъезжаются по краям, каждая цена стоит рядом со своей подписью.
+// Строк несколько — карточка на строку («1 час», «2 часа»), внутри цены «Будни / Выходные» группой
+// слева. Строка одна, а колонок две (комплексный билет) — карточка на колонку, название строки уходит
+// в подпись над карточками. Зачёркнутая старая цена под новой, пояснение под названием.
+// Пустая цена (null) — «Уточняется» или своя подпись (table.empty).
+// Ряды полные (docs/BRAND.md, «Баланс блока»): 2 и 4 карточки — по две в ряд, 3 и 6 — по три,
+// 5 — три и две пошире.
 import { formatPrice, type Price } from '../../lib/format';
 import type { PriceTable } from '../../data/services';
 
@@ -13,36 +18,50 @@ interface Props {
 const { table, tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/60' : 'text-ink/60';
-const cells = (r: PriceTable['rows'][number]): [Price, number | undefined][] =>
-  table.columns && table.columns.length > 1 ? [[r.price, r.old], [r.weekend ?? null, r.oldWeekend]] : [[r.price, r.old]];
+const two = (table.columns?.length ?? 0) > 1;
+
+type Card = { title: string; note?: string; prices: { label?: string; price: Price; old?: number }[] };
+const byColumn = two && table.rows.length === 1;
+const row = table.rows[0];
+const cards: Card[] = byColumn
+  ? [
+      { title: table.columns![0], prices: [{ price: row.price, old: row.old }] },
+      { title: table.columns![1], prices: [{ price: row.weekend ?? null, old: row.oldWeekend }] },
+    ]
+  : table.rows.map((r) => ({
+      title: r.label,
+      note: r.note,
+      prices: two
+        ? [{ label: table.columns![0], price: r.price, old: r.old }, { label: table.columns![1], price: r.weekend ?? null, old: r.oldWeekend }]
+        : [{ price: r.price, old: r.old }],
+    }));
+const caption = byColumn ? [table.caption, row.label].filter(Boolean).join(' · ') : table.caption;
+const n = cards.length;
+const span = (i: number) => (n === 1 ? 'sm:col-span-6' : n === 3 || n === 6 || (n === 5 && i < 3) ? 'sm:col-span-2' : 'sm:col-span-3');
 ---
 
 <div>
-  {table.caption && <p class:list={['label mb-4 font-semibold', dark ? 'text-lime' : 'text-violet']}>{table.caption}</p>}
-  <table class="w-full border-collapse text-left">
-    {table.columns && (
-      <thead>
-        <tr>
-          <th scope="col" class="sr-only">Формат</th>
-          {table.columns.map((c) => <th scope="col" class:list={['label pb-3 pl-4 text-right align-bottom font-semibold lg:w-px lg:whitespace-nowrap xl:pl-8', muted]}>{c}</th>)}
-        </tr>
-      </thead>
-    )}
-    <tbody>
-      {table.rows.map((r) => (
-        <tr class:list={['border-t', dark ? 'border-paper/15' : 'border-ink/15']}>
-          <th scope="row" class="py-5 pr-4 text-left align-top font-normal">
-            <span class="font-display text-base font-bold uppercase md:text-lg">{r.label}</span>
-            {r.note && <span class:list={['mt-1 block text-sm', muted]}>{r.note}</span>}
-          </th>
-          {cells(r).map(([price, old]) => (
-            <td class="py-5 pl-4 text-right align-top whitespace-nowrap lg:w-px xl:pl-8">
-              <span class:list={price === null ? ['text-sm font-semibold', muted] : 'font-display text-xl font-bold md:text-2xl'}>{formatPrice(price, table.empty)}</span>
-              {old && <span class:list={['mt-1 block text-sm', muted]}><span class="sr-only">вместо </span><s>{formatPrice(old)}</s></span>}
-            </td>
+  {caption && <p class:list={['label mb-4 font-semibold', dark ? 'text-lime' : 'text-violet']}>{caption}</p>}
+  {byColumn && row.note && <p class:list={['-mt-2 mb-4 text-sm', muted]}>{row.note}</p>}
+  <ul class="grid gap-3 sm:grid-cols-6">
+    {cards.map((c, i) => (
+      <li class:list={['flex flex-col gap-6 rounded-md p-5 md:p-6', span(i), dark ? 'bg-ink-soft' : 'bg-paper']}>
+        <div>
+          <p class="font-display text-lg leading-tight font-bold uppercase md:text-xl">{c.title}</p>
+          {c.note && <p class:list={['mt-1.5 text-sm leading-snug', muted]}>{c.note}</p>}
+        </div>
+        <dl class="flex flex-wrap gap-x-10 gap-y-4">
+          {c.prices.map((p) => (
+            <div>
+              <dt class:list={p.label ? ['label mb-1.5 font-semibold', muted] : 'sr-only'}>{p.label ?? 'Цена'}</dt>
+              <dd class="whitespace-nowrap">
+                <span class:list={p.price === null ? ['text-sm font-semibold', muted] : 'font-display text-2xl font-bold md:text-3xl'}>{formatPrice(p.price, table.empty)}</span>
+                {p.old && <span class:list={['mt-1 block text-sm', muted]}><span class="sr-only">вместо </span><s>{formatPrice(p.old)}</s></span>}
+              </dd>
+            </div>
           ))}
-        </tr>
-      ))}
-    </tbody>
-  </table>
+        </dl>
+      </li>
+    ))}
+  </ul>
 </div>
