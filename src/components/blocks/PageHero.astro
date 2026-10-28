@@ -1,9 +1,9 @@
 ---
-// Первый экран внутренней страницы: светлое поле, как у главной. Слева путь по разделам, H1,
-// плашки, вводная и кнопки (слот), справа фото. Сетка 8 + 4, как вводная манифеста.
-// H1, плашки, вводная и кнопки — одна группа у низа фото: заголовок не отрывается от своего текста,
-// свободное место остаётся под путём по разделам. Чем короче заголовок, тем крупнее кегль,
-// чтобы масса группы не зависела от длины (docs/BRAND.md, «Баланс блока»).
+// Первый экран внутренней страницы: светлое поле на высоту окна, как у главной. Экран поделён
+// пополам: слева путь по разделам, H1, плашки, вводная и кнопки (слот), справа фото во всю высоту.
+// H1, плашки, вводная и кнопки — одна группа ровно по центру высоты фото: путь по разделам вынесен
+// из потока и стоит у верхнего края. Чем короче заголовок, тем крупнее кегль, чтобы масса группы
+// не зависела от длины (docs/BRAND.md, «Баланс блока»).
 import { splitHeadline } from '../../lib/headline';
 import Headline from './Headline.astro';
 import { Image } from 'astro:assets';
@@ -28,9 +28,9 @@ const poster = (splitHeadline(title)?.key ?? title).length;
 const size = poster > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : poster <= 14 ? 'clamp(2.5rem,7.2vw,8.5rem)' : 'clamp(2.25rem,5.2vw,6rem)';
 ---
 
-<section class="grid-site gap-y-10 px-4 pt-10 pb-16 md:px-8 lg:pt-16 lg:pb-24">
-  <div class="flex flex-col gap-8 lg:col-span-8">
-    <nav aria-label="Разделы">
+<section class="grid-site gap-y-10 px-4 pt-6 pb-16 md:px-8 lg:min-h-[max(620px,calc(100dvh-5.5rem))] lg:pt-4 lg:pb-8">
+  <div class="relative flex flex-col gap-8 lg:col-span-6 lg:justify-center lg:py-14">
+    <nav aria-label="Разделы" class="lg:absolute lg:inset-x-0 lg:top-0">
       <ol class="label flex flex-wrap gap-x-3 text-ink/55">
         <li><a href={url('/')} class="transition hover:text-violet">Главная</a></li>
         {crumbs.map((c) => (
@@ -38,12 +38,14 @@ const size = poster > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : poster <= 14 ? 'clamp(2
         ))}
       </ol>
     </nav>
-    <div class="grid gap-8 lg:mt-auto">
-      <Headline as="h1" text={title} size={size} span={8} class={poster > 40 ? 'max-w-[24ch] leading-[1.02]' : 'max-w-[18ch]'} />
+    <div class="grid gap-8">
+      <Headline as="h1" text={title} size={size} span={6} class={poster > 40 ? 'max-w-[24ch] leading-[1.02]' : 'max-w-[18ch]'} />
       {badges.length > 0 && <div class="flex flex-wrap gap-2">{badges.map((b) => <Badge>{b}</Badge>)}</div>}
       {lead && <p class="max-w-[60ch] text-lg leading-relaxed text-ink/75">{lead}</p>}
       {Astro.slots.has('default') && <div class="flex flex-wrap items-center gap-x-7 gap-y-4"><slot /></div>}
     </div>
   </div>
-  <Image src={photos[photo]} alt={alts[photo]} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 33vw, 100vw" loading="eager" fetchpriority="high" class="aspect-[4/3] w-full rounded-md object-cover lg:col-span-4 lg:aspect-[4/5]" />
+  <div class="relative aspect-[4/3] overflow-hidden rounded-md lg:col-span-6 lg:aspect-auto">
+    <Image src={photos[photo]} alt={alts[photo]} widths={[480, 800, 1200, 1600]} sizes="(min-width: 1024px) 50vw, 100vw" loading="eager" fetchpriority="high" class="absolute inset-0 size-full object-cover" />
+  </div>
 </section>
