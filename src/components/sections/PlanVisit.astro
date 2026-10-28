@@ -14,12 +14,12 @@ import { photos, alts } from '../../data/photos';
   <div class="flex flex-col justify-center lg:col-span-6">
     <Headline text={planVisit.title} tone="dark" size="clamp(2rem,5vw,5.5rem)" span={6} data-reveal />
     <p class="mt-8 max-w-[54ch] text-lg leading-relaxed text-paper/70" data-reveal style="--i:1">{planVisit.text}</p>
-    {/* Кнопки столбиком одной ширины, по самой широкой: разной длины друг под другом давали рваный край. */}
-    <div class="mt-10 grid gap-3 sm:w-max" data-reveal style="--i:2">
-      <BookingLink class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md bg-violet px-4 py-4 font-semibold tracking-[0.12em] text-center sm:tracking-[0.22em] text-paper transition hover:bg-violet-deep active:scale-[0.98] sm:px-6">
+    {/* Кнопки в ряд; где ряд не помещается в колонку 6 из 12 (lg до xl) и на телефоне — столбиком одной ширины. */}
+    <div class="mt-10 grid gap-3 sm:w-max sm:grid-cols-[auto_auto] lg:grid-cols-1 xl:grid-cols-[auto_auto]" data-reveal style="--i:2">
+      <BookingLink class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md bg-violet px-4 py-4 font-semibold tracking-[0.12em] text-center sm:tracking-[0.16em] text-paper transition hover:bg-violet-deep active:scale-[0.98] sm:px-6">
         <span><Icon name="lightning" class="size-4" />{planVisit.book}</span>
       </BookingLink>
-      <a href={partyRequest} class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md border border-paper/30 px-4 py-4 tracking-[0.12em] text-center sm:tracking-[0.22em] sm:px-6 font-semibold transition hover:border-paper hover:bg-paper hover:text-ink active:scale-[0.98]">
+      <a href={partyRequest} class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md border border-paper/30 px-4 py-4 tracking-[0.12em] text-center sm:tracking-[0.16em] sm:px-6 font-semibold transition hover:border-paper hover:bg-paper hover:text-ink active:scale-[0.98]">
         <span><Icon name="confetti" class="size-4" />{planVisit.party}</span>
       </a>
     </div>
