@@ -10,6 +10,8 @@
 // 5 — три и две пошире. stretch: от lg карточки тянутся на высоту родителя (эластичные цены в Offer),
 // название остаётся сверху, цены уходят вниз и встают столбиком, крупнее: в соседних карточках они
 // на одной линии, сколько бы места ни было по ширине.
+// stack: две карточки друг под другом на всю ширину, цены внизу в строку. Так их ставит Offer, когда
+// растянутые рядом карточки вышли бы пустыми колоннами.
 import { formatPrice, type Price } from '../../lib/format';
 import type { PriceTable } from '../../data/services';
 
@@ -17,9 +19,10 @@ interface Props {
   table: PriceTable;
   tone?: 'light' | 'dark';
   stretch?: boolean;
+  stack?: boolean;
 }
 
-const { table, tone = 'light', stretch = false } = Astro.props;
+const { table, tone = 'light', stretch = false, stack = false } = Astro.props;
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/60' : 'text-ink/60';
 const two = (table.columns?.length ?? 0) > 1;
@@ -42,11 +45,11 @@ const cards: Card[] = byColumn
 const caption = byColumn ? [table.caption, row.label].filter(Boolean).join(' · ') : table.caption;
 const n = cards.length;
 const narrow = (i: number) => n === 3 || n === 6 || (n === 5 && i < 3);
-const span = (i: number) => (n === 1 ? 'sm:col-span-6' : narrow(i) ? 'sm:col-span-2' : 'sm:col-span-3');
+const span = (i: number) => (n === 1 || stack ? 'sm:col-span-6' : narrow(i) ? 'sm:col-span-2' : 'sm:col-span-3');
 ---
 
 <div class:list={[stretch && 'lg:flex lg:flex-1 lg:flex-col']}>
-  {caption && <p class:list={['label mb-4 font-semibold', dark ? 'text-lime' : 'text-violet']}>{caption}</p>}
+  {caption && <p class:list={['label mb-4 font-semibold', dark ? 'text-paper/55' : 'text-ink/55']}>{caption}</p>}
   {byColumn && row.note && <p class:list={['-mt-2 mb-4 text-sm', muted]}>{row.note}</p>}
   <ul class:list={['grid gap-3 sm:grid-cols-6', stretch && 'lg:flex-1 lg:auto-rows-fr']}>
     {cards.map((c, i) => (
@@ -55,7 +58,7 @@ const span = (i: number) => (n === 1 ? 'sm:col-span-6' : narrow(i) ? 'sm:col-spa
           <p class:list={['font-display text-lg leading-tight font-bold uppercase', narrow(i) ? 'hyphens-auto break-words' : 'md:text-xl']}>{c.title}</p>
           {c.note && <p class:list={['mt-1.5 text-sm leading-snug', muted]}>{c.note}</p>}
         </div>
-        <dl class:list={['flex flex-wrap gap-x-10 gap-y-4', stretch && 'lg:flex-col lg:gap-y-5']}>
+        <dl class:list={['flex flex-wrap gap-x-10 gap-y-4', stretch && !stack && 'lg:flex-col lg:gap-y-5']}>
           {c.prices.map((p) => (
             <div>
               <dt class:list={p.label ? ['label mb-1.5 font-semibold', muted] : 'sr-only'}>{p.label ?? 'Цена'}</dt>

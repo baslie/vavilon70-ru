@@ -6,6 +6,9 @@
 // короткой колонке они тянутся до низа соседней, кнопка встаёт на линию её низа. Иначе последний блок
 // короткой колонки прижат к низу. На странице одной услуги заголовок, плашки и вводная уже в первом
 // экране: title заменяет заголовок, showIntro={false} убирает плашки и вводную.
+// Иерархия подписей (docs/BRAND.md, «Иерархия подписей»): акцентный капс только у плашки над заголовком,
+// подзаголовок набран как контекст заголовка, факты, «что входит» и преимущества — карточками на подложке
+// с подписью цветом текста.
 import Headline from './Headline.astro';
 import { Image } from 'astro:assets';
 import Badge from './Badge.astro';
@@ -29,6 +32,9 @@ const dark = tone === 'dark';
 const muted = dark ? 'text-paper/70' : 'text-ink/70';
 const accent = dark ? 'text-lime' : 'text-violet';
 const dash = dark ? 'bg-lime' : 'bg-signal';
+// Подложка как у карточек цен (PriceTable), подпись поля — цветом текста, акцент остаётся у штрихов.
+const card = ['rounded-md p-5 md:p-6', dark ? 'bg-ink-soft' : 'bg-paper'];
+const field = ['label font-semibold', dark ? 'text-paper/55' : 'text-ink/55'];
 
 // Факты ячейками: вводная, строки meta, расписание. Пустое значение — серым.
 type Line = { prefix?: string; text: string; empty?: boolean };
@@ -45,20 +51,34 @@ const facts: { label: string; lines: Line[] }[] = [
       }]
     : []),
 ];
+// Ширина ячейки в ряду по объёму текста, из 12 долей: длинная вводная рядом с коротким возрастом — 7 + 5,
+// а не две равные, где одна вытянута в столбик, а другая пустая. Ячейка без пары — на весь ряд.
+const size = (f: (typeof facts)[number]) => f.lines.reduce((n, l) => n + (l.prefix ?? '').length + l.text.length, 0);
+const spans = facts.map((f, i) => {
+  const pair = facts[i % 2 ? i - 1 : i + 1];
+  if (!pair) return 12;
+  const ratio = size(f) / size(pair);
+  return ratio > 2 ? 7 : ratio < 0.5 ? 5 : 6;
+});
+const spanClass: Record<number, string> = { 5: 'sm:col-span-5', 6: 'sm:col-span-6', 7: 'sm:col-span-7', 12: 'sm:col-span-12' };
 
 // Грубая высота блоков в пикселях на 1440: строки текста по длине, плюс подписи и отступы.
 // Точность не нужна, нужно понять, в какой колонке не хватает содержимого.
 type Key = 'head' | 'facts' | 'points' | 'includes' | 'photo' | 'deal';
 const lines = (text: string | null | undefined, perLine: number) => Math.max(1, Math.ceil((text ?? '').length / perLine));
 const gap = 48;
-// Ячейка факта в полколонки: около 30 знаков в строке. Ряд — по высокой ячейке.
-const fact = (f: (typeof facts)[number]) => 34 + f.lines.reduce((h, l) => h + lines((l.prefix ?? '') + l.text, facts.length > 1 ? 30 : 60) * 26, 0);
-const factRows = Array.from({ length: Math.ceil(facts.length / 2) }, (_, i) => Math.max(...facts.slice(i * 2, i * 2 + 2).map(fact)));
+// Внутренние отступы карточки сверху и снизу.
+const pad = 48;
+// Знаков в строке ячейки за вычетом отступов: в полколонки около 21 (неразрывные пробелы типографа
+// переносят раньше). Ряд — по высокой ячейке.
+const perLine: Record<number, number> = { 5: 17, 6: 21, 7: 25, 12: 48 };
+const fact = (i: number) => pad + 34 + facts[i].lines.reduce((h, l) => h + lines((l.prefix ?? '') + l.text, perLine[spans[i]]) * 26, 0);
+const factRows = Array.from({ length: Math.ceil(facts.length / 2) }, (_, r) => Math.max(...[r * 2, r * 2 + 1].filter((i) => i < facts.length).map(fact)));
 const height: Partial<Record<Key, number>> = {
-  head: (showIntro && offer.badges.length ? 52 : 0) + lines(title, 12) * 50 + (offer.subtitle ? 44 : 0),
-  facts: facts.length ? factRows.reduce((h, r) => h + r, 0) + (factRows.length - 1) * 24 : undefined,
-  points: offer.points ? 54 + offer.points.items.reduce((h, p) => h + 54 + lines(p.title, 40) * 28 + lines(p.text, 75) * 26 + 24, 0) : undefined,
-  includes: offer.includes ? 54 + offer.includes.items.reduce((h, item) => h + lines(item, 60) * 28 + 16, 0) : undefined,
+  head: (showIntro && offer.badges.length ? 52 : 0) + lines(title, 12) * 50 + (offer.subtitle ? 48 : 0),
+  facts: facts.length ? factRows.reduce((h, r) => h + r, 0) + (factRows.length - 1) * 12 : undefined,
+  points: offer.points ? pad + 54 + offer.points.items.reduce((h, p) => h + 54 + lines(p.title, 36) * 28 + lines(p.text, 68) * 26 + 24, 0) : undefined,
+  includes: offer.includes ? pad + 54 + offer.includes.items.reduce((h, item) => h + lines(item, 54) * 28 + 16, 0) : undefined,
   photo: photo ? 288 : undefined,
   deal: (offer.soon ? 72 + 32 : 0) + 52,
 };
@@ -81,7 +101,7 @@ const sum = (keys: Key[]) => keys.reduce((h, k) => h + (height[k] ?? 0), 0) + Ma
 
 // Перебираем, куда поставить переносные блоки (их не больше трёх), и берём раскладку, где колонки
 // ближе по высоте. Фото тянется, поэтому в короткой колонке оно разницу съедает целиком. Карточки цен
-// тоже тянутся, но слишком высокие пустеют: растяжение считаем с малым весом.
+// тоже тянутся, но слишком высокие пустеют: первые 80 px растяжения считаем с малым весом, остальное — как дыру.
 // При равенстве — привычный порядок: списки справа, фото слева.
 const movable = (['points', 'includes', 'photo'] as Key[]).filter(has);
 let best = { left: [] as Key[], right: [] as Key[], score: Infinity };
@@ -95,10 +115,16 @@ for (let mask = 0; mask < 1 << movable.length; mask++) {
   const photoElastic = (toLeft.includes('photo') && l <= r) || (toRight.includes('photo') && r <= l);
   const pricesElastic = !!offer.prices && !toRight.includes('photo') && r <= l;
   const habit = (toLeft.includes('points') ? 1 : 0) + (toLeft.includes('includes') ? 1 : 0) + (toRight.includes('photo') ? 1 : 0);
-  const score = (photoElastic ? 0 : pricesElastic ? diff * 0.2 : diff) + Math.max(l, r) * 0.05 + habit * 10;
+  const stretchCost = Math.min(diff, 80) * 0.2 + Math.max(0, diff - 80);
+  const score = (photoElastic ? 0 : pricesElastic ? stretchCost : diff) + Math.max(l, r) * 0.05 + habit * 10;
   if (score < best.score) best = { left, right, score };
 }
 const columns = [best.left, best.right];
+// Цены — весь правый столбец, а левый выше больше чем на 120 px: две карточки рядом вытянулись бы
+// пустыми колоннами. Тогда они встают друг под другом на всю ширину, растяжение делится на две.
+const t = offer.prices;
+const priceCards = !t ? 0 : (t.columns?.length ?? 0) > 1 && t.rows.length === 1 ? 2 : t.rows.length;
+const stack = priceCards === 2 && !best.right.includes('photo') && sum(best.left) - sum(best.right) > 120;
 // Последний блок колонки без фото прижимаем к низу: углы блока заняты, воздух уходит в середину.
 const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col.length - 1] && col.length > 1;
 ---
@@ -114,16 +140,17 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
               <div class:list={[anchor]}>
                 {showIntro && offer.badges.length > 0 && <div class="mb-6 flex flex-wrap gap-x-6 gap-y-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
                 <Headline text={title} tone={tone} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
-                {offer.subtitle && <p class:list={['label mt-5 font-semibold', accent]} data-reveal>{offer.subtitle}</p>}
+                {/* Подзаголовок — продолжение заголовка, набран как его контекст (.headline-context). */}
+                {offer.subtitle && <p class:list={['mt-4 max-w-[28ch] font-display text-[clamp(1.125rem,1.6vw,1.6rem)] leading-[1.15] font-medium tracking-[-0.01em] italic', accent]} data-reveal>{offer.subtitle}</p>}
               </div>
             );
-          // Факты в ряд по два: «Для кого» рядом с возрастом, а не столбиком под ним.
+          // Факты в ряд по два: «Для кого» рядом с возрастом, а не столбиком под ним. Ячейки ряда одной высоты.
           case 'facts':
             return (
-              <dl class:list={['grid gap-x-gutter gap-y-6', facts.length > 1 && 'sm:grid-cols-2', anchor]} data-reveal>
-                {facts.map((f) => (
-                  <div>
-                    <dt class:list={['label font-semibold', accent]}>{f.label}</dt>
+              <dl class:list={['grid gap-3 sm:grid-cols-12', anchor]} data-reveal>
+                {facts.map((f, i) => (
+                  <div class:list={[card, spanClass[spans[i]]]}>
+                    <dt class:list={field}>{f.label}</dt>
                     <dd class="mt-2 leading-relaxed">
                       {f.lines.map((l) => (
                         <span class="block">{l.prefix}<span class:list={[l.empty && muted]}>{l.text}</span></span>
@@ -135,9 +162,9 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
             );
           case 'points':
             return (
-              <div class:list={[anchor]} data-reveal>
-                <h3 class:list={['label font-semibold', accent]}>{offer.points!.title}</h3>
-                <ul class="mt-6 grid max-w-[60ch] gap-6">
+              <div class:list={[card, anchor]} data-reveal>
+                <h3 class:list={field}>{offer.points!.title}</h3>
+                <ul class="mt-5 grid max-w-[60ch] gap-6">
                   {offer.points!.items.map((p) => (
                     <li>
                       <span class:list={['dash mb-4 block', dash]} aria-hidden="true"></span>
@@ -150,9 +177,9 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
             );
           case 'includes':
             return (
-              <div class:list={[anchor]} data-reveal>
-                <h3 class:list={['label font-semibold', accent]}>{offer.includes!.title}</h3>
-                <ul class="mt-6 grid max-w-[60ch] gap-4">
+              <div class:list={[card, anchor]} data-reveal>
+                <h3 class:list={field}>{offer.includes!.title}</h3>
+                <ul class="mt-5 grid max-w-[60ch] gap-4">
                   {offer.includes!.items.map((item) => (
                     <li class="flex gap-4 text-lg leading-snug">
                       <span class:list={['dash mt-2.5 block w-5 shrink-0', dash]} aria-hidden="true"></span>{item}
@@ -173,7 +200,7 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
             const stretch = !!offer.prices && !col.includes('photo');
             return (
               <div class:list={['flex flex-col gap-8', stretch ? 'lg:flex-1' : col.length > 1 && 'lg:mt-auto']}>
-                {offer.prices && <div class="lg:flex lg:flex-1 lg:flex-col" data-reveal><PriceTable table={offer.prices} tone={tone} stretch={stretch} /></div>}
+                {offer.prices && <div class="lg:flex lg:flex-1 lg:flex-col" data-reveal><PriceTable table={offer.prices} tone={tone} stretch={stretch} stack={stack} /></div>}
                 {offer.soon && (
                   <p class:list={['font-display text-2xl leading-snug font-bold uppercase', accent]} data-reveal>{offer.soon}</p>
                 )}
