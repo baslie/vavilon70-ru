@@ -4,7 +4,8 @@
 // H1, плашки, вводная и кнопки — одна группа у низа фото: заголовок не отрывается от своего текста,
 // свободное место остаётся под путём по разделам. Чем короче заголовок, тем крупнее кегль,
 // чтобы масса группы не зависела от длины (docs/BRAND.md, «Баланс блока»).
-import { fitHeadline } from '../../lib/headline';
+import { splitHeadline } from '../../lib/headline';
+import Headline from './Headline.astro';
 import { Image } from 'astro:assets';
 import Badge from './Badge.astro';
 import { photos, alts } from '../../data/photos';
@@ -21,9 +22,10 @@ interface Props {
 }
 
 const { title, crumbs = [], lead, badges = [], photo } = Astro.props;
-// Длинные заголовки из ТЗ («Яркий выпускной и окончание учебного года…») — кеглем меньше,
-// короткие («Праздники», «Услуги и цены») — плакатом.
-const size = title.length > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : title.length <= 14 ? 'clamp(2.5rem,7.2vw,8.5rem)' : 'clamp(2.25rem,5.2vw,6rem)';
+// Кегль по длине плакатной части: у длинного заголовка из ТЗ («Яркий выпускной и окончание учебного
+// года…») это ключ, остальное — контекст строчными (Headline.astro). Короткие («Праздники») — крупнее.
+const poster = (splitHeadline(title)?.key ?? title).length;
+const size = poster > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : poster <= 14 ? 'clamp(2.5rem,7.2vw,8.5rem)' : 'clamp(2.25rem,5.2vw,6rem)';
 ---
 
 <section class="grid-site gap-y-10 px-4 pt-10 pb-16 md:px-8 lg:pt-16 lg:pb-24">
@@ -37,7 +39,7 @@ const size = title.length > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : title.length <= 1
       </ol>
     </nav>
     <div class="grid gap-8 lg:mt-auto">
-      <h1 class:list={['headline headline-fit', title.length > 40 ? 'max-w-[24ch] leading-[1.02]' : 'max-w-[18ch]']} style={fitHeadline(title, size, 8)}>{title}</h1>
+      <Headline as="h1" text={title} size={size} span={8} class={poster > 40 ? 'max-w-[24ch] leading-[1.02]' : 'max-w-[18ch]'} />
       {badges.length > 0 && <div class="flex flex-wrap gap-2">{badges.map((b) => <Badge>{b}</Badge>)}</div>}
       {lead && <p class="max-w-[60ch] text-lg leading-relaxed text-ink/75">{lead}</p>}
       {Astro.slots.has('default') && <div class="flex flex-wrap items-center gap-x-7 gap-y-4"><slot /></div>}

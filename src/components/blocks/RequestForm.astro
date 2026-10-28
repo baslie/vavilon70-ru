@@ -3,7 +3,7 @@
 // поэтому крупный телефон — якорь внизу левой колонки, на линии кнопки отправки.
 // Пока formEndpoint пустой (открытый вопрос #22), отправка не уходит: показываем телефон
 // администратора. Когда адрес появится, форма шлёт FormData POST-запросом.
-import { fitHeadline } from '../../lib/headline';
+import Headline from './Headline.astro';
 import Button from './Button.astro';
 import Icon from '../Icon.astro';
 import { contacts } from '../../data/content';
@@ -28,7 +28,7 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
 <section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <div class="flex flex-col gap-10 lg:col-span-5">
     <div>
-      <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(form.title, 'clamp(1.9rem,3.2vw,3.5rem)', 5)} data-reveal>{form.title}</h2>
+      <Headline text={form.title} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
       <p class:list={['mt-6 max-w-[48ch] text-lg leading-relaxed', muted]} data-reveal>{form.text}</p>
     </div>
     <div class="lg:mt-auto" data-reveal>

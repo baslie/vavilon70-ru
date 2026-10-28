@@ -3,7 +3,7 @@
 // подпись и «от N ₽». Ниже lg — две в ряд. От lg раскладку выбирает число карточек, чтобы в сетке
 // не оставалось пустых ячеек: 2 — по 6 колонок, 4 — по 3, остальные по 4, а лишние до кратного трём
 // добираются широкими карточками сверху (5 = 6 + 6 и 4 + 4 + 4) или четвёркой снизу (7 = 4 × 3 и 3 × 4).
-import { fitHeadline } from '../../lib/headline';
+import Headline from './Headline.astro';
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import { photos, alts } from '../../data/photos';
@@ -28,7 +28,7 @@ const sizes = { 3: '25vw', 4: '33vw', 6: '50vw' };
 ---
 
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.6vw,3.75rem)')} data-reveal>{title}</h2>
+  <Headline text={title} size="clamp(1.9rem,3.6vw,3.75rem)" class="leading-[1.02]" data-reveal />
   <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-2">
     {items.map((c, i) => (
       <li class={spanClass[span(i)]} data-reveal style={`--i:${i % 3}`}>

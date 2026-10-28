@@ -93,6 +93,40 @@
     transform: skewX(12deg);
   }
 
+  /* Контекст длинного заголовка (Headline.astro): строчными, полужирным, вдвое мельче ключа
+     и цветом текста на 60 %. Отдельного цвета нет: на светлом поле серый ink, на тёмном — paper. */
+  .headline-context {
+    display: block;
+    max-width: 28ch;
+    font-size: max(1.125rem, 0.46em);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    text-transform: none;
+    color: color-mix(in oklab, currentColor 60%, transparent);
+    &:first-child {
+      margin-bottom: 0.5em;
+    }
+    &:last-child {
+      margin-top: 0.5em;
+    }
+  }
+
+  /* Заголовок пункта списка: обычный регистр, полужирный Unbounded. Капс остаётся у коротких
+     ярлыков (названия карточек, имена, строки цен): в две-три строки он читается тяжело. */
+  .subhead {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    text-wrap: pretty;
+    @media (width >= 48rem) {
+      font-size: 1.25rem;
+    }
+  }
+
   /* Заголовок из данных (src/lib/headline.ts): кегль --size, но не крупнее, чем нужно, чтобы
      самое длинное слово (--n букв с запасом) влезло в колонку: вся ширина до lg, --span колонок от lg. */
   .headline-fit {
@@ -116,6 +150,7 @@
     letter-spacing: -0.03em;
     line-height: 0.95;
     font-style: italic;
+    text-wrap: balance;
   }
 }
 

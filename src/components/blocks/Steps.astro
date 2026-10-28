@@ -2,7 +2,7 @@
 // Нумерованные шаги: подготовка к визиту (3), первая тренировка (5), предзаказ банкета (4).
 // Три шага — по 4 колонки, четыре — по 3, пять — первые три по 4 и два по 6.
 // Заголовок на 8 колонок, вводная — справа на 4, по низу заголовка, как в философии.
-import { fitHeadline } from '../../lib/headline';
+import Headline from './Headline.astro';
 import DownloadLink from './DownloadLink.astro';
 import type { Step } from '../../data/services';
 
@@ -20,13 +20,13 @@ const span = (i: number) => (items.length === 4 ? 'lg:col-span-3' : items.length
 ---
 
 <section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <h2 class="headline headline-fit leading-[1.02] lg:col-span-8" style={fitHeadline(title, 'clamp(1.9rem,3.6vw,3.75rem)', 8)} data-reveal>{title}</h2>
+  <Headline text={title} size="clamp(1.9rem,3.6vw,3.75rem)" span={8} class="leading-[1.02] lg:col-span-8" data-reveal />
   {lead && <p class:list={['max-w-[60ch] text-lg leading-relaxed lg:col-span-4 lg:self-end', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
   <ol class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-12 lg:grid-cols-subgrid">
     {items.map((s, i) => (
       <li class={span(i)} data-reveal style={`--i:${i % 4}`}>
         <span class:list={['font-display text-5xl font-extrabold italic', dark ? 'text-lime' : 'text-violet']} aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-        <h3 class="mt-5 font-display text-lg font-bold uppercase">{s.title}</h3>
+        <h3 class="subhead mt-5">{s.title}</h3>
         <p class:list={['mt-3 max-w-[48ch] leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>
         {s.download && <p class="mt-5"><DownloadLink href={s.download.href} tone={tone}>{s.download.label}</DownloadLink></p>}
       </li>

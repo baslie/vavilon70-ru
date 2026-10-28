@@ -7,6 +7,7 @@
 // Сетка: слева 5 колонок, 6-я — воздух, справа 6 колонок через subgrid, пункты по 3 —
 // на тех же вертикалях, что третья и четвёртая колонки четырёхколоночной раскладки.
 import { Image } from 'astro:assets';
+import Headline from '../blocks/Headline.astro';
 import { safetyHome, safetyLead } from '../../data/content';
 import { photos, alts } from '../../data/photos';
 
@@ -18,16 +19,20 @@ interface Props {
 
 const { title = safetyHome.title, items = safetyHome.items, tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
-// Короткий заголовок прототипа — плакатным кеглем в две строки, длинный из ТЗ — мельче:
-// кегль от ширины колонки, чтобы «Профессиональный» (около 15em с наклоном) не вылезал за неё.
+// Короткий заголовок прототипа — плакатным кеглем в две строки, длинный из ТЗ — ключом и контекстом
+// (Headline.astro): «Профессиональный подход к» строчными, «безопасности каждого гостя» плакатом.
 const long = title.length > 20;
 ---
 
 <section class:list={['grid-site gap-y-12 px-4 py-24 md:px-8', dark && 'bg-ink text-paper']}>
   <div class="flex flex-col gap-10 lg:col-span-5">
-    <h2 class:list={['headline', long ? 'text-[clamp(1.375rem,5.8vw,2.25rem)] leading-[1.05] lg:text-[2.3vw]' : 'text-[2.6rem] sm:text-5xl md:text-6xl']} data-reveal>
-      {long ? title : <>{title.slice(0, title.indexOf(' '))}<br />{title.slice(title.indexOf(' ') + 1)}</>}
-    </h2>
+    {long ? (
+      <Headline text={title} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
+    ) : (
+      <h2 class="headline text-[2.6rem] sm:text-5xl md:text-6xl" data-reveal>
+        {title.slice(0, title.indexOf(' '))}<br />{title.slice(title.indexOf(' ') + 1)}
+      </h2>
+    )}
     <div class="relative aspect-[4/3] overflow-hidden rounded-md lg:aspect-auto lg:min-h-72 lg:flex-1" data-reveal>
       <Image src={photos.coach} alt={alts.coach} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" class="absolute inset-0 size-full object-cover" />
     </div>
@@ -38,7 +43,7 @@ const long = title.length > 20;
       {items.map((s, i) => (
         <li class="lg:col-span-3" data-reveal style={`--i:${i}`}>
           <span class:list={['dash mb-5 block', dark ? 'bg-lime' : 'bg-signal']} aria-hidden="true"></span>
-          <h3 class="font-display text-lg font-bold uppercase">{s.title}</h3>
+          <h3 class="subhead">{s.title}</h3>
           <p class:list={['mt-3 leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>
         </li>
       ))}

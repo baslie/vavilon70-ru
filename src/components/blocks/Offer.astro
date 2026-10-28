@@ -5,7 +5,7 @@
 // (docs/BRAND.md, «Баланс блока»). Фото тянется на высоту ряда, последний блок короткой колонки
 // прижат к низу. На странице одной услуги заголовок, плашки и вводная уже в первом экране:
 // title заменяет заголовок, showIntro={false} убирает плашки и вводную.
-import { fitHeadline } from '../../lib/headline';
+import Headline from './Headline.astro';
 import { Image } from 'astro:assets';
 import Badge from './Badge.astro';
 import Button from './Button.astro';
@@ -79,7 +79,7 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
             return (
               <div class:list={[anchor]}>
                 {showIntro && offer.badges.length > 0 && <div class="mb-8 flex flex-wrap gap-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
-                <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.2vw,3.5rem)', 5)} data-reveal>{title}</h2>
+                <Headline text={title} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
                 {offer.subtitle && <p class:list={['label mt-5 font-semibold', accent]} data-reveal>{offer.subtitle}</p>}
               </div>
             );
@@ -120,7 +120,7 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
                   {offer.points!.items.map((p) => (
                     <li>
                       <span class:list={['dash mb-4 block', dash]} aria-hidden="true"></span>
-                      <p class="font-display text-base font-bold uppercase md:text-lg">{p.title}</p>
+                      <p class="subhead">{p.title}</p>
                       <p class:list={['mt-2 leading-relaxed', muted]}>{p.text}</p>
                     </li>
                   ))}
