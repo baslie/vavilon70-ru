@@ -1,5 +1,6 @@
 ---
-// Плашка из ТЗ: «Популярный выбор», «18+», «1,5 часа». Цвет по фону (docs/BRAND.md, «Акценты»).
+// Плашка из ТЗ: «Популярный выбор», «18+», «1,5 часа». Наклейка со скосом, как у кнопок: сплошная
+// заливка без рамки, на светлом поле сиреневая, на тёмном лаймовая (docs/BRAND.md, «Акценты»).
 interface Props {
   tone?: 'light' | 'dark';
 }
@@ -7,4 +8,4 @@ interface Props {
 const { tone = 'light' } = Astro.props;
 ---
 
-<span class:list={['label inline-flex items-center rounded-md border px-3 py-1.5 font-semibold', tone === 'dark' ? 'border-lime/40 text-lime' : 'border-violet/30 bg-violet/5 text-violet']}><slot /></span>
+<span class:list={['btn-skew label ml-1 inline-flex items-center rounded-sm px-3 py-1.5 font-bold', tone === 'dark' ? 'bg-lime text-ink' : 'bg-violet text-paper']}><span><slot /></span></span>
