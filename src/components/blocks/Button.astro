@@ -1,0 +1,33 @@
+---
+// Кнопка-параллелограмм сайта (.btn-skew). Без href — онлайн-запись через BookingLink,
+// с href — обычная ссылка, submit — кнопка отправки формы.
+import type { ComponentProps } from 'astro/types';
+import BookingLink from '../BookingLink.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  href?: string;
+  submit?: boolean;
+  variant?: 'primary' | 'outline';
+  /** Фон под кнопкой: для контурной кнопки. */
+  tone?: 'light' | 'dark';
+  icon?: ComponentProps<typeof Icon>['name'];
+  class?: string;
+}
+
+const { href, submit = false, variant = 'primary', tone = 'light', icon, class: className } = Astro.props;
+const classes = [
+  'btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md px-4 py-4 text-center font-semibold tracking-[0.12em] transition active:scale-[0.98] sm:w-auto sm:px-6 sm:tracking-[0.22em]',
+  variant === 'primary' && 'bg-violet text-paper hover:bg-violet-deep',
+  variant === 'outline' && (tone === 'dark' ? 'border border-paper/30 hover:border-paper hover:bg-paper hover:text-ink' : 'border border-ink/25 hover:border-ink hover:bg-ink hover:text-paper'),
+  className,
+];
+---
+
+{submit ? (
+  <button type="submit" class:list={[classes, 'cursor-pointer']}><span>{icon && <Icon name={icon} class="size-4" />}<slot /></span></button>
+) : href ? (
+  <a href={href} class:list={classes}><span>{icon && <Icon name={icon} class="size-4" />}<slot /></span></a>
+) : (
+  <BookingLink class:list={classes}><span>{icon && <Icon name={icon} class="size-4" />}<slot /></span></BookingLink>
+)}

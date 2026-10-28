@@ -1,0 +1,23 @@
+---
+// Ссылка на PDF (бланк заявки, меню кафе). Пока файла нет (href null, открытый вопрос #12) —
+// неактивная кнопка с пометкой «файл скоро».
+import Icon from '../Icon.astro';
+
+interface Props {
+  href: string | null;
+  tone?: 'light' | 'dark';
+}
+
+const { href, tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+---
+
+{href ? (
+  <a href={href} download class:list={['label inline-flex items-center gap-3 font-semibold underline underline-offset-[6px] transition', dark ? 'decoration-paper/25 hover:decoration-lime' : 'decoration-ink/25 hover:decoration-violet']}>
+    <Icon name="download" class={`size-4 ${dark ? 'text-lime' : 'text-violet'}`} /><slot />
+  </a>
+) : (
+  <span class:list={['label inline-flex flex-wrap items-center gap-x-3 gap-y-1 font-semibold', dark ? 'text-paper/50' : 'text-ink/50']} aria-disabled="true">
+    <Icon name="download" class="size-4" /><slot /><span class="font-medium tracking-normal normal-case">· файл скоро</span>
+  </span>
+)}

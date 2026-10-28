@@ -1,0 +1,47 @@
+---
+// Таблица цен из ТЗ: одна колонка или «Будни / Выходные», зачёркнутая старая цена, пояснение
+// под строкой. Пустая цена (null) — подпись «Уточняется» или своя (table.empty).
+import { formatPrice, type Price } from '../../lib/format';
+import type { PriceTable } from '../../data/services';
+
+interface Props {
+  table: PriceTable;
+  tone?: 'light' | 'dark';
+}
+
+const { table, tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+const muted = dark ? 'text-paper/60' : 'text-ink/60';
+const cells = (r: PriceTable['rows'][number]): [Price, number | undefined][] =>
+  table.columns && table.columns.length > 1 ? [[r.price, r.old], [r.weekend ?? null, r.oldWeekend]] : [[r.price, r.old]];
+---
+
+<div>
+  {table.caption && <p class:list={['label mb-4 font-semibold', dark ? 'text-lime' : 'text-violet']}>{table.caption}</p>}
+  <table class="w-full border-collapse text-left">
+    {table.columns && (
+      <thead>
+        <tr>
+          <th scope="col" class="sr-only">Формат</th>
+          {table.columns.map((c) => <th scope="col" class:list={['label pb-3 pl-4 text-right align-bottom font-semibold', muted]}>{c}</th>)}
+        </tr>
+      </thead>
+    )}
+    <tbody>
+      {table.rows.map((r) => (
+        <tr class:list={['border-t', dark ? 'border-paper/15' : 'border-ink/15']}>
+          <th scope="row" class="py-5 pr-4 text-left align-top font-normal">
+            <span class="font-display text-base font-bold uppercase md:text-lg">{r.label}</span>
+            {r.note && <span class:list={['mt-1 block text-sm', muted]}>{r.note}</span>}
+          </th>
+          {cells(r).map(([price, old]) => (
+            <td class="py-5 pl-4 text-right align-top whitespace-nowrap">
+              <span class:list={price === null ? ['text-sm font-semibold', muted] : 'font-display text-xl font-bold md:text-2xl'}>{formatPrice(price, table.empty)}</span>
+              {old && <span class:list={['mt-1 block text-sm', muted]}><span class="sr-only">вместо </span><s>{formatPrice(old)}</s></span>}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

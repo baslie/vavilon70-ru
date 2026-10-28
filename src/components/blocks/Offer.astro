@@ -1,0 +1,101 @@
+---
+// Услуга или секция по ТЗ: плашки, заголовок, «для кого», возраст и формат, расписание — слева,
+// преимущества, «что входит», цены и кнопка — справа. Сетка 5 + воздух + 6, как блок безопасности.
+// На странице одной услуги заголовок, плашки и вводная уже в первом экране: title заменяет
+// заголовок, showIntro={false} убирает плашки и вводную.
+import { Image } from 'astro:assets';
+import Badge from './Badge.astro';
+import Button from './Button.astro';
+import PriceTable from './PriceTable.astro';
+import { formatTime } from '../../lib/format';
+import { photos, alts } from '../../data/photos';
+import type { Offer } from '../../data/services';
+
+interface Props {
+  offer: Offer;
+  tone?: 'light' | 'dark';
+  title?: string;
+  showIntro?: boolean;
+  /** Фото услуги под описанием слева. */
+  photo?: boolean;
+}
+
+const { offer, tone = 'light', title = offer.title, showIntro = true, photo = false } = Astro.props;
+const dark = tone === 'dark';
+const muted = dark ? 'text-paper/70' : 'text-ink/70';
+const accent = dark ? 'text-lime' : 'text-violet';
+const dash = dark ? 'bg-lime' : 'bg-signal';
+---
+
+<section id={offer.id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
+  <div class="lg:col-span-5">
+    {showIntro && offer.badges.length > 0 && <div class="mb-8 flex flex-wrap gap-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
+    <h2 class="headline text-[clamp(1.9rem,3.2vw,3.5rem)] leading-[1.02]" data-reveal>{title}</h2>
+    {offer.subtitle && <p class:list={['label mt-5 font-semibold', accent]} data-reveal>{offer.subtitle}</p>}
+    {showIntro && offer.intro && (
+      <div class="mt-10" data-reveal>
+        <p class:list={['label font-semibold', accent]}>{offer.intro.label}</p>
+        <p class:list={['mt-3 text-lg leading-relaxed', dark ? 'text-paper/85' : 'text-ink/85']}>{offer.intro.text}</p>
+      </div>
+    )}
+    {(offer.meta || offer.schedule) && (
+      <dl class="mt-10 grid gap-6" data-reveal>
+        {offer.meta?.map((m) => (
+          <div>
+            <dt class:list={['label font-semibold', accent]}>{m.label}</dt>
+            <dd class:list={['mt-2 leading-relaxed', m.value ? '' : muted]}>{m.value ?? 'Уточняется'}</dd>
+          </div>
+        ))}
+        {offer.schedule && (
+          <div>
+            <dt class:list={['label font-semibold', accent]}>Расписание</dt>
+            <dd class="mt-2 leading-relaxed">
+              <span class:list={[!offer.schedule.days && muted]}>{offer.schedule.days ?? 'Дни уточняются — скоро в расписании'}</span>
+              {offer.schedule.slots.map((s) => (
+                <span class="block">{s.label}: <span class:list={[!s.time && muted]}>{formatTime(s.time)}</span></span>
+              ))}
+            </dd>
+          </div>
+        )}
+      </dl>
+    )}
+    {photo && <Image src={photos[offer.photo]} alt={alts[offer.photo]} widths={[600, 900]} sizes="(min-width: 1024px) 40vw, 100vw" class="mt-12 aspect-[4/3] w-full rounded-md object-cover" data-reveal />}
+  </div>
+
+  <div class="grid content-start gap-12 lg:col-span-6 lg:col-start-7">
+    {offer.points && (
+      <div data-reveal>
+        <h3 class:list={['label font-semibold', accent]}>{offer.points.title}</h3>
+        <ul class="mt-6 grid gap-6">
+          {offer.points.items.map((p) => (
+            <li>
+              <span class:list={['dash mb-4 block', dash]} aria-hidden="true"></span>
+              <p class="font-display text-base font-bold uppercase md:text-lg">{p.title}</p>
+              <p class:list={['mt-2 leading-relaxed', muted]}>{p.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    {offer.includes && (
+      <div data-reveal>
+        <h3 class:list={['label font-semibold', accent]}>{offer.includes.title}</h3>
+        <ul class="mt-6 grid gap-4">
+          {offer.includes.items.map((item) => (
+            <li class="flex gap-4 text-lg leading-snug">
+              <span class:list={['dash mt-2.5 block w-5 shrink-0', dash]} aria-hidden="true"></span>{item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    {offer.prices && <div data-reveal><PriceTable table={offer.prices} tone={tone} /></div>}
+    {offer.soon && (
+      <p class:list={['font-display text-2xl leading-snug font-bold uppercase', accent]} data-reveal>{offer.soon}</p>
+    )}
+    <div class="flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal>
+      <Button href={offer.cta.href} icon="lightning">{offer.cta.label}</Button>
+      <slot />
+    </div>
+  </div>
+</section>

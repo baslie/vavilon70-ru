@@ -1,0 +1,35 @@
+---
+// Нумерованные шаги: подготовка к визиту (3), первая тренировка (5), предзаказ банкета (4).
+// Три шага — по 4 колонки, четыре — по 3, пять — первые три по 4 и два по 6.
+import DownloadLink from './DownloadLink.astro';
+import type { Step } from '../../data/services';
+
+interface Props {
+  id?: string;
+  title: string;
+  lead?: string;
+  items: Step[];
+  tone?: 'light' | 'dark';
+}
+
+const { id, title, lead, items, tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+const span = (i: number) => (items.length === 4 ? 'lg:col-span-3' : items.length === 5 && i > 2 ? 'lg:col-span-6' : 'lg:col-span-4');
+---
+
+<section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
+  <div class="lg:col-span-8">
+    <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02]" data-reveal>{title}</h2>
+    {lead && <p class:list={['mt-6 max-w-[60ch] text-lg leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
+  </div>
+  <ol class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-12 lg:grid-cols-subgrid">
+    {items.map((s, i) => (
+      <li class={span(i)} data-reveal style={`--i:${i % 4}`}>
+        <span class:list={['font-display text-5xl font-extrabold italic', dark ? 'text-lime' : 'text-violet']} aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <h3 class="mt-5 font-display text-lg font-bold uppercase">{s.title}</h3>
+        <p class:list={['mt-3 max-w-[48ch] leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>
+        {s.download && <p class="mt-5"><DownloadLink href={s.download.href} tone={tone}>{s.download.label}</DownloadLink></p>}
+      </li>
+    ))}
+  </ol>
+</section>
