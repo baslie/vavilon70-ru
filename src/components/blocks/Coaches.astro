@@ -1,0 +1,32 @@
+---
+// «Ваши тренеры» из ТЗ: карточки с фото, именем, ролью, опытом и специализацией.
+// Пока имён и фото нет (открытый вопрос #9) — условное наполнение из src/data/classes.ts.
+import { Image } from 'astro:assets';
+import { coaches } from '../../data/classes';
+import { photos, alts } from '../../data/photos';
+
+interface Props {
+  tone?: 'light' | 'dark';
+}
+
+const { tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+const accent = dark ? 'text-lime' : 'text-violet';
+---
+
+<section id="trenery" class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
+  <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02] lg:col-span-12" data-reveal>Ваши тренеры</h2>
+  <ul class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-12 lg:grid-cols-subgrid">
+    {coaches.map((c, i) => (
+      <li class="lg:col-span-3" data-reveal style={`--i:${i}`}>
+        <Image src={photos[c.photo]} alt={alts[c.photo]} widths={[400, 700]} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw" class="aspect-[4/5] w-full rounded-md object-cover" />
+        <h3 class="mt-6 font-display text-xl font-bold uppercase">{c.name}</h3>
+        <p class:list={['label mt-3 font-semibold', accent]}>{c.role}</p>
+        <dl class:list={['mt-5 grid gap-3 text-sm leading-relaxed', dark ? 'text-paper/75' : 'text-ink/75']}>
+          <div><dt class="inline font-semibold">Опыт: </dt><dd class="inline">{c.experience}</dd></div>
+          <div><dt class="inline font-semibold">Специализация: </dt><dd class="inline">{c.specialization}</dd></div>
+        </dl>
+      </li>
+    ))}
+  </ul>
+</section>

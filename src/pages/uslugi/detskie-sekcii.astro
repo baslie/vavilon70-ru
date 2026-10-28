@@ -1,0 +1,32 @@
+---
+// Детские секции: фристайл, развивающая гимнастика и ОФП, Ninja-трасса (якоря меню #fristajl,
+// #nfp, #ninja), тренеры и «Как проходит первая тренировка» (#pervaya-trenirovka).
+// Поля чередуются; страница заканчивается тёмными шагами, поэтому общего призыва нет.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import Offer from '../../components/blocks/Offer.astro';
+import Coaches from '../../components/blocks/Coaches.astro';
+import Steps from '../../components/blocks/Steps.astro';
+import { kidsFreestyle, kidsGym, kidsNinja, firstTraining } from '../../data/classes';
+import { url } from '../../data/nav';
+
+const sections = [kidsFreestyle, kidsGym, kidsNinja];
+---
+
+<Layout title="Детские секции — Вавилон" description="Детские спортивные секции «Вавилона» в Томске: батутный фристайл, развивающая гимнастика и ОФП для детей 4–7 лет, секция Ninja-трасса. Пробное занятие от 500 ₽." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title="Спортивные секции" crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }, { title: 'Тренировки и секции' }]} lead="Групповые занятия с тренером для детей от 4 лет: батутный фристайл, развивающая гимнастика и ОФП, полоса препятствий Ninja-трасса." photo="coach">
+      <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
+        {sections.map((s) => <li><a href={`#${s.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{s.title}</a></li>)}
+      </ul>
+    </PageHero>
+    {sections.map((s, i) => <Offer offer={s} tone={i % 2 ? 'light' : 'dark'} photo />)}
+    <Coaches />
+    <Steps id="pervaya-trenirovka" title={firstTraining.title} items={firstTraining.items} tone="dark" />
+  </main>
+  <Footer />
+</Layout>
