@@ -136,11 +136,10 @@ export const arena: Offer = {
     // TODO: вместимость от заказчика (docs/TZ.md, открытый вопрос #1).
     { label: 'Вместимость', value: null },
   ],
+  // Цена — ответ заказчика 28.10.2026.
   prices: {
     columns: ['Будни', 'Выходные'],
-    // TODO: цена аренды за час (открытый вопрос #1).
-    rows: [{ label: '1 час аренды', price: null, weekend: null }],
-    empty: 'По запросу',
+    rows: [{ label: '1 час аренды', price: 1000, weekend: 1500 }],
   },
   cta: { label: 'Забронировать арену', href: '#zayavka' },
   photo: 'football',

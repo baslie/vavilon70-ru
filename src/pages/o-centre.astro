@@ -21,7 +21,7 @@ import { homeLead, contacts } from '../data/content';
   <main>
     <PageHero title="Больше чем прыжки" crumbs={[{ title: 'О центре' }]} lead={homeLead} photo="arena">
       <Button icon="lightning">Забронировать</Button>
-      <p class="label text-ink/60">{contacts.address}, {contacts.place}</p>
+      <p class="label text-ink/60">{contacts.address}, {contacts.place}<br />Часы работы {contacts.hours}</p>
     </PageHero>
     <Manifest />
     <Philosophy />
