@@ -1,0 +1,34 @@
+---
+// «О центре»: манифест, философия с цифрами, фотогид, безопасность и призыв —
+// те же секции и тексты ТЗ, что на главной, с первым экраном внутренней страницы.
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import Button from '../components/blocks/Button.astro';
+import Manifest from '../components/sections/Manifest.astro';
+import Philosophy from '../components/sections/Philosophy.astro';
+import Facts from '../components/sections/Facts.astro';
+import Inside from '../components/sections/Inside.astro';
+import Safety from '../components/sections/Safety.astro';
+import PlanVisit from '../components/sections/PlanVisit.astro';
+import { homeLead, contacts } from '../data/content';
+---
+
+<Layout title="О центре — Вавилон" description="«Вавилон» в ТРЦ «Мегаполис», Томск: 1300 м² для спорта, игр и праздников — батутная арена, первая в Томске Ninja-трасса, футбольное поле, квесты и семейное кафе." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title="Больше чем прыжки" crumbs={[{ title: 'О центре' }]} lead={homeLead} photo="arena">
+      <Button icon="lightning">Забронировать</Button>
+      <p class="label text-ink/60">{contacts.address}, {contacts.place}</p>
+    </PageHero>
+    <Manifest />
+    <Philosophy />
+    <Facts />
+    <Inside />
+    <Safety />
+    <PlanVisit />
+  </main>
+  <Footer />
+</Layout>
