@@ -1,6 +1,7 @@
 ---
 // Плитка карточек-ссылок для разделов «Услуги и цены» и «Праздники»: фото, название со стрелкой,
 // подпись и «от N ₽». Три карточки в ряд по 4 колонки, ниже lg — две.
+import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import { photos, alts } from '../../data/photos';
@@ -20,7 +21,7 @@ const dark = tone === 'dark';
 ---
 
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02]" data-reveal>{title}</h2>
+  <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.6vw,3.75rem)')} data-reveal>{title}</h2>
   <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-2">
     {items.map((c, i) => (
       <li class="lg:col-span-4" data-reveal style={`--i:${i % 3}`}>

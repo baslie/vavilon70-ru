@@ -3,6 +3,7 @@
 // преимущества, «что входит», цены и кнопка — справа. Сетка 5 + воздух + 6, как блок безопасности.
 // На странице одной услуги заголовок, плашки и вводная уже в первом экране: title заменяет
 // заголовок, showIntro={false} убирает плашки и вводную.
+import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
 import Badge from './Badge.astro';
 import Button from './Button.astro';
@@ -30,7 +31,7 @@ const dash = dark ? 'bg-lime' : 'bg-signal';
 <section id={offer.id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <div class="lg:col-span-5">
     {showIntro && offer.badges.length > 0 && <div class="mb-8 flex flex-wrap gap-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
-    <h2 class="headline text-[clamp(1.9rem,3.2vw,3.5rem)] leading-[1.02]" data-reveal>{title}</h2>
+    <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.2vw,3.5rem)', 5)} data-reveal>{title}</h2>
     {offer.subtitle && <p class:list={['label mt-5 font-semibold', accent]} data-reveal>{offer.subtitle}</p>}
     {showIntro && offer.intro && (
       <div class="mt-10" data-reveal>
