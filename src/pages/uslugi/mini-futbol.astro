@@ -1,0 +1,29 @@
+---
+// Аренда футбольной арены. Цены и вместимости в ТЗ нет (открытый вопрос #1): «По запросу»,
+// кнопка ведёт на форму заявки внизу страницы. Форма заменяет общий призыв к действию.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import Offer from '../../components/blocks/Offer.astro';
+import RequestForm from '../../components/blocks/RequestForm.astro';
+import Button from '../../components/blocks/Button.astro';
+import { arena, complexTicket } from '../../data/services';
+import { forms } from '../../data/forms';
+import { url } from '../../data/nav';
+---
+
+<Layout title="Мини-футбол — Вавилон" description="Аренда крытой футбольной арены с мягким искусственным газоном в «Вавилоне», Томск: для друзей, дней рождения, корпоративных турниров и тренировок." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title={arena.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }, { title: 'Свободные посещения' }]} lead={arena.intro?.text} photo={arena.photo}>
+      <Button href="#zayavka" icon="lightning">{arena.cta.label}</Button>
+      <a href={`#${arena.id}`} class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">Цены и условия</a>
+    </PageHero>
+    <Offer offer={arena} tone="dark" title="Цены и условия" showIntro={false} />
+    <Offer offer={complexTicket} photo />
+    <RequestForm id="zayavka" form={forms.arena} />
+  </main>
+  <Footer />
+</Layout>

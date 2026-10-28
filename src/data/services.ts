@@ -2,7 +2,7 @@
 // «Услуги и цены», «Тренировки и секции» (персональные) и «Дополнительные услуги».
 // Цена null — нет в ТЗ, выводится подписью «Уточняется» (src/lib/format.ts).
 // Эмодзи из плашек ТЗ не переносим: минимализм бренда, текст плашки оставляем.
-import type { Price } from '../lib/format';
+import { formatFrom, type Price } from '../lib/format';
 import type { PhotoKey } from './content';
 
 export type PriceRow = {
@@ -203,3 +203,7 @@ export const visitSteps: { title: string; items: Step[] } = {
     { title: 'Форма одежды и сменка', text: 'Носки строго обязательны: без них на арену не допускаем. Спортивная одежда без молний, пуговиц и металлического декора. Сменная обувь для прохода к раздевалкам и передвижения по комплексу — по желанию.' },
   ],
 };
+
+/** «от N ₽» для карточки услуги по её таблице цен. */
+export const priceFrom = (offer: Offer) =>
+  formatFrom(offer.prices?.rows.flatMap((r) => [r.price, r.weekend ?? null]) ?? [], offer.soon ?? 'Цена по запросу');

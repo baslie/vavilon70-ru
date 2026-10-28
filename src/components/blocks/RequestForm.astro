@@ -1,0 +1,104 @@
+---
+// Форма заявки (src/data/forms.ts). Слева заголовок, пояснение и телефон, справа поля.
+// Пока formEndpoint пустой (открытый вопрос #22), отправка не уходит: показываем телефон
+// администратора. Когда адрес появится, форма шлёт FormData POST-запросом.
+import Button from './Button.astro';
+import Icon from '../Icon.astro';
+import { contacts } from '../../data/content';
+import { privacyPolicyHref, type RequestFormConfig } from '../../data/forms';
+
+interface Props {
+  id: string;
+  form: RequestFormConfig;
+  tone?: 'light' | 'dark';
+}
+
+const { id, form, tone = 'dark' } = Astro.props;
+const dark = tone === 'dark';
+const muted = dark ? 'text-paper/70' : 'text-ink/70';
+const input = [
+  'w-full rounded-md border px-4 py-3 text-base transition focus:outline-none',
+  dark ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/40 focus:border-lime [color-scheme:dark] [&>option]:text-ink' : 'border-ink/20 bg-paper text-ink placeholder:text-ink/40 focus:border-violet',
+];
+const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transition hover:decoration-lime' : 'underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet';
+---
+
+<section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
+  <div class="lg:col-span-5">
+    <h2 class="headline text-[clamp(1.9rem,3.2vw,3.5rem)] leading-[1.02]" data-reveal>{form.title}</h2>
+    <p class:list={['mt-6 max-w-[48ch] text-lg leading-relaxed', muted]} data-reveal>{form.text}</p>
+    <p class:list={['label mt-8 flex items-center gap-3', dark ? 'text-paper/60' : 'text-ink/60']} data-reveal>
+      <Icon name="phone" class={`size-4 ${dark ? 'text-lime' : 'text-violet'}`} />Или позвоните
+      <a href={contacts.phoneHref} class:list={['font-semibold', dark ? 'text-paper' : 'text-ink', link]}>{contacts.phone}</a>
+    </p>
+  </div>
+
+  <form class="grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2 lg:col-span-6 lg:col-start-7" data-request-form data-reveal>
+    {form.fields.map((f) => {
+      const fieldId = `${id}-${f.name}`;
+      return (
+        <div class:list={[f.wide && 'sm:col-span-2']}>
+          <label for={fieldId} class:list={['label mb-2 block font-semibold', dark ? 'text-paper/70' : 'text-ink/70']}>
+            {f.label}{f.required && <span class={dark ? 'text-lime' : 'text-violet'} aria-hidden="true"> *</span>}
+          </label>
+          {f.type === 'select' ? (
+            <select id={fieldId} name={f.name} required={f.required} class:list={input}>
+              {f.options?.map((o) => <option>{o}</option>)}
+            </select>
+          ) : f.type === 'textarea' ? (
+            <textarea id={fieldId} name={f.name} rows="3" class:list={input}></textarea>
+          ) : (
+            <input id={fieldId} name={f.name} type={f.type} required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} min={f.type === 'number' ? 1 : undefined} inputmode={f.type === 'tel' ? 'tel' : undefined} class:list={input} />
+          )}
+        </div>
+      );
+    })}
+
+    <label class:list={['flex items-start gap-3 text-sm leading-relaxed sm:col-span-2', muted]}>
+      <input type="checkbox" name="consent" required class="mt-1 size-4 shrink-0 accent-violet" />
+      <span>
+        Согласен на обработку персональных данных
+        {privacyPolicyHref && <>в соответствии с <a href={privacyPolicyHref} class={link}>политикой конфиденциальности</a></>}
+      </span>
+    </label>
+
+    <div class="sm:col-span-2">
+      <Button submit icon="lightning">{form.submit}</Button>
+    </div>
+
+    <div class="sm:col-span-2" role="status" aria-live="polite">
+      <p data-form-status="offline" hidden class:list={['rounded-md border p-4 leading-relaxed', dark ? 'border-lime/40' : 'border-violet/30 bg-violet/5']}>
+        Онлайн-заявки скоро заработают. Пока позвоните администратору: <a href={contacts.phoneHref} class:list={['font-semibold', link]}>{contacts.phone}</a>
+      </p>
+      <p data-form-status="ok" hidden class:list={['rounded-md border p-4 leading-relaxed', dark ? 'border-lime/40' : 'border-violet/30 bg-violet/5']}>
+        Заявка отправлена. Администратор перезвонит в рабочее время.
+      </p>
+      <p data-form-status="error" hidden class:list={['rounded-md border p-4 leading-relaxed', dark ? 'border-paper/30' : 'border-ink/20']}>
+        Не получилось отправить заявку. Позвоните администратору: <a href={contacts.phoneHref} class:list={['font-semibold', link]}>{contacts.phone}</a>
+      </p>
+    </div>
+  </form>
+</section>
+
+<script>
+  import { formEndpoint } from '../../data/forms';
+
+  document.querySelectorAll<HTMLFormElement>('[data-request-form]').forEach((form) => {
+    const show = (state: 'offline' | 'ok' | 'error') =>
+      form.querySelectorAll<HTMLElement>('[data-form-status]').forEach((el) => (el.hidden = el.dataset.formStatus !== state));
+
+    // Событие submit приходит только после встроенной проверки полей браузером.
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!formEndpoint) return show('offline');
+      try {
+        const response = await fetch(formEndpoint, { method: 'POST', body: new FormData(form) });
+        if (!response.ok) throw new Error(String(response.status));
+        form.reset();
+        show('ok');
+      } catch {
+        show('error');
+      }
+    });
+  });
+</script>

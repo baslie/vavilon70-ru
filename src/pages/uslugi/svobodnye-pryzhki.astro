@@ -1,0 +1,32 @@
+---
+// Свободные прыжки по шаблону Ninja-трассы: первый экран, цены и условия, комплексный билет,
+// подготовка к визиту, безопасность, призыв.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import Offer from '../../components/blocks/Offer.astro';
+import Steps from '../../components/blocks/Steps.astro';
+import Button from '../../components/blocks/Button.astro';
+import Safety from '../../components/sections/Safety.astro';
+import PlanVisit from '../../components/sections/PlanVisit.astro';
+import { jumps, complexTicket, visitSteps } from '../../data/services';
+import { url } from '../../data/nav';
+---
+
+<Layout title="Свободные прыжки — Вавилон" description="Свободные прыжки на батутной арене «Вавилона» в Томске: разминка и инструктаж с тренером, от 4 лет. Час — от 500 ₽." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title={jumps.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }, { title: 'Свободные посещения' }]} badges={jumps.badges} lead={jumps.meta?.[0].value ?? undefined} photo={jumps.photo}>
+      <Button icon="lightning">{jumps.cta.label}</Button>
+      <a href={`#${jumps.id}`} class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">Цены и условия</a>
+    </PageHero>
+    <Offer offer={jumps} tone="dark" title="Цены и условия" showIntro={false} />
+    <Offer offer={complexTicket} photo />
+    <Steps title={visitSteps.title} items={visitSteps.items} tone="dark" />
+    <Safety />
+    <PlanVisit />
+  </main>
+  <Footer />
+</Layout>

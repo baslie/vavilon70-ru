@@ -1,0 +1,47 @@
+---
+// «Услуги и цены»: обзор всех форматов карточками с ценой «от», комплексный билет и подготовка
+// к визиту (якоря меню #kompleksnyj-bilet и #podgotovka). Подписи карточек собраны из фактов ТЗ.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import CardGrid, { type Card } from '../../components/blocks/CardGrid.astro';
+import Offer from '../../components/blocks/Offer.astro';
+import Steps from '../../components/blocks/Steps.astro';
+import Button from '../../components/blocks/Button.astro';
+import PlanVisit from '../../components/sections/PlanVisit.astro';
+import { jumps, ninja, arena, personal, complexTicket, visitSteps, priceFrom } from '../../data/services';
+import { kidsFreestyle, kidsGym, kidsNinja, adultFreestyle } from '../../data/classes';
+import { url } from '../../data/nav';
+import { formatFrom } from '../../lib/format';
+
+const visits: Card[] = [
+  { title: 'Свободные прыжки', text: 'Батутная арена с разминкой и инструктажем тренера, от 4 лет.', href: url('/uslugi/svobodnye-pryzhki/'), photo: jumps.photo, meta: priceFrom(jumps) },
+  { title: 'Ninja-трасса', text: 'Первая в Томске полоса препятствий: рукоходы, подвесные элементы, балансиры.', href: url('/uslugi/ninja-trassa/'), photo: ninja.photo, meta: priceFrom(ninja) },
+  { title: 'Мини-футбол', text: 'Аренда арены с мягким искусственным газоном, мяч предоставляется.', href: url('/uslugi/mini-futbol/'), photo: arena.photo, meta: priceFrom(arena) },
+];
+
+// Для секций цена «от» по пробному занятию — самой низкой в таблицах.
+const classes: Card[] = [
+  { title: 'Тренировки с инструктором', text: 'Индивидуально, вдвоём или мини-группой из трёх человек.', href: url('/uslugi/personalnye-trenirovki/'), photo: personal.photo, meta: priceFrom(personal) },
+  { title: 'Детские секции', text: 'Батутный фристайл, развивающая гимнастика и ОФП, секция Ninja-трасса.', href: url('/uslugi/detskie-sekcii/'), photo: kidsNinja.photo, meta: formatFrom([kidsFreestyle, kidsGym, kidsNinja].flatMap((o) => o.prices!.rows.map((r) => r.price))) },
+  { title: 'Взрослые секции', text: 'Батутный фристайл и Ninja-трасса для взрослых от 18 лет.', href: url('/uslugi/vzroslye-sekcii/'), photo: adultFreestyle.photo, meta: priceFrom(adultFreestyle) },
+];
+---
+
+<Layout title="Услуги и цены — Вавилон" description="Цены «Вавилона» в Томске: свободные прыжки, Ninja-трасса, комплексный билет, аренда футбольной арены, тренировки и секции." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title="Услуги и цены" lead="Выберите удобный формат отдыха — разовое посещение, тренировка с инструктором, прохождение Ninja-трассы или организация праздника под ключ." photo="arena">
+      <Button icon="lightning">Забронировать</Button>
+      <a href="#kompleksnyj-bilet" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">Комплексный билет</a>
+    </PageHero>
+    <CardGrid title="Свободные посещения" items={visits} tone="dark" />
+    <Offer offer={complexTicket} photo />
+    <CardGrid title="Тренировки и секции" items={classes} tone="dark" />
+    <Steps id="podgotovka" title={visitSteps.title} items={visitSteps.items} />
+    <PlanVisit />
+  </main>
+  <Footer />
+</Layout>

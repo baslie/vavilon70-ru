@@ -1,0 +1,46 @@
+---
+// Подарочные сертификаты: на что и как приобрести (ТЗ, «Дополнительные услуги»), форма заявки
+// внизу вместо общего призыва к действию.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import RequestForm from '../../components/blocks/RequestForm.astro';
+import Button from '../../components/blocks/Button.astro';
+import CardGrid, { type Card } from '../../components/blocks/CardGrid.astro';
+import { certificates, personal, complexTicket, priceFrom } from '../../data/services';
+import { kidsFreestyle } from '../../data/classes';
+import { forms } from '../../data/forms';
+import { url } from '../../data/nav';
+
+// Три услуги, на которые выписывается сертификат по ТЗ.
+const options: Card[] = [
+  { title: 'Абонемент в секцию', text: 'Фристайл, развивающая гимнастика и ОФП или Ninja-трасса для детей и взрослых.', href: url('/uslugi/detskie-sekcii/'), photo: kidsFreestyle.photo, meta: priceFrom(kidsFreestyle) },
+  { title: 'Персональная тренировка', text: 'Час с инструктором: индивидуально, вдвоём или мини-группой.', href: url('/uslugi/personalnye-trenirovki/'), photo: personal.photo, meta: priceFrom(personal) },
+  { title: 'Комплексный билет', text: '2 часа «всё включено»: батутная арена, Ninja-трасса и футбольное поле.', href: url('/uslugi/#kompleksnyj-bilet'), photo: complexTicket.photo, meta: priceFrom(complexTicket) },
+];
+---
+
+<Layout title="Подарочные сертификаты — Вавилон" description="Подарочные сертификаты «Вавилона» в Томске: на абонемент в секцию, персональную тренировку или комплексный билет." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title={certificates.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }, { title: 'Дополнительно' }]} lead={certificates.lead} photo="textureAlt">
+      <Button href="#zayavka" icon="gift">{certificates.cta}</Button>
+    </PageHero>
+
+    <section class="grid-site gap-y-12 bg-ink px-4 py-20 text-paper md:px-8 lg:py-24">
+      {certificates.items.map((item, i) => (
+        <div class="lg:col-span-6" data-reveal style={`--i:${i}`}>
+          <span class="dash mb-6 block bg-lime" aria-hidden="true"></span>
+          <h2 class="headline text-[clamp(1.6rem,2.6vw,2.75rem)] leading-[1.02]">{item.title}</h2>
+          <p class="mt-5 max-w-[48ch] text-lg leading-relaxed text-paper/75">{item.text}</p>
+        </div>
+      ))}
+    </section>
+
+    <CardGrid title="На что можно подарить" items={options} />
+    <RequestForm id="zayavka" form={forms.certificate} />
+  </main>
+  <Footer />
+</Layout>
