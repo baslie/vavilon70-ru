@@ -1,6 +1,9 @@
 ---
 // Первый экран внутренней страницы: светлое поле, как у главной. Слева путь по разделам, H1,
 // плашки, вводная и кнопки (слот), справа фото. Сетка 8 + 4, как вводная манифеста.
+// H1, плашки, вводная и кнопки — одна группа у низа фото: заголовок не отрывается от своего текста,
+// свободное место остаётся под путём по разделам. Чем короче заголовок, тем крупнее кегль,
+// чтобы масса группы не зависела от длины (docs/BRAND.md, «Баланс блока»).
 import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
 import Badge from './Badge.astro';
@@ -18,25 +21,24 @@ interface Props {
 }
 
 const { title, crumbs = [], lead, badges = [], photo } = Astro.props;
-// Длинные заголовки из ТЗ («Яркий выпускной и окончание учебного года…») — кеглем меньше.
-const long = title.length > 40;
+// Длинные заголовки из ТЗ («Яркий выпускной и окончание учебного года…») — кеглем меньше,
+// короткие («Праздники», «Услуги и цены») — плакатом.
+const size = title.length > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : title.length <= 14 ? 'clamp(2.5rem,7.2vw,8.5rem)' : 'clamp(2.25rem,5.2vw,6rem)';
 ---
 
 <section class="grid-site gap-y-10 px-4 pt-10 pb-16 md:px-8 lg:pt-16 lg:pb-24">
-  <div class="flex flex-col justify-between gap-10 lg:col-span-8">
-    <div>
-      <nav aria-label="Разделы">
-        <ol class="label flex flex-wrap gap-x-3 text-ink/55">
-          <li><a href={url('/')} class="transition hover:text-violet">Главная</a></li>
-          {crumbs.map((c) => (
-            <li class="flex gap-x-3"><span class="text-ink/30" aria-hidden="true">/</span>{c.href ? <a href={c.href} class="transition hover:text-violet">{c.title}</a> : <span>{c.title}</span>}</li>
-          ))}
-        </ol>
-      </nav>
-      <h1 class:list={['headline headline-fit mt-8', long ? 'max-w-[24ch] leading-[1.02]' : 'max-w-[18ch]']} style={fitHeadline(title, long ? 'clamp(2rem,3.8vw,4.25rem)' : 'clamp(2.25rem,5.2vw,6rem)', 8)}>{title}</h1>
-      {badges.length > 0 && <div class="mt-8 flex flex-wrap gap-2">{badges.map((b) => <Badge>{b}</Badge>)}</div>}
-    </div>
-    <div class="grid gap-8">
+  <div class="flex flex-col gap-8 lg:col-span-8">
+    <nav aria-label="Разделы">
+      <ol class="label flex flex-wrap gap-x-3 text-ink/55">
+        <li><a href={url('/')} class="transition hover:text-violet">Главная</a></li>
+        {crumbs.map((c) => (
+          <li class="flex gap-x-3"><span class="text-ink/30" aria-hidden="true">/</span>{c.href ? <a href={c.href} class="transition hover:text-violet">{c.title}</a> : <span>{c.title}</span>}</li>
+        ))}
+      </ol>
+    </nav>
+    <div class="grid gap-8 lg:mt-auto">
+      <h1 class:list={['headline headline-fit', title.length > 40 ? 'max-w-[24ch] leading-[1.02]' : 'max-w-[18ch]']} style={fitHeadline(title, size, 8)}>{title}</h1>
+      {badges.length > 0 && <div class="flex flex-wrap gap-2">{badges.map((b) => <Badge>{b}</Badge>)}</div>}
       {lead && <p class="max-w-[60ch] text-lg leading-relaxed text-ink/75">{lead}</p>}
       {Astro.slots.has('default') && <div class="flex flex-wrap items-center gap-x-7 gap-y-4"><slot /></div>}
     </div>

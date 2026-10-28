@@ -1,6 +1,9 @@
 ---
 // «Ваши тренеры» из ТЗ: карточки с фото, именем, ролью, опытом и специализацией.
 // Пока имён и фото нет (открытый вопрос #9) — условное наполнение из src/data/classes.ts.
+// Карточки по 3 колонки. Пока тренеров меньше четырёх, заголовок встаёт с ними в один ряд
+// на свободные колонки слева, чтобы справа не оставалось пустой половины сетки.
+import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
 import { coaches } from '../../data/classes';
 import { photos, alts } from '../../data/photos';
@@ -12,11 +15,14 @@ interface Props {
 const { tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
 const accent = dark ? 'text-lime' : 'text-violet';
+const n = Math.min(coaches.length, 4);
+const head = ({ 1: 'lg:col-span-9', 2: 'lg:col-span-6', 3: 'lg:col-span-3' } as Record<number, string>)[n] ?? 'lg:col-span-12';
+const list = ({ 1: 'lg:col-span-3', 2: 'lg:col-span-6', 3: 'lg:col-span-9' } as Record<number, string>)[n] ?? 'lg:col-span-12';
 ---
 
 <section id="trenery" class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02] lg:col-span-12" data-reveal>Ваши тренеры</h2>
-  <ul class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-12 lg:grid-cols-subgrid">
+  <h2 class:list={['headline headline-fit leading-[1.02]', head]} style={fitHeadline('Ваши тренеры', 'clamp(1.9rem,3.6vw,3.75rem)', n < 4 ? 12 - 3 * n : 12)} data-reveal>Ваши тренеры</h2>
+  <ul class:list={['grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:grid-cols-subgrid', list]}>
     {coaches.map((c, i) => (
       <li class="lg:col-span-3" data-reveal style={`--i:${i}`}>
         <Image src={photos[c.photo]} alt={alts[c.photo]} widths={[400, 700]} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw" class="aspect-[4/5] w-full rounded-md object-cover" />

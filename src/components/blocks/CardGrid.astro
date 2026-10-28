@@ -1,6 +1,8 @@
 ---
 // Плитка карточек-ссылок для разделов «Услуги и цены» и «Праздники»: фото, название со стрелкой,
-// подпись и «от N ₽». Три карточки в ряд по 4 колонки, ниже lg — две.
+// подпись и «от N ₽». Ниже lg — две в ряд. От lg раскладку выбирает число карточек, чтобы в сетке
+// не оставалось пустых ячеек: 2 — по 6 колонок, 4 — по 3, остальные по 4, а лишние до кратного трём
+// добираются широкими карточками сверху (5 = 6 + 6 и 4 + 4 + 4) или четвёркой снизу (7 = 4 × 3 и 3 × 4).
 import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
@@ -18,16 +20,21 @@ interface Props {
 
 const { id, title, items, tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
+const n = items.length;
+const span = (i: number): 3 | 4 | 6 =>
+  n <= 2 ? 6 : n === 4 ? 3 : n % 3 === 2 ? (i < 2 ? 6 : 4) : n % 3 === 1 ? (i >= n - 4 ? 3 : 4) : 4;
+const spanClass = { 3: 'lg:col-span-3', 4: 'lg:col-span-4', 6: 'lg:col-span-6' };
+const sizes = { 3: '25vw', 4: '33vw', 6: '50vw' };
 ---
 
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.6vw,3.75rem)')} data-reveal>{title}</h2>
   <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-2">
     {items.map((c, i) => (
-      <li class="lg:col-span-4" data-reveal style={`--i:${i % 3}`}>
+      <li class={spanClass[span(i)]} data-reveal style={`--i:${i % 3}`}>
         <a href={c.href} class="group block">
           <div class="overflow-hidden rounded-md">
-            <Image src={photos[c.photo ?? 'textureAlt']} alt={c.photo ? alts[c.photo] : ''} widths={[480, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" class="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <Image src={photos[c.photo ?? 'textureAlt']} alt={c.photo ? alts[c.photo] : ''} widths={[480, 800, 1200]} sizes={`(min-width: 1024px) ${sizes[span(i)]}, (min-width: 768px) 50vw, 100vw`} class:list={['w-full object-cover transition-transform duration-700 group-hover:scale-105', span(i) === 6 ? 'aspect-[4/3] lg:aspect-[16/9]' : 'aspect-[4/3]']} />
           </div>
           <h3 class="mt-6 flex items-start justify-between gap-4 font-display text-xl font-bold uppercase">
             {c.title}

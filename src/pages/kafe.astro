@@ -48,10 +48,12 @@ import { url } from '../data/nav';
           </li>
         ))}
       </ul>
-      <div class="rounded-md bg-paper p-6 md:p-10 lg:col-span-8" data-reveal>
-        <p class="font-display text-xl font-bold uppercase md:text-2xl">{menu.pdf.title}</p>
-        <p class="mt-4 max-w-[60ch] text-lg leading-relaxed text-ink/70">{menu.pdf.text}</p>
-        <p class="mt-8"><DownloadLink href={menu.pdf.href}>{menu.pdf.label}</DownloadLink></p>
+      <div class="rounded-md bg-paper p-6 md:p-10 lg:col-span-12 lg:flex lg:items-end lg:justify-between lg:gap-12" data-reveal>
+        <div>
+          <p class="font-display text-xl font-bold uppercase md:text-2xl">{menu.pdf.title}</p>
+          <p class="mt-4 max-w-[60ch] text-lg leading-relaxed text-ink/70">{menu.pdf.text}</p>
+        </div>
+        <p class="mt-8 shrink-0 lg:mt-0"><DownloadLink href={menu.pdf.href}>{menu.pdf.label}</DownloadLink></p>
       </div>
     </section>
 

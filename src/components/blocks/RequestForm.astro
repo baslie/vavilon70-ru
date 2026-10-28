@@ -1,5 +1,6 @@
 ---
-// Форма заявки (src/data/forms.ts). Слева заголовок, пояснение и телефон, справа поля.
+// Форма заявки (src/data/forms.ts). Слева заголовок и пояснение, справа поля. Форма выше текста,
+// поэтому крупный телефон — якорь внизу левой колонки, на линии кнопки отправки.
 // Пока formEndpoint пустой (открытый вопрос #22), отправка не уходит: показываем телефон
 // администратора. Когда адрес появится, форма шлёт FormData POST-запросом.
 import { fitHeadline } from '../../lib/headline';
@@ -25,13 +26,17 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
 ---
 
 <section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <div class="lg:col-span-5">
-    <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(form.title, 'clamp(1.9rem,3.2vw,3.5rem)', 5)} data-reveal>{form.title}</h2>
-    <p class:list={['mt-6 max-w-[48ch] text-lg leading-relaxed', muted]} data-reveal>{form.text}</p>
-    <p class:list={['label mt-8 flex items-center gap-3', dark ? 'text-paper/60' : 'text-ink/60']} data-reveal>
-      <Icon name="phone" class={`size-4 ${dark ? 'text-lime' : 'text-violet'}`} />Или позвоните
-      <a href={contacts.phoneHref} class:list={['font-semibold', dark ? 'text-paper' : 'text-ink', link]}>{contacts.phone}</a>
-    </p>
+  <div class="flex flex-col gap-10 lg:col-span-5">
+    <div>
+      <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(form.title, 'clamp(1.9rem,3.2vw,3.5rem)', 5)} data-reveal>{form.title}</h2>
+      <p class:list={['mt-6 max-w-[48ch] text-lg leading-relaxed', muted]} data-reveal>{form.text}</p>
+    </div>
+    <div class="lg:mt-auto" data-reveal>
+      <p class:list={['label flex items-center gap-3', dark ? 'text-paper/60' : 'text-ink/60']}>
+        <Icon name="phone" class={`size-4 ${dark ? 'text-lime' : 'text-violet'}`} />Или позвоните
+      </p>
+      <a href={contacts.phoneHref} class:list={['mt-3 inline-block font-display text-4xl font-bold transition lg:text-5xl', dark ? 'hover:text-lime' : 'hover:text-violet']}>{contacts.phone}</a>
+    </div>
   </div>
 
   <form class="grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2 lg:col-span-6 lg:col-start-7" data-request-form data-reveal>

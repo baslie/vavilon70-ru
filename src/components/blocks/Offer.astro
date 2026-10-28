@@ -1,8 +1,10 @@
 ---
-// Услуга или секция по ТЗ: плашки, заголовок, «для кого», возраст и формат, расписание — слева,
-// преимущества, «что входит», цены и кнопка — справа. Сетка 5 + воздух + 6, как блок безопасности.
-// На странице одной услуги заголовок, плашки и вводная уже в первом экране: title заменяет
-// заголовок, showIntro={false} убирает плашки и вводную.
+// Услуга или секция по ТЗ на сетке 5 + воздух + 6, как блок безопасности. Слева плашки, заголовок,
+// «для кого», возраст и формат, расписание, справа цены и кнопка. Преимущества, «что входит» и фото
+// встают в ту колонку, где их не хватает: обе колонки должны закончиться на одной линии
+// (docs/BRAND.md, «Баланс блока»). Фото тянется на высоту ряда, последний блок короткой колонки
+// прижат к низу. На странице одной услуги заголовок, плашки и вводная уже в первом экране:
+// title заменяет заголовок, showIntro={false} убирает плашки и вводную.
 import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
 import Badge from './Badge.astro';
@@ -17,7 +19,7 @@ interface Props {
   tone?: 'light' | 'dark';
   title?: string;
   showIntro?: boolean;
-  /** Фото услуги под описанием слева. */
+  /** Фото услуги в более короткой колонке. */
   photo?: boolean;
 }
 
@@ -26,77 +28,140 @@ const dark = tone === 'dark';
 const muted = dark ? 'text-paper/70' : 'text-ink/70';
 const accent = dark ? 'text-lime' : 'text-violet';
 const dash = dark ? 'bg-lime' : 'bg-signal';
+
+// Грубая высота блоков в пикселях на 1440: строки текста по длине, плюс подписи и отступы.
+// Точность не нужна, нужно понять, в какой колонке не хватает содержимого.
+type Key = 'head' | 'intro' | 'meta' | 'points' | 'includes' | 'photo' | 'deal';
+const lines = (text: string | null | undefined, perLine: number) => Math.max(1, Math.ceil((text ?? '').length / perLine));
+const gap = 48;
+const height: Partial<Record<Key, number>> = {
+  head: (showIntro && offer.badges.length ? 64 : 0) + lines(title, 12) * 50 + (offer.subtitle ? 44 : 0),
+  intro: showIntro && offer.intro ? 34 + lines(offer.intro.text, 55) * 29 : undefined,
+  meta: offer.meta || offer.schedule
+    ? (offer.meta ?? []).reduce((h, m) => h + 58 + lines(m.value ?? 'Уточняется', 60) * 26, 0) + (offer.schedule ? 58 + (1 + offer.schedule.slots.length) * 26 : 0)
+    : undefined,
+  points: offer.points ? 54 + offer.points.items.reduce((h, p) => h + 54 + lines(p.title, 40) * 28 + lines(p.text, 75) * 26 + 24, 0) : undefined,
+  includes: offer.includes ? 54 + offer.includes.items.reduce((h, item) => h + lines(item, 60) * 28 + 16, 0) : undefined,
+  photo: photo ? 288 : undefined,
+  deal: (offer.prices ? (offer.prices.columns ? 36 : 0) + (offer.prices.caption ? 32 : 0) + offer.prices.rows.reduce((h, r) => h + (r.note || r.old ? 96 : 74), 0) + gap : 0) + (offer.soon ? 72 + gap : 0) + 52,
+};
+const has = (k: Key) => height[k] !== undefined;
+const sum = (keys: Key[]) => keys.reduce((h, k) => h + (height[k] ?? 0), 0) + Math.max(0, keys.length - 1) * gap;
+
+// Перебираем, куда поставить переносные блоки (их не больше трёх), и берём раскладку, где колонки
+// ближе по высоте. Фото тянется, поэтому в короткой колонке оно разницу съедает целиком.
+// При равенстве — привычный порядок: списки справа, фото слева.
+const movable = (['points', 'includes', 'photo'] as Key[]).filter(has);
+let best = { left: [] as Key[], right: [] as Key[], score: Infinity };
+for (let mask = 0; mask < 1 << movable.length; mask++) {
+  const toLeft = movable.filter((_, i) => mask & (1 << i));
+  const toRight = movable.filter((k) => !toLeft.includes(k));
+  const left = (['head', 'intro', 'meta'] as Key[]).filter(has).concat(toLeft);
+  const right = toRight.includes('photo') ? ['photo' as Key, ...toRight.filter((k) => k !== 'photo'), 'deal' as Key] : [...toRight, 'deal' as Key];
+  const [l, r] = [sum(left), sum(right)];
+  const elastic = (toLeft.includes('photo') && l <= r) || (toRight.includes('photo') && r <= l);
+  const habit = (toLeft.includes('points') ? 1 : 0) + (toLeft.includes('includes') ? 1 : 0) + (toRight.includes('photo') ? 1 : 0);
+  const score = (elastic ? 0 : Math.abs(l - r)) + Math.max(l, r) * 0.05 + habit * 10;
+  if (score < best.score) best = { left, right, score };
+}
+const columns = [best.left, best.right];
+// Последний блок колонки без фото прижимаем к низу: углы блока заняты, воздух уходит в середину.
+const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col.length - 1] && col.length > 1;
 ---
 
 <section id={offer.id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <div class="lg:col-span-5">
-    {showIntro && offer.badges.length > 0 && <div class="mb-8 flex flex-wrap gap-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
-    <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.2vw,3.5rem)', 5)} data-reveal>{title}</h2>
-    {offer.subtitle && <p class:list={['label mt-5 font-semibold', accent]} data-reveal>{offer.subtitle}</p>}
-    {showIntro && offer.intro && (
-      <div class="mt-10" data-reveal>
-        <p class:list={['label font-semibold', accent]}>{offer.intro.label}</p>
-        <p class:list={['mt-3 text-lg leading-relaxed', dark ? 'text-paper/85' : 'text-ink/85']}>{offer.intro.text}</p>
-      </div>
-    )}
-    {(offer.meta || offer.schedule) && (
-      <dl class="mt-10 grid gap-6" data-reveal>
-        {offer.meta?.map((m) => (
-          <div>
-            <dt class:list={['label font-semibold', accent]}>{m.label}</dt>
-            <dd class:list={['mt-2 leading-relaxed', m.value ? '' : muted]}>{m.value ?? 'Уточняется'}</dd>
-          </div>
-        ))}
-        {offer.schedule && (
-          <div>
-            <dt class:list={['label font-semibold', accent]}>Расписание</dt>
-            <dd class="mt-2 leading-relaxed">
-              <span class:list={[!offer.schedule.days && muted]}>{offer.schedule.days ?? 'Дни уточняются — скоро в расписании'}</span>
-              {offer.schedule.slots.map((s) => (
-                <span class="block">{s.label}: <span class:list={[!s.time && muted]}>{formatTime(s.time)}</span></span>
-              ))}
-            </dd>
-          </div>
-        )}
-      </dl>
-    )}
-    {photo && <Image src={photos[offer.photo]} alt={alts[offer.photo]} widths={[600, 900]} sizes="(min-width: 1024px) 40vw, 100vw" class="mt-12 aspect-[4/3] w-full rounded-md object-cover" data-reveal />}
-  </div>
-
-  <div class="grid content-start gap-12 lg:col-span-6 lg:col-start-7">
-    {offer.points && (
-      <div data-reveal>
-        <h3 class:list={['label font-semibold', accent]}>{offer.points.title}</h3>
-        <ul class="mt-6 grid gap-6">
-          {offer.points.items.map((p) => (
-            <li>
-              <span class:list={['dash mb-4 block', dash]} aria-hidden="true"></span>
-              <p class="font-display text-base font-bold uppercase md:text-lg">{p.title}</p>
-              <p class:list={['mt-2 leading-relaxed', muted]}>{p.text}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-    {offer.includes && (
-      <div data-reveal>
-        <h3 class:list={['label font-semibold', accent]}>{offer.includes.title}</h3>
-        <ul class="mt-6 grid gap-4">
-          {offer.includes.items.map((item) => (
-            <li class="flex gap-4 text-lg leading-snug">
-              <span class:list={['dash mt-2.5 block w-5 shrink-0', dash]} aria-hidden="true"></span>{item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-    {offer.prices && <div data-reveal><PriceTable table={offer.prices} tone={tone} /></div>}
-    {offer.soon && (
-      <p class:list={['font-display text-2xl leading-snug font-bold uppercase', accent]} data-reveal>{offer.soon}</p>
-    )}
-    <div class="flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal>
-      <Button href={offer.cta.href} icon="lightning">{offer.cta.label}</Button>
-      <slot />
+  {columns.map((col, ci) => (
+    <div class:list={['flex flex-col gap-10 lg:gap-12', ci ? 'lg:col-span-6 lg:col-start-7' : 'lg:col-span-5']}>
+      {col.map((k) => {
+        const anchor = anchored(col, k) && 'lg:mt-auto';
+        switch (k) {
+          case 'head':
+            return (
+              <div class:list={[anchor]}>
+                {showIntro && offer.badges.length > 0 && <div class="mb-8 flex flex-wrap gap-2" data-reveal>{offer.badges.map((b) => <Badge tone={tone}>{b}</Badge>)}</div>}
+                <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.2vw,3.5rem)', 5)} data-reveal>{title}</h2>
+                {offer.subtitle && <p class:list={['label mt-5 font-semibold', accent]} data-reveal>{offer.subtitle}</p>}
+              </div>
+            );
+          case 'intro':
+            return (
+              <div class:list={[anchor]} data-reveal>
+                <p class:list={['label font-semibold', accent]}>{offer.intro!.label}</p>
+                <p class:list={['mt-3 max-w-[60ch] text-lg leading-relaxed', dark ? 'text-paper/85' : 'text-ink/85']}>{offer.intro!.text}</p>
+              </div>
+            );
+          case 'meta':
+            return (
+              <dl class:list={['grid gap-6', anchor]} data-reveal>
+                {offer.meta?.map((m) => (
+                  <div>
+                    <dt class:list={['label font-semibold', accent]}>{m.label}</dt>
+                    <dd class:list={['mt-2 leading-relaxed', m.value ? '' : muted]}>{m.value ?? 'Уточняется'}</dd>
+                  </div>
+                ))}
+                {offer.schedule && (
+                  <div>
+                    <dt class:list={['label font-semibold', accent]}>Расписание</dt>
+                    <dd class="mt-2 leading-relaxed">
+                      <span class:list={[!offer.schedule.days && muted]}>{offer.schedule.days ?? 'Дни уточняются — скоро в расписании'}</span>
+                      {offer.schedule.slots.map((s) => (
+                        <span class="block">{s.label}: <span class:list={[!s.time && muted]}>{formatTime(s.time)}</span></span>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            );
+          case 'points':
+            return (
+              <div class:list={[anchor]} data-reveal>
+                <h3 class:list={['label font-semibold', accent]}>{offer.points!.title}</h3>
+                <ul class="mt-6 grid max-w-[60ch] gap-6">
+                  {offer.points!.items.map((p) => (
+                    <li>
+                      <span class:list={['dash mb-4 block', dash]} aria-hidden="true"></span>
+                      <p class="font-display text-base font-bold uppercase md:text-lg">{p.title}</p>
+                      <p class:list={['mt-2 leading-relaxed', muted]}>{p.text}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          case 'includes':
+            return (
+              <div class:list={[anchor]} data-reveal>
+                <h3 class:list={['label font-semibold', accent]}>{offer.includes!.title}</h3>
+                <ul class="mt-6 grid max-w-[60ch] gap-4">
+                  {offer.includes!.items.map((item) => (
+                    <li class="flex gap-4 text-lg leading-snug">
+                      <span class:list={['dash mt-2.5 block w-5 shrink-0', dash]} aria-hidden="true"></span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          case 'photo':
+            return (
+              <div class="relative aspect-[4/3] overflow-hidden rounded-md lg:aspect-auto lg:min-h-72 lg:flex-1" data-reveal>
+                <Image src={photos[offer.photo]} alt={alts[offer.photo]} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 45vw, 100vw" class="absolute inset-0 size-full object-cover" />
+              </div>
+            );
+          // Если в колонке одни цены: таблица сверху, напротив заголовка, кнопка внизу, на линии низа соседней колонки.
+          case 'deal':
+            return (
+              <div class:list={['flex flex-col gap-10 lg:gap-12', col.length > 1 ? 'lg:mt-auto' : 'lg:flex-1']}>
+                {offer.prices && <div data-reveal><PriceTable table={offer.prices} tone={tone} /></div>}
+                {offer.soon && (
+                  <p class:list={['font-display text-2xl leading-snug font-bold uppercase', accent]} data-reveal>{offer.soon}</p>
+                )}
+                <div class:list={['flex flex-wrap items-center gap-x-7 gap-y-4', col.length === 1 && 'lg:mt-auto']} data-reveal>
+                  <Button href={offer.cta.href} icon="lightning">{offer.cta.label}</Button>
+                  <slot />
+                </div>
+              </div>
+            );
+        }
+      })}
     </div>
-  </div>
+  ))}
 </section>

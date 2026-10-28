@@ -1,6 +1,7 @@
 ---
 // Таблица цен из ТЗ: одна колонка или «Будни / Выходные», зачёркнутая старая цена, пояснение
 // под строкой. Пустая цена (null) — подпись «Уточняется» или своя (table.empty).
+// Столбцы цен сжаты по содержимому: лишнюю ширину забирает название, цены держатся группой справа.
 import { formatPrice, type Price } from '../../lib/format';
 import type { PriceTable } from '../../data/services';
 
@@ -23,7 +24,7 @@ const cells = (r: PriceTable['rows'][number]): [Price, number | undefined][] =>
       <thead>
         <tr>
           <th scope="col" class="sr-only">Формат</th>
-          {table.columns.map((c) => <th scope="col" class:list={['label pb-3 pl-4 text-right align-bottom font-semibold', muted]}>{c}</th>)}
+          {table.columns.map((c) => <th scope="col" class:list={['label pb-3 pl-4 text-right align-bottom font-semibold lg:w-px lg:whitespace-nowrap xl:pl-8', muted]}>{c}</th>)}
         </tr>
       </thead>
     )}
@@ -35,7 +36,7 @@ const cells = (r: PriceTable['rows'][number]): [Price, number | undefined][] =>
             {r.note && <span class:list={['mt-1 block text-sm', muted]}>{r.note}</span>}
           </th>
           {cells(r).map(([price, old]) => (
-            <td class="py-5 pl-4 text-right align-top whitespace-nowrap">
+            <td class="py-5 pl-4 text-right align-top whitespace-nowrap lg:w-px xl:pl-8">
               <span class:list={price === null ? ['text-sm font-semibold', muted] : 'font-display text-xl font-bold md:text-2xl'}>{formatPrice(price, table.empty)}</span>
               {old && <span class:list={['mt-1 block text-sm', muted]}><span class="sr-only">вместо </span><s>{formatPrice(old)}</s></span>}
             </td>

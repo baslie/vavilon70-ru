@@ -1,6 +1,7 @@
 ---
 // Нумерованные шаги: подготовка к визиту (3), первая тренировка (5), предзаказ банкета (4).
 // Три шага — по 4 колонки, четыре — по 3, пять — первые три по 4 и два по 6.
+// Заголовок на 8 колонок, вводная — справа на 4, по низу заголовка, как в философии.
 import { fitHeadline } from '../../lib/headline';
 import DownloadLink from './DownloadLink.astro';
 import type { Step } from '../../data/services';
@@ -19,10 +20,8 @@ const span = (i: number) => (items.length === 4 ? 'lg:col-span-3' : items.length
 ---
 
 <section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <div class="lg:col-span-8">
-    <h2 class="headline headline-fit leading-[1.02]" style={fitHeadline(title, 'clamp(1.9rem,3.6vw,3.75rem)', 8)} data-reveal>{title}</h2>
-    {lead && <p class:list={['mt-6 max-w-[60ch] text-lg leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
-  </div>
+  <h2 class="headline headline-fit leading-[1.02] lg:col-span-8" style={fitHeadline(title, 'clamp(1.9rem,3.6vw,3.75rem)', 8)} data-reveal>{title}</h2>
+  {lead && <p class:list={['max-w-[60ch] text-lg leading-relaxed lg:col-span-4 lg:self-end', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
   <ol class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-12 lg:grid-cols-subgrid">
     {items.map((s, i) => (
       <li class={span(i)} data-reveal style={`--i:${i % 4}`}>
