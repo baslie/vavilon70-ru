@@ -8,6 +8,7 @@ import Icon from './Icon.astro';
 import BookingLink from './BookingLink.astro';
 import { contacts, hero, slogans, socials } from '../data/content';
 import { menu } from '../data/nav';
+import { privacyPolicyHref } from '../data/forms';
 
 // Подвал — карта страниц из того же меню, что и шапка: по ссылке на страницу. Разделы с подменю
 // раскладываются в колонки, группа со своей страницей сворачивается в ссылку на неё (href).
@@ -17,6 +18,8 @@ const columns = menu
   .map((item) => ({ ...item, links: item.groups!.flatMap((g) => (g.href ? [{ title: g.title, href: g.href }] : g.links)) }));
 const complex = menu.filter((item) => !item.groups && !item.href.startsWith('#'));
 const year = new Date().getFullYear();
+// Правовые ссылки нижней строки. «Настройки cookie» снова открывает плашку согласия (CookieConsent.astro).
+const legal = 'underline decoration-ink/25 underline-offset-[6px] transition hover:text-ink hover:decoration-violet';
 ---
 
 <footer id="kontakty" class="px-4 pt-16 pb-8 md:px-8">
@@ -67,7 +70,13 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="mt-14 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <p class="text-sm text-ink/55">© {year} «Вавилон», спортивно-развлекательный комплекс, Томск</p>
+    <div class="flex flex-col gap-2 text-sm text-ink/55 lg:flex-row lg:gap-8">
+      <p>© {year} «Вавилон», спортивно-развлекательный комплекс, Томск</p>
+      <p class="flex flex-wrap gap-x-6 gap-y-2">
+        <a href={privacyPolicyHref} class={legal}>Политика конфиденциальности</a>
+        <button type="button" class:list={[legal, 'hidden cursor-pointer [.js_&]:inline']} data-cookie-settings>Настройки cookie</button>
+      </p>
+    </div>
     <p class="label flex flex-wrap gap-x-3 font-semibold text-ink" aria-hidden="true">
       {slogans.values.map((w, i) => <>{i > 0 && <span class="text-violet">/</span>}<span>{w}</span></>)}
     </p>

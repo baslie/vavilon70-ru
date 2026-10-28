@@ -39,7 +39,8 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
     </div>
   </div>
 
-  <form class="grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2 lg:col-span-6 lg:col-start-7" data-request-form data-reveal>
+  {/* ym-hide-content: Вебвизор Метрики не записывает, что вводят в поля заявки. */}
+  <form class="ym-hide-content grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2 lg:col-span-6 lg:col-start-7" data-request-form data-reveal>
     {form.fields.map((f) => {
       const fieldId = `${id}-${f.name}`;
       return (
@@ -64,7 +65,7 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
       <input type="checkbox" name="consent" required class="mt-1 size-4 shrink-0 accent-violet" />
       <span>
         Согласен на обработку персональных данных
-        {privacyPolicyHref && <>в соответствии с <a href={privacyPolicyHref} class={link}>политикой конфиденциальности</a></>}
+        {privacyPolicyHref && <>в соответствии с <a href={privacyPolicyHref} target="_blank" rel="noopener" class={link}>политикой конфиденциальности</a></>}
       </span>
     </label>
 

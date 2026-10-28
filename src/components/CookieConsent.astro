@@ -1,0 +1,110 @@
+---
+// Плашка согласия на cookie (152-ФЗ). Сначала выбор, потом аналитика: до «Принять» Метрика не грузится
+// и cookie _ym_* не пишутся. «Отказаться» — кнопка того же размера, не модальное окно, сайт не блокирует.
+// Выбор хранится в localStorage с версией (consentVersion в src/data/analytics.ts), изменить его можно
+// кнопкой «Настройки cookie» в подвале. Без JS плашка не показывается: без JS и Метрики нет.
+import { privacyPolicyHref } from '../data/forms';
+
+const button = 'label rounded-md px-5 py-3 font-semibold transition active:scale-[0.98]';
+---
+
+<section
+  class="fixed inset-x-4 bottom-4 z-40 rounded-lg border border-ink/15 bg-paper p-5 text-ink shadow-[0_16px_48px_-16px_rgb(14_14_17/0.45)] sm:right-auto sm:max-w-[30rem] md:bottom-8 md:left-8 md:p-6 motion-safe:transition-[opacity,translate] motion-safe:duration-500 motion-safe:ease-out-expo motion-safe:starting:translate-y-6 motion-safe:starting:opacity-0"
+  aria-label="Согласие на cookie"
+  data-cookie-banner
+  hidden
+>
+  <p class="label font-semibold text-violet">Файлы cookie</p>
+  <p class="mt-3 text-sm leading-relaxed text-ink/75">
+    Мы используем cookie и Яндекс Метрику, чтобы считать посещения и понимать, какие разделы сайта полезны.
+    Метрика включится, только если вы согласитесь. Подробнее — в <a href={privacyPolicyHref} class="underline decoration-ink/25 underline-offset-4 transition hover:decoration-violet">политике конфиденциальности</a>.
+  </p>
+  <div class="mt-5 grid grid-cols-2 gap-3">
+    <button type="button" class:list={[button, 'bg-violet text-paper hover:bg-violet-deep']} data-consent="accept">Принять</button>
+    <button type="button" class:list={[button, 'border border-ink/25 hover:border-ink']} data-consent="reject">Отказаться</button>
+  </div>
+</section>
+
+<script>
+  import { consentVersion, metrikaId, metrikaOptions } from '../data/analytics';
+
+  type Consent = { analytics: boolean; date: string; version: number };
+  const key = 'vavilon-consent';
+  const banner = document.querySelector<HTMLElement>('[data-cookie-banner]')!;
+
+  // localStorage может быть недоступен (приватный режим, запрет сайтовых данных) — тогда просто спрашиваем каждый раз.
+  const read = (): Consent | null => {
+    try {
+      const consent = JSON.parse(localStorage.getItem(key) ?? 'null') as Consent | null;
+      return consent?.version === consentVersion ? consent : null;
+    } catch {
+      return null;
+    }
+  };
+  const save = (analytics: boolean) => {
+    try {
+      localStorage.setItem(key, JSON.stringify({ analytics, date: new Date().toISOString(), version: consentVersion } satisfies Consent));
+    } catch {}
+  };
+
+  // Код счётчика из интерфейса Метрики, но вставляется только после согласия. <noscript>-пиксель
+  // не ставим: он срабатывает без JS, а значит, и без согласия.
+  let metrikaLoaded = false;
+  const loadMetrika = () => {
+    if (metrikaLoaded || !metrikaId || !import.meta.env.PROD) return;
+    metrikaLoaded = true;
+    const w = window as unknown as { ym: ((...args: unknown[]) => void) & { a?: IArguments[]; l?: number } };
+    w.ym ||= function () {
+      (w.ym.a ||= []).push(arguments);
+    };
+    w.ym.l = Date.now();
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://mc.yandex.ru/metrika/tag.js?id=${metrikaId}`;
+    document.head.append(script);
+    w.ym(Number(metrikaId), 'init', metrikaOptions);
+  };
+
+  // Отзыв согласия: стираем cookie (_ym_*, mdd) и записи Метрики на нашем домене. Уже загруженный скрипт
+  // выгрузить нельзя, поэтому страница перезагружается — после перезагрузки счётчик не грузится.
+  const clearMetrika = () => {
+    const host = location.hostname;
+    const domains = ['', host, `.${host}`, `.${host.split('.').slice(-2).join('.')}`];
+    document.cookie
+      .split(';')
+      .map((c) => c.split('=')[0].trim())
+      .filter((name) => name.startsWith('_ym') || name === 'mdd')
+      .forEach((name) => domains.forEach((d) => (document.cookie = `${name}=; Max-Age=0; path=/${d ? `; domain=${d}` : ''}`)));
+    try {
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith('_ym'))
+        .forEach((k) => localStorage.removeItem(k));
+    } catch {}
+  };
+
+  const consent = read();
+  // При отказе чистим и на загрузке: Метрика дописывает свои записи, пока страница перезагружается.
+  if (!consent) banner.hidden = false;
+  else if (consent.analytics) loadMetrika();
+  else clearMetrika();
+
+  banner.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const analytics = btn.dataset.consent === 'accept';
+      save(analytics);
+      banner.hidden = true;
+      if (analytics) loadMetrika();
+      else {
+        clearMetrika();
+        if (metrikaLoaded) location.reload();
+      }
+    }),
+  );
+
+  document.querySelectorAll('[data-cookie-settings]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      banner.hidden = false;
+      banner.querySelector<HTMLButtonElement>('[data-consent]')?.focus();
+    }),
+  );
+</script>

@@ -1,0 +1,40 @@
+---
+// Политика обработки персональных данных. Текст перенесён со старого сайта (vavilon70.ru/privacy)
+// и дополнен целями для заявок и Метрики и разделом о cookie, лежит в src/data/privacy.md.
+// Адрес /privacy/ совпадает со старым, чтобы ссылки на Tilda-версию продолжили работать.
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Headline from '../components/blocks/Headline.astro';
+import { Content } from '../data/privacy.md';
+
+const edition = '28.10.2026';
+---
+
+<Layout
+  title="Политика конфиденциальности — Вавилон"
+  description="Политика обработки персональных данных спортивно-развлекательного комплекса «Вавилон»: какие данные собираем, зачем, как используем cookie и Яндекс Метрику."
+  bodyClass="bg-mist text-ink"
+>
+  <Header />
+
+  <main>
+    <section class="grid-site gap-y-8 px-4 pt-16 pb-14 md:px-8 lg:pt-24">
+      <div class="lg:col-span-8">
+        <p class="label mb-6 font-semibold text-violet">Документ</p>
+        <Headline as="h1" text="Политика конфиденциальности" size="clamp(2.25rem,5vw,5.5rem)" span={8} />
+      </div>
+      <div class="flex flex-col justify-end gap-3 lg:col-span-4">
+        <p class="text-lg leading-relaxed text-ink/75">Как «Вавилон» обрабатывает персональные данные посетителей сайта и использует файлы cookie.</p>
+        <p class="label text-ink/50">Редакция от {edition}</p>
+      </div>
+    </section>
+
+    <section class="grid-site border-t border-ink/10 px-4 pt-6 pb-20 md:px-8">
+      <article class="doc lg:col-span-8">
+        <Content />
+      </article>
+    </section>
+  </main>
+  <Footer />
+</Layout>
