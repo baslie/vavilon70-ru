@@ -27,7 +27,8 @@ const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:
         ))}
       </ul>
       <div class:list={['mt-auto border-t pt-6', dark ? 'border-paper/15' : 'border-ink/15']}>
-        <p class="font-display text-xl font-bold uppercase">{formatPrice(p.price, 'Цена по запросу')}</p>
+        {/* Пустая цена тише настоящей, как в PriceTable: заглушка не должна быть громче состава пакета. */}
+        <p class:list={p.price === null ? ['text-sm font-semibold', dark ? 'text-paper/65' : 'text-ink/65'] : 'font-display text-xl font-bold uppercase'}>{formatPrice(p.price, 'Цена по запросу')}</p>
         {p.extra !== undefined && (
           <p class:list={['mt-2 text-sm', dark ? 'text-paper/60' : 'text-ink/60']}>Доплата за человека: {formatPrice(p.extra)}</p>
         )}

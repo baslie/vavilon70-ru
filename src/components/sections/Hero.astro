@@ -32,7 +32,8 @@ const details = [
         <span class="block">Больше</span>
         <span class="block">чем прыжки</span>
       </h1>
-      <p class="label mt-6 flex flex-wrap gap-x-3 text-ink/60">
+      {/* На узком экране разрядка и зазор меньше, чтобы «Вавилон» не висел один на второй строке. */}
+      <p class="label mt-6 flex flex-wrap gap-x-2 tracking-[0.12em] text-ink/60 sm:gap-x-3 sm:tracking-[0.22em]">
         {slogans.values.map((w, i) => <>{i > 0 && <span class="text-ink/30">/</span>}<span>{w}</span></>)}
       </p>
     </div>

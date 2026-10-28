@@ -14,7 +14,9 @@ const panels = await Promise.all(tabs.map((t) => Astro.slots.render(t.id)));
 ---
 
 <div data-tabs>
-  <div role="tablist" aria-label={label} class="hidden flex-wrap gap-3 [.js_&]:flex">
+  {/* Вкладки — подчёркиванием цветом акцента поля, без заливки и скоса: залитая скошенная вкладка
+      не отличалась от кнопки записи (28.10.2026). Подчёркивание активной лежит на общей линии. */}
+  <div role="tablist" aria-label={label} class:list={['hidden flex-wrap gap-x-8 border-b [.js_&]:flex', dark ? 'border-paper/15' : 'border-ink/15']}>
     {tabs.map((t, i) => (
       <button
         type="button"
@@ -24,12 +26,12 @@ const panels = await Promise.all(tabs.map((t) => Astro.slots.render(t.id)));
         aria-selected={i === 0 ? 'true' : 'false'}
         tabindex={i === 0 ? 0 : -1}
         class:list={[
-          'btn-skew label cursor-pointer rounded-md border px-5 py-3 font-semibold transition',
+          'label -mb-px cursor-pointer border-b-2 border-transparent py-3 font-semibold transition',
           dark
-            ? 'border-paper/30 hover:border-paper aria-selected:border-violet aria-selected:bg-violet aria-selected:text-paper'
-            : 'border-ink/25 hover:border-ink aria-selected:border-violet aria-selected:bg-violet aria-selected:text-paper',
+            ? 'text-paper/65 hover:border-lime/40 hover:text-paper aria-selected:border-lime aria-selected:text-paper'
+            : 'text-ink/65 hover:border-violet/40 hover:text-ink aria-selected:border-violet aria-selected:text-ink',
         ]}
-      ><span>{t.label}</span></button>
+      >{t.label}</button>
     ))}
   </div>
   {tabs.map((t, i) => (

@@ -31,7 +31,7 @@ const size = poster > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : poster <= 14 ? 'clamp(2
 <section class="grid-site gap-y-10 px-4 pt-6 pb-16 md:px-8 lg:min-h-[max(620px,calc(100dvh-5.5rem))] lg:pt-4 lg:pb-8">
   <div class="relative flex flex-col gap-8 lg:col-span-6 lg:justify-center lg:py-14">
     <nav aria-label="Разделы" class="lg:absolute lg:inset-x-0 lg:top-0">
-      <ol class="label flex flex-wrap gap-x-3 text-ink/55">
+      <ol class="label flex flex-wrap gap-x-3 text-ink/65">
         <li><a href={url('/')} class="transition hover:text-violet">Главная</a></li>
         {crumbs.map((c) => (
           <li class="flex gap-x-3"><span class="text-ink/30" aria-hidden="true">/</span>{c.href ? <a href={c.href} class="transition hover:text-violet">{c.title}</a> : <span>{c.title}</span>}</li>
