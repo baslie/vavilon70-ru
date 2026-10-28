@@ -21,7 +21,7 @@ const dark = tone === 'dark';
 
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02]" data-reveal>{title}</h2>
-  <ul class="grid-site mt-12 gap-y-12 md:grid-cols-2">
+  <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-2">
     {items.map((c, i) => (
       <li class="lg:col-span-4" data-reveal style={`--i:${i % 3}`}>
         <a href={c.href} class="group block">

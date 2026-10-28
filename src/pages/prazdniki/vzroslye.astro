@@ -1,0 +1,36 @@
+---
+// Взрослые мероприятия: день рождения 18+ (#den-rozhdeniya), тимбилдинг и корпоративы
+// (#korporativy) с пакетами-заглушками (открытый вопрос #7), ночная тренировка
+// (#nochnaya-trenirovka) с формой «Узнать дату ближайшей ночи» и общая форма расчёта.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import EventSection from '../../components/blocks/EventSection.astro';
+import Offer from '../../components/blocks/Offer.astro';
+import RequestForm from '../../components/blocks/RequestForm.astro';
+import Button from '../../components/blocks/Button.astro';
+import { adultBirthday, corporate, night } from '../../data/parties';
+import { forms } from '../../data/forms';
+import { url } from '../../data/nav';
+
+const cta = { label: forms.party.title, href: '#zayavka' };
+---
+
+<Layout title="Взрослые мероприятия — Вавилон" description="Взрослые мероприятия в «Вавилоне», Томск: день рождения 18+, тимбилдинг и корпоративы, закрытая ночная тренировка." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title="Взрослые мероприятия" crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }]} badges={['18+']} lead="День рождения без рамок, тимбилдинг для команды и ночная тренировка, когда весь комплекс только для своих." photo="jumpTall">
+      <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
+        {[adultBirthday, corporate, night].map((e) => <li><a href={`#${e.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{e.title}</a></li>)}
+      </ul>
+    </PageHero>
+    <EventSection event={adultBirthday} tone="dark" cta={cta} />
+    <EventSection event={corporate} cta={cta} />
+    <Offer offer={night} tone="dark" photo />
+    <RequestForm id="noch" form={forms.night} tone="light" />
+    <RequestForm id="zayavka" form={forms.party} />
+  </main>
+  <Footer />
+</Layout>

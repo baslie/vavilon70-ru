@@ -1,0 +1,30 @@
+---
+// Дополнительные услуги для праздников: аквагрим (#akvagrim) и фотограф (#fotograf).
+// Цен нет (открытый вопрос #8) — «По запросу», кнопки ведут на форму расчёта праздника.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import Offer from '../../components/blocks/Offer.astro';
+import RequestForm from '../../components/blocks/RequestForm.astro';
+import Button from '../../components/blocks/Button.astro';
+import { extras, facePainting, photographer } from '../../data/parties';
+import { forms } from '../../data/forms';
+import { url } from '../../data/nav';
+---
+
+<Layout title="Дополнительные услуги — Вавилон" description="Аквагрим и профессиональный фотограф на празднике в «Вавилоне», Томск." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title={extras.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }, { title: 'Дополнительные услуги' }]} lead={extras.lead} photo="party">
+      <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
+        {[facePainting, photographer].map((o) => <li><a href={`#${o.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{o.title}</a></li>)}
+      </ul>
+    </PageHero>
+    <Offer offer={facePainting} tone="dark" photo />
+    <Offer offer={photographer} photo />
+    <RequestForm id="zayavka" form={forms.party} />
+  </main>
+  <Footer />
+</Layout>

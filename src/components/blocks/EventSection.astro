@@ -1,0 +1,40 @@
+---
+// Мероприятие с пакетами: день рождения 18+, корпоративы, украшение зоны кафе. Слева подпись,
+// слоган и текст, справа преимущества, ниже пакеты на всю ширину и кнопка.
+import Packages from './Packages.astro';
+import Button from './Button.astro';
+import type { EventBlock } from '../../data/parties';
+
+interface Props {
+  event: EventBlock;
+  tone?: 'light' | 'dark';
+  cta?: { label: string; href: string };
+}
+
+const { event, tone = 'light', cta } = Astro.props;
+const dark = tone === 'dark';
+const muted = dark ? 'text-paper/70' : 'text-ink/70';
+---
+
+<section id={event.id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
+  <div class="lg:col-span-5">
+    <p class:list={['label font-semibold', dark ? 'text-lime' : 'text-violet']} data-reveal>{event.title}</p>
+    <h2 class="headline mt-6 text-[clamp(1.9rem,3.2vw,3.5rem)] leading-[1.02]" data-reveal>{event.tagline}</h2>
+    <p class:list={['mt-6 max-w-[52ch] text-lg leading-relaxed', muted]} data-reveal>{event.text}</p>
+  </div>
+  {event.points && (
+    <ul class="grid content-end gap-8 lg:col-span-6 lg:col-start-7">
+      {event.points.map((p, i) => (
+        <li data-reveal style={`--i:${i}`}>
+          <span class:list={['dash mb-4 block', dark ? 'bg-lime' : 'bg-signal']} aria-hidden="true"></span>
+          <p class="font-display text-base font-bold uppercase md:text-lg">{p.title}</p>
+          <p class:list={['mt-2 leading-relaxed', muted]}>{p.text}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+  <div class="lg:col-span-12" data-reveal>
+    <Packages packages={event.packages} tone={tone} />
+  </div>
+  {cta && <div class="lg:col-span-12" data-reveal><Button href={cta.href} icon="confetti">{cta.label}</Button></div>}
+</section>

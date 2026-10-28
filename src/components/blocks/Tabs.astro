@@ -1,0 +1,66 @@
+---
+// Вкладки из ТЗ («Дети 4–7 лет | Дети 8–18 лет», «Сады | Школа | Старшеклассники»).
+// Содержимое панели — слот с именем вкладки (slot={tab.id}). Без JS кнопок нет, а панели идут
+// подряд со своими заголовками; со скриптом видна одна панель, стрелки переключают вкладки.
+interface Props {
+  tabs: { id: string; label: string }[];
+  label: string;
+  tone?: 'light' | 'dark';
+}
+
+const { tabs, label, tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+const panels = await Promise.all(tabs.map((t) => Astro.slots.render(t.id)));
+---
+
+<div data-tabs>
+  <div role="tablist" aria-label={label} class="hidden flex-wrap gap-3 [.js_&]:flex">
+    {tabs.map((t, i) => (
+      <button
+        type="button"
+        role="tab"
+        id={`tab-${t.id}`}
+        aria-controls={`panel-${t.id}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        tabindex={i === 0 ? 0 : -1}
+        class:list={[
+          'btn-skew label cursor-pointer rounded-md border px-5 py-3 font-semibold transition',
+          dark
+            ? 'border-paper/30 hover:border-paper aria-selected:border-violet aria-selected:bg-violet aria-selected:text-paper'
+            : 'border-ink/25 hover:border-ink aria-selected:border-violet aria-selected:bg-violet aria-selected:text-paper',
+        ]}
+      ><span>{t.label}</span></button>
+    ))}
+  </div>
+  {tabs.map((t, i) => (
+    <div role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} class="mt-10" data-tab-panel>
+      <h3 class:list={['label mb-6 font-semibold [.js_&]:sr-only', dark ? 'text-lime' : 'text-violet']}>{t.label}</h3>
+      <Fragment set:html={panels[i]} />
+    </div>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-tab-panel]')];
+    const select = (index: number) => {
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+      panels.forEach((panel, i) => (panel.hidden = i !== index));
+    };
+    select(0);
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (event) => {
+        const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        const next = (i + step + tabs.length) % tabs.length;
+        select(next);
+        tabs[next].focus();
+      });
+    });
+  });
+</script>

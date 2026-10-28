@@ -1,0 +1,31 @@
+---
+// «Праздники»: карточки всех форматов, спокойный блок безопасности для родителей и форма
+// «Рассчитать стоимость праздника» (#zayavka — на неё ведут кнопки праздника по всему сайту).
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import CardGrid from '../../components/blocks/CardGrid.astro';
+import RequestForm from '../../components/blocks/RequestForm.astro';
+import Button from '../../components/blocks/Button.astro';
+import Safety from '../../components/sections/Safety.astro';
+import { partyCards } from '../../data/parties';
+import { forms } from '../../data/forms';
+import { url } from '../../data/nav';
+
+const cards = partyCards.map((c) => ({ ...c, href: url(c.path) }));
+---
+
+<Layout title="Праздники — Вавилон" description="Праздники под ключ в «Вавилоне», Томск: дни рождения, выпускные, детские праздники, взрослые корпоративы и тимбилдинги." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title="Праздники" lead="Дни рождения, выпускные, детские праздники и взрослые корпоративы (тимбилдинги) под ключ." photo="party">
+      <Button href="#zayavka" icon="confetti">{forms.party.title}</Button>
+    </PageHero>
+    <CardGrid title="Выберите формат" items={cards} tone="dark" />
+    <Safety />
+    <RequestForm id="zayavka" form={forms.party} />
+  </main>
+  <Footer />
+</Layout>
