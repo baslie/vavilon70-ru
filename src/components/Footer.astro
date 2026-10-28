@@ -1,9 +1,12 @@
 ---
-// Подвал: контакты, соцсети и разделы сайта. Светлое поле после тёмного CTA.
-// На общей сетке четыре колонки по 3: контакты и три колонки разделов через subgrid.
+// Подвал: разделы сайта, полоса контактов и нижняя строка. Светлое поле после тёмного CTA.
+// Три ряда на общей сетке, все ячейки под колонками разделов: логотип и три колонки разделов,
+// под тонкой линией адрес, телефон, соцсети и запись, внизу © слева и слоган справа —
+// углы подвала заняты при любой длине колонок (docs/BRAND.md, «Баланс блока»).
 import Logo from './Logo.astro';
+import Icon from './Icon.astro';
 import BookingLink from './BookingLink.astro';
-import { contacts, hero, socials } from '../data/content';
+import { contacts, hero, slogans, socials } from '../data/content';
 import { menu } from '../data/nav';
 
 // Подвал — карта страниц из того же меню, что и шапка: по ссылке на страницу. Разделы с подменю
@@ -17,14 +20,9 @@ const year = new Date().getFullYear();
 ---
 
 <footer id="kontakty" class="px-4 pt-16 pb-8 md:px-8">
-  <div class="grid-site gap-y-14">
+  <div class="grid-site gap-y-12">
     <div class="lg:col-span-3">
       <Logo class="w-32" caption />
-      <p class="mt-10 text-lg leading-relaxed">{contacts.address}<br />{contacts.place}</p>
-      <a href={contacts.phoneHref} class="mt-4 inline-block font-display text-3xl font-bold transition hover:text-violet">{contacts.phone}</a>
-      <ul class="label mt-8 flex gap-6 font-semibold">
-        {socials.map((s) => <li><a href={s.href} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{s.title}</a></li>)}
-      </ul>
     </div>
 
     <nav class="grid gap-x-gutter gap-y-10 sm:grid-cols-3 lg:col-span-9 lg:grid-cols-subgrid" aria-label="Разделы сайта">
@@ -40,11 +38,38 @@ const year = new Date().getFullYear();
         <h2 class="label font-semibold text-violet">Комплекс</h2>
         <ul class="mt-5 grid gap-3 text-ink/75">
           {complex.map((l) => <li><a href={l.href} class="transition hover:text-ink">{l.title}</a></li>)}
-          <li><BookingLink class="transition hover:text-ink">{hero.primary}</BookingLink></li>
         </ul>
       </div>
     </nav>
   </div>
 
-  <p class="mt-16 text-sm text-ink/55">© {year} «Вавилон», спортивно-развлекательный комплекс, Томск</p>
+  <div class="grid-site mt-16 gap-y-10 border-t border-ink/15 pt-10 sm:max-lg:grid-cols-2">
+    <div class="lg:col-span-3">
+      <p class="label font-semibold text-ink/55">Адрес</p>
+      <p class="mt-3 text-lg leading-relaxed">{contacts.address}<br />{contacts.place}</p>
+    </div>
+    <div class="lg:col-span-3">
+      <p class="label font-semibold text-ink/55">Администратор</p>
+      <a href={contacts.phoneHref} class="mt-3 inline-block font-display text-3xl leading-none font-bold transition hover:text-violet">{contacts.phone}</a>
+    </div>
+    <div class="lg:col-span-3">
+      <p class="label font-semibold text-ink/55">Мы в соцсетях</p>
+      <ul class="label mt-4 flex gap-6 font-semibold">
+        {socials.map((s) => <li><a href={s.href} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{s.title}</a></li>)}
+      </ul>
+    </div>
+    <div class="lg:col-span-3">
+      <p class="label font-semibold text-ink/55">Онлайн-запись</p>
+      <BookingLink class="btn-skew label mt-3 inline-flex w-full items-center justify-center gap-3 rounded-md bg-violet px-6 py-4 font-semibold text-paper transition hover:bg-violet-deep active:scale-[0.98] sm:w-auto">
+        <span><Icon name="lightning" class="size-4" />{hero.primary}</span>
+      </BookingLink>
+    </div>
+  </div>
+
+  <div class="mt-14 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-ink/55">© {year} «Вавилон», спортивно-развлекательный комплекс, Томск</p>
+    <p class="label flex flex-wrap gap-x-3 font-semibold text-ink" aria-hidden="true">
+      {slogans.values.map((w, i) => <>{i > 0 && <span class="text-signal">/</span>}<span>{w}</span></>)}
+    </p>
+  </div>
 </footer>
