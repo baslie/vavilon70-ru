@@ -14,11 +14,12 @@ export type Card = { title: string; text: string; href: string; photo?: PhotoKey
 interface Props {
   id?: string;
   title: string;
+  lead?: string;
   items: Card[];
   tone?: 'light' | 'dark';
 }
 
-const { id, title, items, tone = 'light' } = Astro.props;
+const { id, title, lead, items, tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
 const n = items.length;
 const span = (i: number): 3 | 4 | 6 =>
@@ -29,6 +30,7 @@ const sizes = { 3: '25vw', 4: '33vw', 6: '50vw' };
 
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <Headline text={title} tone={tone} size="clamp(1.9rem,3.6vw,3.75rem)" class="leading-[1.02]" data-reveal />
+  {lead && <p class:list={['mt-6 max-w-[60ch] text-lg leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
   <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-2">
     {items.map((c, i) => (
       <li class={spanClass[span(i)]} data-reveal style={`--i:${i % 3}`}>

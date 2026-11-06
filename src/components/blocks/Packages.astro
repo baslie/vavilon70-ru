@@ -1,6 +1,7 @@
 ---
-// Пакеты праздника колонками: название, состав, цена и доплата за человека. Четыре пакета —
-// по 3 колонки, три — по 4, два — по 6, один — на 6. Пустая цена — «Цена по запросу».
+// Пакеты праздника колонками: номер пакета, название и число гостей, состав, общее время, цена
+// и доплата за следующего участника. Четыре пакета — по 3 колонки, три — по 4, два — по 6, один — на 6.
+// Пустая цена — «Цена по запросу».
 // Название — как у карточки цены (PriceTable), цветом текста: акцентный капс остаётся у плашки над заголовком.
 import { formatPrice } from '../../lib/format';
 import type { Package } from '../../data/parties';
@@ -12,13 +13,16 @@ interface Props {
 
 const { packages, tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
+const muted = dark ? 'text-paper/65' : 'text-ink/65';
 const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:col-span-6';
 ---
 
 <ul class="grid-site gap-y-gutter md:max-lg:grid-cols-2">
   {packages.map((p) => (
     <li class:list={['flex flex-col rounded-md p-6 md:p-7', span, dark ? 'bg-ink-soft' : 'bg-paper']}>
+      {p.label && <p class:list={['label mb-3 font-semibold', dark ? 'text-lime' : 'text-violet']}>{p.label}</p>}
       <h3 class="font-display text-lg leading-tight font-bold uppercase md:text-xl">{p.name}</h3>
+      {p.guests && <p class:list={['mt-2 text-sm font-semibold', muted]}>{p.guests}</p>}
       <ul class="mt-6 mb-8 grid gap-3">
         {p.items.map((item) => (
           <li class="flex gap-3 leading-snug">
@@ -27,10 +31,14 @@ const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:
         ))}
       </ul>
       <div class:list={['mt-auto border-t pt-6', dark ? 'border-paper/15' : 'border-ink/15']}>
+        {p.duration && <p class:list={['mb-4 text-sm leading-snug', muted]}>{p.duration}</p>}
         {/* Пустая цена тише настоящей, как в PriceTable: заглушка не должна быть громче состава пакета. */}
-        <p class:list={p.price === null ? ['text-sm font-semibold', dark ? 'text-paper/65' : 'text-ink/65'] : 'font-display text-xl font-bold uppercase'}>{formatPrice(p.price, 'Цена по запросу')}</p>
+        <p class:list={p.price === null ? ['text-sm font-semibold', muted] : 'font-display text-xl font-bold uppercase'}>
+          {formatPrice(p.price, 'Цена по запросу')}
+          {p.price !== null && p.perPerson && <span class="font-sans text-base font-semibold normal-case"> с человека</span>}
+        </p>
         {p.extra !== undefined && (
-          <p class:list={['mt-2 text-sm', dark ? 'text-paper/60' : 'text-ink/60']}>Доплата за человека: {formatPrice(p.extra)}</p>
+          <p class:list={['mt-2 text-sm', dark ? 'text-paper/60' : 'text-ink/60']}>Каждый следующий участник: {p.extra === null ? 'уточняется' : `+${formatPrice(p.extra)}`}</p>
         )}
       </div>
     </li>

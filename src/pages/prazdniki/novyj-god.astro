@@ -1,0 +1,46 @@
+---
+// Новогодние программы (ТЗ 06.11.2026, «Новогодние мероприятия»): вводная, вкладки «Детские сады |
+// Школа» с пакетами (группы от 12 человек, цена с человека), безопасность для родителей и форма
+// расчёта. Шаблон — как у выпускных.
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import Tabs from '../../components/blocks/Tabs.astro';
+import Packages from '../../components/blocks/Packages.astro';
+import RequestForm from '../../components/blocks/RequestForm.astro';
+import Button from '../../components/blocks/Button.astro';
+import Safety from '../../components/sections/Safety.astro';
+import { newYear } from '../../data/parties';
+import { forms } from '../../data/forms';
+import { url } from '../../data/nav';
+---
+
+<Layout title="Новогодние программы — Вавилон" description="Новогодние программы в «Вавилоне», Томск: для детских садов и школьных классов от 12 человек — батуты, Ninja-трасса, «Снежки на батутах» и угощение в семейном кафе, от 1 550 ₽ с человека." bodyClass="bg-mist text-ink">
+  <Header />
+
+  <main>
+    <PageHero title={newYear.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }, { title: 'Детские праздники' }]} lead={newYear.lead} photo="arena">
+      <Button href="#zayavka" icon="confetti">{forms.party.title}</Button>
+      <a href="#programmy" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">Программы</a>
+    </PageHero>
+
+    <section id="programmy" class="bg-ink px-4 py-20 text-paper md:px-8 lg:py-24">
+      <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02]" data-reveal>Новогодние программы</h2>
+      <div class="mt-10">
+        <Tabs tabs={newYear.groups} label="Для кого праздник" tone="dark">
+          {newYear.groups.map((g) => (
+            <div slot={g.id}>
+              {g.note && <p class="label mb-6 font-semibold text-paper/65">{g.note}</p>}
+              <Packages packages={g.packages} tone="dark" />
+            </div>
+          ))}
+        </Tabs>
+      </div>
+    </section>
+
+    <Safety />
+    <RequestForm id="zayavka" form={forms.party} />
+  </main>
+  <Footer />
+</Layout>

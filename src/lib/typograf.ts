@@ -17,6 +17,14 @@ Typograf.addRule({
   handler: (s) => s.replace(numberWordRe, `$1$2${NBSP}`),
 });
 
+// Неразрывный пробел между разрядами числа и перед знаком рубля в тексте: «4 000 ₽» не разрывается.
+// Цены из formatPrice уже приходят с неразрывным пробелом от toLocaleString.
+const digitGroupRe = /(\d) (?=\d{3}(?!\d)|₽)/g;
+Typograf.addRule({
+  name: 'common/nbsp/digitGroups',
+  handler: (s) => s.replace(digitGroupRe, `$1${NBSP}`),
+});
+
 const text = new Typograf({ locale, htmlEntity: { type: 'name', onlyInvisible: true } });
 // Ручное отключение: <!--notypo-->…<!--/notypo-->.
 text.addSafeTag('<!--notypo-->', '<!--/notypo-->');
