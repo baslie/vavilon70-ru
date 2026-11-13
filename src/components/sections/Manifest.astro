@@ -13,7 +13,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 <section id="o-centre" class="bg-ink px-4 py-24 text-paper md:px-8" aria-labelledby="manifest-title">
   <div class="grid-site gap-y-10">
-    <h2 id="manifest-title" class="max-w-[24ch] font-display text-[1.6rem] leading-[1.2] font-semibold sm:text-4xl lg:col-span-8 lg:text-[2.9rem]" data-reveal>
+    <h2 id="manifest-title" class="max-w-[24ch] font-display text-xl leading-[1.25] font-semibold sm:text-2xl md:text-3xl lg:col-span-8 lg:text-[2.9rem] lg:leading-[1.2]" data-reveal>
       {manifest.lead} <span class="text-violet">{manifest.accent}</span> {manifest.tail}
     </h2>
     <Image src={photos.football} alt={alts.football} widths={[600, 900]} sizes="(min-width: 1024px) 33vw, 100vw" class="aspect-[4/3] w-full rounded-md object-cover lg:col-span-4 lg:aspect-auto lg:h-full" data-reveal style="--i:1" />

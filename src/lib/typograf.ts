@@ -6,12 +6,12 @@ import Typograf from 'typograf';
 
 const locale = ['ru', 'en-US'];
 
-// Неразрывный пробел между числом и следующим словом: «6 ключевых», «14 батутов».
+// Неразрывный пробел между числом и следующим словом: «6 ключевых», «14 батутов», «1,5 часа».
 // Встроенное common/nbsp/afterNumber выключено по умолчанию и не видит число сразу после тега
 // (<span>6 …): теги типограф подменяет метками, закрывающий символ метки — U+F000.
 const NBSP = String.fromCharCode(0xa0);
 const TAG_MARK = String.fromCharCode(0xf000);
-const numberWordRe = new RegExp(String.raw`(^|[\s${TAG_MARK}])(\d{1,5}) (?=[а-яёa-z])`, 'gi');
+const numberWordRe = new RegExp(String.raw`(^|[\s${TAG_MARK}])(\d{1,5}(?:[.,]\d+)?) (?=[а-яёa-z])`, 'gi');
 Typograf.addRule({
   name: 'common/nbsp/afterNumberWord',
   handler: (s) => s.replace(numberWordRe, `$1$2${NBSP}`),
@@ -23,6 +23,17 @@ const digitGroupRe = /(\d) (?=\d{3}(?!\d)|₽)/g;
 Typograf.addRule({
   name: 'common/nbsp/digitGroups',
   handler: (s) => s.replace(digitGroupRe, `$1${NBSP}`),
+});
+
+// Составное слово не рвётся по дефису: «чек-/листу», «Ninja-/трасса», «№152-/ФЗ». После дефиса ставим
+// невидимый WORD JOINER (U+2060): он запрещает перенос и не требует глифа в шрифте, в отличие от
+// неразрывного дефиса U+2011. Длинные пары («спортивно-развлекательный») не склеиваем: на телефоне
+// такое слово не влезло бы в строку.
+const WJ = String.fromCharCode(0x2060);
+const compoundRe = /(?<![\p{L}\d-])([№\p{L}\d]+)-(?=([\p{L}\d]+)(?![\p{L}\d-]))/gu;
+Typograf.addRule({
+  name: 'common/nbsp/compoundWord',
+  handler: (s) => s.replace(compoundRe, (m, a: string, b: string) => (a.length + b.length < 18 ? `${a}-${WJ}` : m)),
 });
 
 const text = new Typograf({ locale, htmlEntity: { type: 'name', onlyInvisible: true } });
