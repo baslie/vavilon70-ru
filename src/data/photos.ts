@@ -22,6 +22,7 @@ export const photos: Record<PhotoKey, ImageMetadata> = {
   coach: pick('17-coach-01'),
   texture: pick('18-texture-01'),
   textureAlt: pick('18-texture-03'),
+  // Реальных фото кафе нет — открытый вопрос #33.
   cafe: pick('21-cafe-02', '2026-11-13'),
   decor: pick('22-decor-01', '2026-11-13'),
   safety: pick('23-safety-01', '2026-11-13'),
