@@ -248,7 +248,7 @@ export const facePainting: Offer = {
   prices: {
     rows: [{ label: 'Работа мастера на празднике, 1 час', note: 'Без ограничений по количеству детей', price: 3000 }],
   },
-  cta: { label: 'Добавить к празднику', href: '#zayavka' },
+  cta: { label: 'Добавить к празднику', href: '#zayavka', note: 'Добавить к празднику: аквагрим' },
   photo: 'facePainting',
 };
 
@@ -261,7 +261,7 @@ export const photographer: Offer = {
   prices: {
     rows: [{ label: '1,5 часа', price: 7000 }],
   },
-  cta: { label: 'Добавить к празднику', href: '#zayavka' },
+  cta: { label: 'Добавить к празднику', href: '#zayavka', note: 'Добавить к празднику: фотограф' },
   photo: 'photographer',
 };
 

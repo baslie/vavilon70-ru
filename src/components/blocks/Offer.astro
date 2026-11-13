@@ -209,7 +209,7 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
                 )}
                 {offer.terms && <p class:list={['max-w-[60ch] text-sm leading-relaxed', muted]} data-reveal><span class:list={[field, 'mr-2']}>Условия</span>{offer.terms}</p>}
                 <div class="flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal>
-                  <Button href={offer.cta.href} request={offer.cta.request} topic={offer.cta.topic} icon="lightning">{offer.cta.label}</Button>
+                  <Button href={offer.cta.href} request={offer.cta.request} topic={offer.cta.topic} note={offer.cta.note} icon="lightning">{offer.cta.label}</Button>
                   <slot />
                 </div>
               </div>

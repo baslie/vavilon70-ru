@@ -17,14 +17,19 @@ interface Props {
   class?: string;
   hidden?: boolean;
   reveal?: boolean;
+  /** Плотнее для поп-апа: форма праздника должна помещаться в окно ноутбука без прокрутки. */
+  compact?: boolean;
 }
 
-const { id, form, formKey, tone = 'dark', topic, class: className, hidden, reveal = false } = Astro.props;
+const { id, form, formKey, tone = 'dark', topic, class: className, hidden, reveal = false, compact = false } = Astro.props;
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/70' : 'text-ink/70';
+// Пункты select на тёмном — *:text-ink: класс без «>», иначе типограф (middleware) принимает его за конец тега
+// и портит остаток атрибута. Левый отступ отдельно: у телефона слева префикс «+7».
 const input = [
-  'w-full rounded-md border px-4 py-3 text-base transition focus:outline-none aria-invalid:border-signal',
-  dark ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/50 focus:border-lime [color-scheme:dark] [&>option]:text-ink' : 'border-ink/20 bg-mist/50 text-ink placeholder:text-ink/50 focus:border-violet',
+  compact ? 'py-2.5' : 'py-3',
+  'w-full rounded-md border pr-4 text-base transition focus:outline-none aria-invalid:border-signal',
+  dark ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/50 focus:border-lime [color-scheme:dark] *:text-ink' : 'border-ink/20 bg-mist/50 text-ink placeholder:text-ink/50 focus:border-violet',
 ];
 const accent = dark ? 'text-lime' : 'text-violet';
 const error = ['mt-2 text-sm font-semibold', dark ? 'text-lime' : 'text-signal'];
@@ -33,29 +38,29 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
 
 {/* ym-hide-content: Вебвизор Метрики не записывает, что вводят в поля заявки. */}
 {/* novalidate: проверяет скрипт ниже — сообщение под полем словами сайта, а не всплывашка браузера. */}
-<form novalidate class:list={['ym-hide-content grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2', className]} data-request-form={formKey} hidden={hidden} data-reveal={reveal ? '' : undefined}>
+<form novalidate class:list={['ym-hide-content grid content-start gap-x-gutter sm:grid-cols-2', compact ? 'gap-y-4' : 'gap-y-6', className]} data-request-form={formKey} hidden={hidden} data-reveal={reveal ? '' : undefined}>
   {form.fields.map((f) => {
     const fieldId = `${id}-${f.name}`;
     return (
       <div class:list={[f.wide && 'sm:col-span-2']}>
-        <label for={fieldId} class:list={['label mb-2 block font-semibold', dark ? 'text-paper/70' : 'text-ink/70']}>
+        <label for={fieldId} class:list={['label block font-semibold', compact ? 'mb-1.5' : 'mb-2', dark ? 'text-paper/70' : 'text-ink/70']}>
           {f.label}{f.required && <span class={dark ? 'text-lime' : 'text-violet'} aria-hidden="true"> *</span>}
         </label>
         {f.type === 'select' ? (
-          <select id={fieldId} name={f.name} required={f.required} aria-describedby={`${fieldId}-error`} data-message="Выберите вариант" class:list={input}>
+          <select id={fieldId} name={f.name} required={f.required} aria-describedby={`${fieldId}-error`} data-message="Выберите вариант" class:list={[input, 'pl-4']}>
             <option value="" selected={!topic}>{f.placeholder ?? 'Выберите'}</option>
             {f.options?.map((o) => <option value={o} selected={o === topic}>{o}</option>)}
           </select>
         ) : f.type === 'textarea' ? (
-          <textarea id={fieldId} name={f.name} rows="3" class:list={input}></textarea>
+          <textarea id={fieldId} name={f.name} rows={compact ? 2 : 3} class:list={[input, 'pl-4']}></textarea>
         ) : (
           f.type === 'tel' ? (
             <div class="relative">
               <span class:list={['pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold', accent]} aria-hidden="true">+7</span>
-              <input id={fieldId} name={f.name} type="tel" required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} inputmode="tel" pattern="[0-9\s\(\)\-]{10,}" aria-describedby={`${fieldId}-error`} data-message="Введите номер: 10 цифр после +7" class:list={[input, 'pl-11!']} />
+              <input id={fieldId} name={f.name} type="tel" required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} inputmode="tel" pattern="[0-9\s\(\)\-]{10,}" aria-describedby={`${fieldId}-error`} data-message="Введите номер: 10 цифр после +7" class:list={[input, 'pl-11']} />
             </div>
           ) : (
-            <input id={fieldId} name={f.name} type={f.type === 'number' ? 'text' : f.type} required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} inputmode={f.type === 'number' ? 'numeric' : undefined} pattern={f.type === 'number' ? '[0-9]*' : undefined} aria-describedby={`${fieldId}-error`} data-message={f.type === 'number' ? 'Только цифры' : 'Заполните поле'} class:list={input} />
+            <input id={fieldId} name={f.name} type={f.type === 'number' ? 'text' : f.type} required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} inputmode={f.type === 'number' ? 'numeric' : undefined} pattern={f.type === 'number' ? '[0-9]*' : undefined} aria-describedby={`${fieldId}-error`} data-message={f.type === 'number' ? 'Только цифры' : 'Заполните поле'} class:list={[input, 'pl-4']} />
           )
         )}
         <p id={`${fieldId}-error`} class:list={error} hidden></p>
@@ -99,8 +104,12 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
   import { formEndpoint } from '../../data/forms';
 
   document.querySelectorAll<HTMLFormElement>('[data-request-form]').forEach((form) => {
+    // Сообщение под кнопкой: прокручиваем к нему, если оно ниже окна (поп-ап на ноутбуке, телефон).
     const show = (state: 'offline' | 'ok' | 'error') =>
-      form.querySelectorAll<HTMLElement>('[data-form-status]').forEach((el) => (el.hidden = el.dataset.formStatus !== state));
+      form.querySelectorAll<HTMLElement>('[data-form-status]').forEach((el) => {
+        el.hidden = el.dataset.formStatus !== state;
+        if (!el.hidden) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
 
     // Проверка своими сообщениями (form novalidate): текст из data-message под полем, aria-invalid на поле.
     const fields = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[data-message]')];

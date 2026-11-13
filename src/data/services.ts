@@ -49,7 +49,7 @@ export type Offer = {
   /** Кнопка: без href — онлайн-запись (BookingLink), с href — якорь формы на странице. */
   /** topic — повод в поп-апе заявки (src/data/forms.ts, partyTopics). */
   /** request — ключ формы поп-апа (src/data/forms.ts), когда секции с формой на странице нет. */
-  cta: { label: string; href?: string; topic?: string; request?: string };
+  cta: { label: string; href?: string; topic?: string; request?: string; /** Текст в комментарий поп-апа заявки. */ note?: string };
   /** Условия акции мелко под ценами, над кнопкой: сначала скидка, потом оговорки. */
   terms?: string;
   photo: PhotoKey;
