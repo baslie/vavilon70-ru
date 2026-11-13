@@ -21,6 +21,7 @@ export const slogans = {
 export const contacts = {
   address: 'пр. Ленина 217, стр. 2',
   place: 'ТРЦ «Мегаполис», 1 этаж',
+  // Телефон прежний и на новом месте (заказчик, 13.11.2026).
   phone: '201-191',
   phoneHref: 'tel:+73822201191',
   // Предварительно, ТРЦ ещё согласует часы (открытый вопрос #19).
@@ -115,10 +116,9 @@ export const planVisit = {
   party: 'Рассчитать праздник',
 };
 
-// Площадки назвал заказчик 28.10.2026. Ссылка ВКонтакте — со старого сайта на Tilda.
-// TODO: ссылки на Telegram и Max от заказчика (docs/TZ.md, открытый вопрос #18). Пока заглушки.
+// Площадки назвал заказчик 28.10.2026, ссылки прислал 13.11.2026. ВКонтакте — та же страница, что на старом сайте.
 export const socials = [
   { title: 'ВКонтакте', href: 'https://vk.com/vavilon_tsk' },
-  { title: 'Telegram', href: '#' },
-  { title: 'Max', href: '#' },
+  { title: 'Telegram', href: 'https://t.me/VavilonTomsk' },
+  { title: 'Max', href: 'https://max.ru/u/f9LHodD0cOIP0y2q3Oiic_Mql9OliYm6X3dgX1PCJ_LF1qXCUZeaJtvGmwg' },
 ];
