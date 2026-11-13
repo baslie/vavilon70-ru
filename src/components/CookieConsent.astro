@@ -26,7 +26,7 @@ const button = 'label rounded-md px-5 py-3 font-semibold transition active:scale
 </section>
 
 <script>
-  import { consentVersion, metrikaId, metrikaOptions } from '../data/analytics';
+  import { consentVersion, metrikaHosts, metrikaId, metrikaOptions } from '../data/analytics';
 
   type Consent = { analytics: boolean; date: string; version: number };
   const key = 'vavilon-consent';
@@ -51,7 +51,7 @@ const button = 'label rounded-md px-5 py-3 font-semibold transition active:scale
   // не ставим: он срабатывает без JS, а значит, и без согласия.
   let metrikaLoaded = false;
   const loadMetrika = () => {
-    if (metrikaLoaded || !metrikaId || !import.meta.env.PROD) return;
+    if (metrikaLoaded || !metrikaId || !import.meta.env.PROD || !metrikaHosts.includes(location.hostname)) return;
     metrikaLoaded = true;
     const w = window as unknown as { ym: ((...args: unknown[]) => void) & { a?: IArguments[]; l?: number } };
     w.ym ||= function () {
