@@ -17,8 +17,8 @@ import { url } from '../../data/nav';
 <Layout title="Взрослые секции — Вавилон" description="Секции для взрослых 18+ в «Вавилоне», Томск: батутный фристайл и Ninja-трасса. Альтернативный фитнес с опытными инструкторами." bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
-    <PageHero title={adults.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }, { title: 'Тренировки и секции' }]} badges={['18+']} lead={adults.lead} photo="jumpTall">
+  <main id="main">
+    <PageHero title={adults.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Взрослые секции" badges={['18+']} lead={adults.lead} photo="jumpTall">
       <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
         {[adultFreestyle, adultNinja].map((s) => <li><a href={`#${s.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{s.title}</a></li>)}
       </ul>

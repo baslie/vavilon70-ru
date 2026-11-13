@@ -20,7 +20,7 @@ const { name, title = name, lead, sections = [] } = stub;
 <Layout title={`${name} — Вавилон`} bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
+  <main id="main">
     <section class="grid-site gap-y-8 px-4 pt-16 pb-20 md:px-8 lg:pt-24">
       <div class="lg:col-span-8">
         {title !== name && <p class="label mb-6 font-semibold text-violet">{name}</p>}

@@ -12,8 +12,8 @@ import { promos, students, birthday } from '../data/promos';
 <Layout title="Акции и скидки — Вавилон" description="Скидки в «Вавилоне», Томск: студентам по будням и имениннику — 50 % в день рождения на батутную арену и Ninja-трассу." bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
-    <PageHero title={promos.title} crumbs={[{ title: 'Акции' }]} lead={promos.lead} photo="jump">
+  <main id="main">
+    <PageHero title={promos.title} lead={promos.lead} photo="jump">
       <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
         {[students, birthday].map((o) => <li><a href={`#${o.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{o.title}</a></li>)}
       </ul>

@@ -19,10 +19,10 @@ import { url } from '../data/nav';
 <Layout title="Семейное кафе — Вавилон" description="Семейное кафе «Вавилона» в Томске: пицца, бургеры, десерты и напитки в отдельном зале, тематическое украшение и банкетный стол к празднику." bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
-    <PageHero title={cafe.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }, { title: 'Семейное кафе' }]} lead={cafe.lead} photo="party">
+  <main id="main">
+    <PageHero title={cafe.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }]} current="Семейное кафе" lead={cafe.lead} photo="party">
       <Button href="#zayavka" icon="confetti">{forms.banquet.title}</Button>
-      <a href="#menu" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">Меню</a>
+      <Button href="#menu" variant="outline">Меню</Button>
     </PageHero>
 
     <section class="grid-site gap-y-12 bg-ink px-4 py-20 text-paper md:px-8 lg:py-24">

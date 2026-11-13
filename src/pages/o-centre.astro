@@ -18,8 +18,8 @@ import { homeLead, contacts } from '../data/content';
 <Layout title="О центре — Вавилон" description="«Вавилон» в ТРЦ «Мегаполис», Томск: 1300 м² для спорта, игр и праздников — батутная арена, первая в Томске Ninja-трасса, футбольное поле, квесты и семейное кафе." bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
-    <PageHero title="Больше чем прыжки" crumbs={[{ title: 'О центре' }]} lead={homeLead} photo="arena">
+  <main id="main">
+    <PageHero title="Больше чем прыжки" lead={homeLead} photo="arena">
       <Button icon="lightning">Забронировать</Button>
       <p class="label text-ink/60">{contacts.address}, {contacts.place}<br />Часы работы {contacts.hours}</p>
     </PageHero>

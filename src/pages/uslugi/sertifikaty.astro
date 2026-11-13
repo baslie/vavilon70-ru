@@ -24,8 +24,8 @@ const options: Card[] = [
 <Layout title="Подарочные сертификаты — Вавилон" description="Подарочные сертификаты «Вавилона» в Томске: на абонемент в секцию, персональную тренировку или комплексный билет." bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
-    <PageHero title={certificates.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }, { title: 'Дополнительно' }]} lead={certificates.lead} photo="textureAlt">
+  <main id="main">
+    <PageHero title={certificates.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Подарочные сертификаты" lead={certificates.lead} photo="textureAlt">
       <Button href="#zayavka" icon="gift">{certificates.cta}</Button>
     </PageHero>
 

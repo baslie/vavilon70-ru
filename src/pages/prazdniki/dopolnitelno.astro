@@ -16,8 +16,8 @@ import { url } from '../../data/nav';
 <Layout title="Дополнительные услуги — Вавилон" description="Аквагрим и профессиональный фотограф на празднике в «Вавилоне», Томск." bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
-    <PageHero title={extras.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }, { title: 'Дополнительные услуги' }]} lead={extras.lead} photo="party">
+  <main id="main">
+    <PageHero title={extras.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }]} current="Дополнительные услуги" lead={extras.lead} photo="party">
       <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
         {[facePainting, photographer].map((o) => <li><a href={`#${o.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{o.title}</a></li>)}
       </ul>

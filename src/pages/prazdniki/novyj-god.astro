@@ -19,10 +19,10 @@ import { url } from '../../data/nav';
 <Layout title="Новогодние программы — Вавилон" description="Новогодние программы в «Вавилоне», Томск: для детских садов и школьных классов от 12 человек — батуты, Ninja-трасса, «Снежки на батутах» и угощение в семейном кафе, от 1 550 ₽ с человека." bodyClass="bg-mist text-ink">
   <Header />
 
-  <main>
-    <PageHero title={newYear.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }, { title: 'Детские праздники' }]} lead={newYear.lead} photo="arena">
+  <main id="main">
+    <PageHero title={newYear.title} crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }]} current="Новогодние программы" lead={newYear.lead} photo="arena">
       <Button href="#zayavka" icon="confetti">{forms.party.title}</Button>
-      <a href="#programmy" class="label font-semibold underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">Программы</a>
+      <Button href="#programmy" variant="outline">Программы</Button>
     </PageHero>
 
     <section id="programmy" class="bg-ink px-4 py-20 text-paper md:px-8 lg:py-24">

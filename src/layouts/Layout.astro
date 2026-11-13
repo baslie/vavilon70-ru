@@ -32,6 +32,8 @@ const {
     {yclientsId && <script is:inline async src={`https://w${yclientsId}.yclients.com/widgetJS`} charset="UTF-8"></script>}
   </head>
   <body class:list={['min-h-dvh overflow-x-clip font-sans', bodyClass]}>
+    {/* Первая остановка Tab: мимо логотипа и меню сразу к содержимому (<main id="main"> на каждой странице). */}
+    <a href="#main" class="label fixed top-3 left-3 z-[60] -translate-y-24 rounded-md bg-violet px-5 py-3 font-semibold text-paper transition focus-visible:translate-y-0">Перейти к содержимому</a>
     <slot />
     <RequestDialog />
     <CookieConsent />
