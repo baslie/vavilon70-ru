@@ -1,16 +1,15 @@
 ---
-// Взрослые секции 18+: фристайл (#fristajl), Ninja-трасса «скоро» (#ninja) с формой «Узнать
-// о старте группы» (#start, открытый вопрос #10), тренеры и первая тренировка.
+// Взрослые секции 18+: фристайл (#fristajl), Ninja-трасса «скоро» (#ninja) с поп-апом «Узнать
+// о старте группы» (открытый вопрос #10), первая тренировка, тренеры и призыв. Поля чередуются.
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import PageHero from '../../components/blocks/PageHero.astro';
 import Offer from '../../components/blocks/Offer.astro';
-import RequestForm from '../../components/blocks/RequestForm.astro';
+import PlanVisit from '../../components/sections/PlanVisit.astro';
 import Coaches from '../../components/blocks/Coaches.astro';
 import Steps from '../../components/blocks/Steps.astro';
-import { adults, adultFreestyle, adultNinja, firstTraining } from '../../data/classes';
-import { forms } from '../../data/forms';
+import { adults, adultFreestyle, adultNinja, firstTrainingAdults } from '../../data/classes';
 import { url } from '../../data/nav';
 ---
 
@@ -18,16 +17,16 @@ import { url } from '../../data/nav';
   <Header />
 
   <main id="main">
-    <PageHero title={adults.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Взрослые секции" badges={['18+']} lead={adults.lead} photo="jumpTall">
+    <PageHero title={adults.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Взрослые секции" badges={['18+']} lead={adults.lead} photo="students">
       <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
         {[adultFreestyle, adultNinja].map((s) => <li><a href={`#${s.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{s.title}</a></li>)}
       </ul>
     </PageHero>
     <Offer offer={adultFreestyle} tone="dark" photo />
     <Offer offer={adultNinja} photo />
-    <RequestForm id="start" form={forms.ninjaStart} />
-    <Coaches />
-    <Steps title={firstTraining.title} items={firstTraining.items} tone="dark" />
+    <Steps title={firstTrainingAdults.title} items={firstTrainingAdults.items} tone="dark" />
+    <Coaches adults />
+    <PlanVisit />
   </main>
   <Footer />
 </Layout>

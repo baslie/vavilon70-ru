@@ -1,6 +1,7 @@
 ---
 // Свободные прыжки по шаблону Ninja-трассы: первый экран, цены и условия, комплексный билет,
 // подготовка к визиту, безопасность, призыв.
+import { guide } from '../../data/content';
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -12,13 +13,16 @@ import Safety from '../../components/sections/Safety.astro';
 import PlanVisit from '../../components/sections/PlanVisit.astro';
 import { jumps, complexTicket, visitSteps } from '../../data/services';
 import { url } from '../../data/nav';
+
+// Вводная — описание арены из фотогида ТЗ: возраст уже стоит фактом в блоке цен, повтор был дословным.
+const arenaLead = `${guide.items.find((g) => g.path === '/uslugi/svobodnye-pryzhki/')?.text}.`;
 ---
 
 <Layout title="Свободные прыжки — Вавилон" description="Свободные прыжки на батутной арене «Вавилона» в Томске: разминка и инструктаж с тренером, от 4 лет. Час — от 500 ₽." bodyClass="bg-mist text-ink">
   <Header />
 
   <main id="main">
-    <PageHero title={jumps.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Свободные прыжки" badges={jumps.badges} lead={jumps.meta?.[0].value ?? undefined} photo={jumps.photo}>
+    <PageHero title={jumps.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Свободные прыжки" badges={jumps.badges} lead={arenaLead} photo={jumps.photo}>
       <Button icon="lightning">{jumps.cta.label}</Button>
       <Button href={`#${jumps.id}`} variant="outline">Цены и условия</Button>
     </PageHero>
@@ -26,7 +30,7 @@ import { url } from '../../data/nav';
     <Offer offer={complexTicket} photo />
     <Steps title={visitSteps.title} items={visitSteps.items} tone="dark" />
     <Safety />
-    <PlanVisit />
+    <PlanVisit photo="cafe" />
   </main>
   <Footer />
 </Layout>

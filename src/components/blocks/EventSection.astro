@@ -1,6 +1,6 @@
 ---
 // Мероприятие с пакетами: день рождения 18+, корпоративы, украшение зоны кафе. Слева плашка,
-// слоган и текст, справа преимущества, ниже пакеты на всю ширину, примечание (депозит кафе) и кнопка.
+// слоган и текст, справа преимущества, ниже пакеты на всю ширину (если есть), примечание (депозит кафе) и кнопка.
 import Badge from './Badge.astro';
 import Headline from './Headline.astro';
 import Packages from './Packages.astro';
@@ -35,9 +35,11 @@ const muted = dark ? 'text-paper/70' : 'text-ink/70';
       ))}
     </ul>
   )}
-  <div class="lg:col-span-12" data-reveal>
-    <Packages packages={event.packages} tone={tone} topic={cta?.topic} />
-  </div>
+  {event.packages && (
+    <div class="lg:col-span-12" data-reveal>
+      <Packages packages={event.packages} tone={tone} topic={cta?.topic} perHead="с человека" />
+    </div>
+  )}
   {event.note && <p class:list={['max-w-[72ch] leading-relaxed lg:col-span-8', muted]} data-reveal>{event.note}</p>}
   {cta && <div class="lg:col-span-12" data-reveal><Button href={cta.href} topic={cta.topic} icon="confetti">{cta.label}</Button></div>}
 </section>

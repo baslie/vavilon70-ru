@@ -18,8 +18,8 @@ export type Package = {
   price: Price;
   /** Цена указана с человека (выпускные, новогодние программы). */
   perPerson?: boolean;
-  /** Доплата за каждого следующего участника. */
-  extra?: Price;
+  /** Плашка «Популярный выбор»; по умолчанию у среднего из трёх и второго из четырёх (Packages.astro). */
+  popular?: boolean;
 };
 export type PackageGroup = { id: string; label: string; /** Условие для всей вкладки: «от 12 человек». */ note?: string; packages: Package[] };
 
@@ -48,17 +48,17 @@ export const birthday = {
       label: 'Дети 4–7 лет',
       packages: [
         {
-          label: '1 пакет', name: 'Бэби Драйв', guests: 'до 6 человек', price: 8100, extra: 1100,
+          label: '1 пакет', name: 'Бэби Драйв', guests: 'до 6 человек', price: 8100,
           duration: time('2 часа 20 минут', '1 час 30 минут'),
           items: ['Свободные прыжки на батутной зоне', duty, 'Мини-дискотека 30 минут с любимым героем Лабубу', 'Пригласительные бумажные', gastro],
         },
         {
-          label: '2 пакет', name: 'Легенды Вавилона', guests: 'до 8 человек', price: 15600, extra: 1100,
+          label: '2 пакет', name: 'Легенды Вавилона', guests: 'до 8 человек', price: 15600,
           duration: time('2 часа 20 минут', '1 час 30 минут'),
           items: ['Аренда развлекательной зоны 1 час', 'Развлекательная программа на батутах с аниматором в костюме 1 час', 'Дежурный инструктор', 'Активный квест с Человеком-пауком на Ninja-трассе — 30 минут', inviteE, gifts, sweetKid, gastro],
         },
         {
-          label: '3 пакет', name: 'Super Kids: Большое приключение', guests: 'до 10 человек', price: 18900, extra: 1100,
+          label: '3 пакет', name: 'Super Kids: Большое приключение', guests: 'до 10 человек', price: 18900,
           duration: time('2 часа 40 минут', '1 час 50 минут'),
           items: ['Аренда развлекательной зоны 1 час', 'Развлекательная программа на батутах с аниматором в костюме 1 час', duty, 'Эксклюзивная программа на выбор: Неоновое шоу / Роблокс', gifts, inviteE, sweetKid, gastro],
         },
@@ -69,17 +69,17 @@ export const birthday = {
       label: 'Дети 8–18 лет',
       packages: [
         {
-          label: '1 пакет', name: 'Трасса Героев', guests: 'до 6 человек', price: 8500, extra: 1100,
+          label: '1 пакет', name: 'Трасса Героев', guests: 'до 6 человек', price: 8500,
           duration: time('2 часа 20 минут', '1 час 30 минут'),
           items: ['Свободные прыжки', duty, 'Спортивно-развлекательная программа на Ninja-трассе — 30 минут', host, 'Пригласительные', gastro],
         },
         {
-          label: '2 пакет', name: 'Энерджи', guests: 'до 8 человек', price: 17100, extra: 1100,
+          label: '2 пакет', name: 'Энерджи', guests: 'до 8 человек', price: 17100,
           duration: time('2 часа 40 минут', '1 час 50 минут'),
           items: ['Аренда спортивной зоны 1 час', duty, 'Эксклюзивная программа на выбор: Неон, Роблокс, Мафия', gifts, inviteE, sweetKid, gastro],
         },
         {
-          label: '3 пакет', name: 'Драйв Код', guests: 'до 10 человек', price: 25100, extra: 1100,
+          label: '3 пакет', name: 'Драйв Код', guests: 'до 10 человек', price: 25100,
           duration: time('3 часа 10 минут', '2 часа 20 минут'),
           items: ['Аренда спортивной зоны 1 час', trampolineHost, duty, 'Эксклюзивная программа на выбор: Неон, Роблокс, Мафия', 'Прохождение Ninja-трассы 30 минут со штатным инструктором', gifts, inviteE, sweetKid, gastro],
         },
@@ -160,8 +160,8 @@ export const newYear = {
       label: 'Детские сады',
       note: 'Для групп от 12 человек',
       packages: [
-        { name: 'Базовый', duration: timeShort('1 час'), price: 1550, perPerson: true, items: [jumpsHour, duty, cafeMenu] },
-        { name: 'Стандарт', duration: timeShort('1 час 50 минут'), price: 2400, perPerson: true, items: [jumpsHour, duty, newYearShow, cafeMenu, sweet] },
+        { label: '1 пакет', name: 'Базовый', duration: timeShort('1 час'), price: 1550, perPerson: true, items: [jumpsHour, duty, cafeMenu] },
+        { label: '2 пакет', name: 'Стандарт', duration: timeShort('1 час 50 минут'), price: 2400, perPerson: true, items: [jumpsHour, duty, newYearShow, cafeMenu, sweet] },
         { name: '3 пакет', duration: timeShort('1 час 50 минут'), price: 2900, perPerson: true, items: ['Аренда батутной зоны на выбор 1 час (спортивная или развлекательная, до 16 человек)', 'Квест на батутах с ведущим «Снежки на батутах: Новогодний батл» 1 час', duty, newYearShow, cafeMenu, sweet] },
       ],
     },
@@ -178,7 +178,7 @@ export const newYear = {
   ] satisfies PackageGroup[],
 };
 
-export type EventBlock = { id: string; title: string; tagline: string; text: string; points?: Point[]; packages: Package[]; /** Под пакетами: депозит кафе и т. п. */ note?: string };
+export type EventBlock = { id: string; title: string; tagline: string; text: string; points?: Point[]; packages?: Package[]; /** Под пакетами: депозит кафе и т. п. */ note?: string };
 
 export const adultBirthday: EventBlock = {
   id: 'den-rozhdeniya',
@@ -248,7 +248,7 @@ export const facePainting: Offer = {
     rows: [{ label: 'Работа мастера на празднике, 1 час', note: 'Без ограничений по количеству детей', price: 3000 }],
   },
   cta: { label: 'Добавить к празднику', href: '#zayavka' },
-  photo: 'party',
+  photo: 'facePainting',
 };
 
 export const photographer: Offer = {
@@ -261,7 +261,7 @@ export const photographer: Offer = {
     rows: [{ label: '1,5 часа', price: 7000 }],
   },
   cta: { label: 'Добавить к празднику', href: '#zayavka' },
-  photo: 'jump',
+  photo: 'photographer',
 };
 
 export type PartyCard = { title: string; text: string; path: string; photo?: PhotoKey; meta?: string };
@@ -271,10 +271,10 @@ const from = (groups: PackageGroup[], perPerson = false) => `от ${minPrice(gro
 
 // Карточки хаба «Праздники»: подписи по текстам ТЗ, «от N ₽» — по самому дешёвому пакету.
 export const partyCards: PartyCard[] = [
-  { title: 'День рождения', text: 'Пакеты «под ключ» для детей 4–7 и 8–18 лет: аниматоры, Ninja-трасса, шоу-программы и подарки имениннику.', path: '/prazdniki/den-rozhdeniya/', photo: 'party', meta: from(birthday.groups) },
+  { title: 'День рождения', text: 'Пакеты «под ключ» для детей 4–7 и 8–18 лет: аниматоры, Ninja-трасса, шоу-программы и подарки имениннику.', path: '/prazdniki/den-rozhdeniya/', photo: 'decor', meta: from(birthday.groups) },
   { title: 'Выпускные', text: 'Для детских садов, школы и старшеклассников: батуты, Ninja-трасса, командные челленджи и ведущие.', path: '/prazdniki/vypusknye/', photo: 'football', meta: from(graduation.groups, true) },
-  { title: 'Новогодние программы', text: 'Зимний драйв для детских садов и школьных классов: батуты, Ninja-трасса, «Снежки на батутах» и угощение в кафе.', path: '/prazdniki/novyj-god/', photo: 'arena', meta: from(newYear.groups, true) },
+  { title: 'Новогодние программы', text: 'Зимний драйв для детских садов и школьных классов: батуты, Ninja-трасса, «Снежки на батутах» и угощение в кафе.', path: '/prazdniki/novyj-god/', photo: 'newYear', meta: from(newYear.groups, true) },
   { title: 'Взрослые мероприятия', text: 'День рождения 18+, тимбилдинг и корпоративы, закрытая ночная тренировка.', path: '/prazdniki/vzroslye/', photo: 'jumpTall' },
-  { title: 'Дополнительные услуги', text: 'Аквагрим и профессиональный фотограф на празднике.', path: '/prazdniki/dopolnitelno/', photo: 'jump' },
-  { title: 'Семейное кафе', text: 'Меню для детей и взрослых, тематическое украшение и банкетный стол к назначенному времени.', path: '/kafe/' },
+  { title: 'Дополнительные услуги', text: 'Аквагрим и профессиональный фотограф на празднике.', path: '/prazdniki/dopolnitelno/', photo: 'facePainting' },
+  { title: 'Семейное кафе', text: 'Меню для детей и взрослых, тематическое украшение и банкетный стол к назначенному времени.', path: '/kafe/', photo: 'cafe' },
 ];

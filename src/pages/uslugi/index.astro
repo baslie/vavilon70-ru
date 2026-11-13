@@ -24,7 +24,7 @@ const visits: Card[] = [
 // Для секций цена «от» по пробному занятию — самой низкой в таблицах.
 const classes: Card[] = [
   { title: 'Тренировки с инструктором', text: 'Индивидуально, вдвоём или мини-группой из трёх человек.', href: url('/uslugi/personalnye-trenirovki/'), photo: personal.photo, meta: priceFrom(personal) },
-  { title: 'Детские секции', text: 'Батутный фристайл, развивающая гимнастика и ОФП, секция Ninja-трасса.', href: url('/uslugi/detskie-sekcii/'), photo: kidsNinja.photo, meta: formatFrom([kidsFreestyle, kidsGym, kidsNinja].flatMap((o) => o.prices!.rows.map((r) => r.price))) },
+  { title: 'Детские секции', text: 'Батутный фристайл, развивающая гимнастика и ОФП, секция Ninja-трасса.', href: url('/uslugi/detskie-sekcii/'), photo: 'safety', meta: formatFrom([kidsFreestyle, kidsGym, kidsNinja].flatMap((o) => o.prices!.rows.map((r) => r.price))) },
   { title: 'Взрослые секции', text: 'Батутный фристайл и Ninja-трасса для взрослых от 18 лет.', href: url('/uslugi/vzroslye-sekcii/'), photo: adultFreestyle.photo, meta: priceFrom(adultFreestyle) },
 ];
 ---
@@ -33,7 +33,7 @@ const classes: Card[] = [
   <Header />
 
   <main id="main">
-    <PageHero title="Услуги и цены" lead="Выберите удобный формат отдыха — разовое посещение, тренировка с инструктором, прохождение Ninja-трассы или организация праздника под ключ." photo="arena">
+    <PageHero title="Услуги и цены" lead="Выберите удобный формат отдыха — разовое посещение, тренировка с инструктором, прохождение Ninja-трассы или организация праздника под ключ." photo="students">
       <Button icon="lightning">Забронировать</Button>
       <Button href="#kompleksnyj-bilet" variant="outline">Комплексный билет</Button>
     </PageHero>
@@ -41,7 +41,7 @@ const classes: Card[] = [
     <Offer offer={complexTicket} photo />
     <CardGrid title="Тренировки и секции" items={classes} tone="dark" />
     <Steps id="podgotovka" title={visitSteps.title} items={visitSteps.items} />
-    <PlanVisit />
+    <PlanVisit photo="cafe" />
   </main>
   <Footer />
 </Layout>

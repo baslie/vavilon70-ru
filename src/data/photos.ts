@@ -5,8 +5,9 @@ import type { PhotoKey } from './content';
 
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.jpg', { eager: true });
 
-function pick(name: string): ImageMetadata {
-  const file = files[`../assets/photos/2026-10-20-vavilon-${name}.jpg`];
+// Первая серия — 20.10, вторая (кафе, праздник, безопасность, взрослые) — 13.11, по дизайн-аудиту.
+function pick(name: string, date = '2026-10-20'): ImageMetadata {
+  const file = files[`../assets/photos/${date}-vavilon-${name}.jpg`];
   if (!file) throw new Error(`Нет фото ${name}`);
   return file.default;
 }
@@ -21,6 +22,14 @@ export const photos: Record<PhotoKey, ImageMetadata> = {
   coach: pick('17-coach-01'),
   texture: pick('18-texture-01'),
   textureAlt: pick('18-texture-03'),
+  cafe: pick('21-cafe-02', '2026-11-13'),
+  decor: pick('22-decor-01', '2026-11-13'),
+  safety: pick('23-safety-01', '2026-11-13'),
+  adultNinja: pick('24-adult-ninja-02', '2026-11-13'),
+  facePainting: pick('25-face-painting-01', '2026-11-13'),
+  photographer: pick('26-photographer-02', '2026-11-13'),
+  students: pick('27-students-01', '2026-11-13'),
+  newYear: pick('28-new-year-01', '2026-11-13'),
 };
 
 export const alts: Record<PhotoKey, string> = {
@@ -33,4 +42,12 @@ export const alts: Record<PhotoKey, string> = {
   coach: 'Тренер страхует ребёнка на спортивном батуте',
   texture: 'Ткань формы с фиолетовыми, красными и белыми молниями',
   textureAlt: 'Ткань формы с фиолетовыми, красными и белыми молниями',
+  cafe: 'Семья с детьми за столом с пиццей в кафе у батутной арены',
+  decor: 'Праздничный стол с тортом, фиолетовой посудой и аркой из шаров у батутов',
+  safety: 'Тренер страхует девочку на спортивном батуте',
+  adultNinja: 'Взрослый проходит кольца на Ninja-трассе',
+  facePainting: 'Аквагример рисует маску мальчику на дне рождения',
+  photographer: 'Фотограф снимает детей, которые прыгают на празднике',
+  students: 'Компания молодых людей в прыжке на батутной арене',
+  newYear: 'Новогодний праздник для детей на батутной арене',
 };

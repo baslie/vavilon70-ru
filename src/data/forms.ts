@@ -70,7 +70,7 @@ export const forms = {
     fields: [
       name,
       phone,
-      { name: 'service', label: 'На что сертификат', type: 'select', placeholder: 'Выберите услугу', options: ['Абонемент в секцию', 'Персональная тренировка', 'Комплексный билет'] },
+      { name: 'service', label: 'На что сертификат', type: 'select', placeholder: 'Выберите услугу', wide: true, options: ['Абонемент в секцию', 'Персональная тренировка', 'Комплексный билет'] },
       comment,
     ],
     submit: 'Оформить сертификат',

@@ -48,7 +48,8 @@ export type Offer = {
   soon?: string;
   /** Кнопка: без href — онлайн-запись (BookingLink), с href — якорь формы на странице. */
   /** topic — повод в поп-апе заявки (src/data/forms.ts, partyTopics). */
-  cta: { label: string; href?: string; topic?: string };
+  /** request — ключ формы поп-апа (src/data/forms.ts), когда секции с формой на странице нет. */
+  cta: { label: string; href?: string; topic?: string; request?: string };
   /** Условия акции мелко под ценами, над кнопкой: сначала скидка, потом оговорки. */
   terms?: string;
   photo: PhotoKey;
@@ -185,8 +186,8 @@ export const personal: Offer = {
 export const certificates = {
   title: 'Подарочные сертификаты',
   lead: 'Сертификат на абонемент в секцию, персональную тренировку или комплексный билет.',
+  // «На конкретную услугу» из ТЗ — это lead, отдельным пунктом не повторяем.
   items: [
-    { title: 'На конкретную услугу', text: 'Сертификат на абонемент в секцию, персональную тренировку или комплексный билет.' },
     { title: 'Как приобрести', text: 'В фирменном оформлении на ресепшене комплекса или в электронном виде у администратора.' },
   ] satisfies Point[],
   cta: 'Оформить сертификат',

@@ -21,7 +21,7 @@ const cta = { label: forms.party.title, href: '#zayavka' };
   <Header />
 
   <main id="main">
-    <PageHero title="Взрослые мероприятия" crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }]} current="Взрослые мероприятия" badges={['18+']} lead="День рождения без рамок, тимбилдинг для команды и ночная тренировка, когда весь комплекс только для своих." photo="jumpTall">
+    <PageHero title="Взрослые мероприятия" crumbs={[{ title: 'Праздники', href: url('/prazdniki/') }]} current="Взрослые мероприятия" badges={['18+']} lead="День рождения без рамок, тимбилдинг для команды и ночная тренировка, когда весь комплекс только для своих." photo="adultNinja">
       <Button href="#zayavka" icon="confetti">{forms.party.title}</Button>
       <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
         {[adultBirthday, corporate, night].map((e) => <li><a href={`#${e.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{e.title}</a></li>)}

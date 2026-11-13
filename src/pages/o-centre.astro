@@ -1,30 +1,55 @@
 ---
-// «О центре»: манифест, философия с цифрами, фотогид, безопасность и призыв —
-// те же секции и тексты ТЗ, что на главной, с первым экраном внутренней страницы.
+// «О центре»: по ответу заказчика (28.10) — описание, цифры, локации. Собрано из ТЗ, без манифеста
+// и философии главной: первый экран про новое место в «Мегаполисе» (ТЗ, «Манифест», первая фраза),
+// блок «Новое место» с адресом, часами и телефоном, цифры, фотогид, безопасность и призыв.
+// Как добраться и где парковка — открытый вопрос #35, пока ссылка на Яндекс Карты.
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import PageHero from '../components/blocks/PageHero.astro';
 import Button from '../components/blocks/Button.astro';
-import Manifest from '../components/sections/Manifest.astro';
-import Philosophy from '../components/sections/Philosophy.astro';
 import Facts from '../components/sections/Facts.astro';
 import Inside from '../components/sections/Inside.astro';
 import Safety from '../components/sections/Safety.astro';
 import PlanVisit from '../components/sections/PlanVisit.astro';
-import { homeLead, contacts } from '../data/content';
+import { contacts } from '../data/content';
+
+const lead = 'Спортивно-развлекательный комплекс, где собраны 6 ключевых направлений для активного отдыха, спорта и праздников.';
+const mapHref = `https://yandex.ru/maps/?text=${encodeURIComponent(`Томск, ${contacts.address}`)}`;
+const place = [
+  { label: 'Адрес', value: `${contacts.address}, ${contacts.place}` },
+  { label: 'Часы работы', value: contacts.hours },
+  { label: 'Телефон', value: contacts.phone, href: contacts.phoneHref },
+];
 ---
 
 <Layout title="О центре — Вавилон" description="«Вавилон» в ТРЦ «Мегаполис», Томск: 1300 м² для спорта, игр и праздников — батутная арена, первая в Томске Ninja-трасса, футбольное поле, квесты и семейное кафе." bodyClass="bg-mist text-ink">
   <Header />
 
   <main id="main">
-    <PageHero title="Больше чем прыжки" lead={homeLead} photo="arena">
+    <PageHero title="«Вавилон» в ТРЦ «Мегаполис»" lead={lead} photo="jumpTall">
       <Button icon="lightning">Забронировать</Button>
-      <p class="label text-ink/60">{contacts.address}, {contacts.place}<br />Часы работы {contacts.hours}</p>
+      <Button href={mapHref} variant="outline" icon="mapPin" external>Открыть на карте</Button>
     </PageHero>
-    <Manifest />
-    <Philosophy />
+
+    <section id="mesto" class="grid-site gap-y-12 bg-ink px-4 py-20 text-paper md:px-8 lg:py-24">
+      <div class="lg:col-span-5" data-reveal>
+        <span class="dash mb-6 block bg-lime" aria-hidden="true"></span>
+        <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02]">Новое место</h2>
+        <p class="mt-6 max-w-[44ch] text-lg leading-relaxed text-paper/75">Мы переехали в ТРЦ «Мегаполис». Телефон прежний.</p>
+      </div>
+      <dl class="grid gap-8 sm:grid-cols-[1.5fr_1fr_1fr] lg:col-span-7 lg:self-end">
+        {place.map((p, i) => (
+          <div data-reveal style={`--i:${i}`}>
+            <dt class="label font-semibold text-lime">{p.label}</dt>
+            <dd class="mt-3 text-xl leading-snug font-semibold">
+              {p.href ? <a href={p.href} class="transition hover:text-lime">{p.value}</a> : p.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
     <Facts />
     <Inside />
     <Safety />

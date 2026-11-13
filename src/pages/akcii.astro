@@ -13,7 +13,7 @@ import { promos, students, birthday } from '../data/promos';
   <Header />
 
   <main id="main">
-    <PageHero title={promos.title} lead={promos.lead} photo="jump">
+    <PageHero title={promos.title} lead={promos.lead} photo="jumpTall">
       <ul class="label flex flex-wrap gap-x-7 gap-y-3 font-semibold">
         {[students, birthday].map((o) => <li><a href={`#${o.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{o.title}</a></li>)}
       </ul>

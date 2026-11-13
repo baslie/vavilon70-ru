@@ -1,9 +1,13 @@
 ---
-// Пакеты праздника колонками: номер пакета, название и число гостей, состав, общее время, цена
-// и доплата за следующего участника. Четыре пакета — по 3 колонки, три — по 4, два — по 6, один — на 6.
+// Пакеты праздника колонками: номер пакета, название и число гостей, состав, общее время и цена.
+// Доплату за следующего участника в карточке не повторяем: она в «Во всех пакетах» под пакетами.
+// perHead — под ценой пакета «≈ 1 350 ₽ с ребёнка»: цена, делённая на число гостей из guests («до 6 человек»),
+// с округлением до 10 ₽. Средний из трёх пакетов и второй из четырёх — с плашкой «Популярный выбор»
+// (popular в данных перекрывает это правило). Четыре пакета — по 3 колонки, три — по 4, два — по 6, один — на 6.
 // Пустая цена — «Цена по запросу». С topic под ценой кнопка «Выбрать пакет»: открывает поп-ап заявки
 // (RequestDialog) с этим поводом и названием пакета в комментарии.
 // Название — как у карточки цены (PriceTable), цветом текста: акцентный капс остаётся у плашки над заголовком.
+import Badge from './Badge.astro';
 import Button from './Button.astro';
 import { formatPrice } from '../../lib/format';
 import { mdSpan } from '../../lib/grid';
@@ -14,18 +18,31 @@ interface Props {
   tone?: 'light' | 'dark';
   /** Повод в поп-апе заявки (src/data/forms.ts, partyTopics). */
   topic?: string;
+  /** Подпись цены на одного гостя: «с ребёнка», «с человека». */
+  perHead?: string;
 }
 
-const { packages, tone = 'light', topic } = Astro.props;
+const { packages, tone = 'light', topic, perHead } = Astro.props;
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/65' : 'text-ink/65';
+const n = packages.length;
+const popular = (p: Package, i: number) => p.popular ?? ((n === 3 || n === 4) && i === 1);
+const head = (p: Package) => {
+  const guests = Number(p.guests?.match(/\d+/)?.[0]);
+  return perHead && p.price !== null && !p.perPerson && guests ? Math.round(p.price / guests / 10) * 10 : null;
+};
 const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:col-span-6';
 ---
 
 <ul class="grid-site gap-y-gutter md:max-lg:grid-cols-6">
   {packages.map((p, i) => (
-    <li class:list={['@container flex flex-col rounded-md p-6 md:p-7', span, mdSpan(i, packages.length), dark ? 'bg-ink-soft' : 'bg-paper']}>
-      {p.label && <p class:list={['label mb-3 font-semibold', dark ? 'text-lime' : 'text-violet']}>{p.label}</p>}
+    <li class:list={['@container flex flex-col rounded-md p-6 md:p-7', span, mdSpan(i, packages.length), dark ? 'bg-ink-soft' : 'bg-paper', popular(p, i) && (dark ? 'ring-1 ring-lime/40' : 'ring-1 ring-violet/40')]}>
+      {(p.label || popular(p, i)) && (
+        <div class="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          {p.label && <p class:list={['label font-semibold', dark ? 'text-paper/65' : 'text-ink/65']}>{p.label}</p>}
+          {popular(p, i) && <Badge tone={tone}>Популярный выбор</Badge>}
+        </div>
+      )}
       <h3 class="font-display text-[min(1.125rem,calc(100cqi/var(--n)))] leading-tight font-bold uppercase lg:text-[min(1.25rem,calc(100cqi/var(--n)))]" style={`--n: ${Math.max(...p.name.split(/\s+/).map((w) => w.length)) * 0.9}`}>{p.name}</h3>
       {p.guests && <p class:list={['mt-2 text-sm font-semibold', muted]}>{p.guests}</p>}
       <ul class="mt-6 mb-8 grid gap-3">
@@ -42,9 +59,7 @@ const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:
           {formatPrice(p.price, 'Цена по запросу')}
           {p.price !== null && p.perPerson && <span class="font-sans text-base font-semibold normal-case"> с человека</span>}
         </p>
-        {p.extra !== undefined && (
-          <p class:list={['mt-2 text-sm', dark ? 'text-paper/60' : 'text-ink/60']}>Каждый следующий участник: {p.extra === null ? 'уточняется' : `+${formatPrice(p.extra)}`}</p>
-        )}
+        {head(p) && <p class:list={['mt-2 text-sm', muted]}>≈ {formatPrice(head(p))} {perHead}</p>}
         {topic && (
           <Button href="#zayavka" request="party" topic={topic} note={`Пакет: ${p.label ? `${p.label}, ` : ''}${p.name}`} variant="outline" tone={tone} class="mt-6 sm:w-full">Выбрать пакет</Button>
         )}

@@ -20,7 +20,8 @@ interface Props {
   current?: string;
   lead?: string;
   badges?: string[];
-  photo: PhotoKey;
+  /** Фото справа. Вместо него можно отдать слот media: свёрстанный макет (сертификат). */
+  photo?: PhotoKey;
 }
 
 const { title, crumbs = [], current, lead, badges = [], photo } = Astro.props;
@@ -57,7 +58,11 @@ const size = poster > 40 ? 'clamp(2rem,3.8vw,4.25rem)' : poster <= 14 ? 'clamp(2
       {Astro.slots.has('default') && <div class="flex flex-wrap items-center gap-x-7 gap-y-4"><slot /></div>}
     </div>
   </div>
+  {Astro.slots.has('media') ? (
+    <div class="relative lg:col-span-6"><slot name="media" /></div>
+  ) : photo && (
   <div class="relative aspect-[4/3] overflow-hidden rounded-md lg:col-span-6 lg:aspect-auto">
     <Image src={photos[photo]} alt={alts[photo]} widths={[480, 800, 1200, 1600]} sizes="(min-width: 1024px) 50vw, 100vw" loading="eager" fetchpriority="high" class="absolute inset-0 size-full object-cover" />
   </div>
+  )}
 </section>

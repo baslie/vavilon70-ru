@@ -15,8 +15,9 @@ const panels = await Promise.all(tabs.map((t) => Astro.slots.render(t.id)));
 
 <div data-tabs>
   {/* Вкладки — подчёркиванием цветом акцента поля, без заливки и скоса: залитая скошенная вкладка
-      не отличалась от кнопки записи (28.10.2026). Подчёркивание активной лежит на общей линии. */}
-  <div role="tablist" aria-label={label} class:list={['hidden flex-wrap gap-x-8 border-b [.js_&]:flex', dark ? 'border-paper/15' : 'border-ink/15']}>
+      не отличалась от кнопки записи (28.10.2026). Подчёркивание активной лежит на общей линии.
+      Вкладки не переносятся: на телефоне ряд прокручивается вбок до края экрана (дизайн-аудит 13.11.2026). */}
+  <div role="tablist" aria-label={label} class:list={['-mx-4 hidden snap-x scroll-px-4 gap-x-8 overflow-x-auto border-b px-4 [scrollbar-width:none] md:mx-0 md:px-0 [.js_&]:flex', dark ? 'border-paper/15' : 'border-ink/15']}>
     {tabs.map((t, i) => (
       <button
         type="button"
@@ -26,7 +27,7 @@ const panels = await Promise.all(tabs.map((t) => Astro.slots.render(t.id)));
         aria-selected={i === 0 ? 'true' : 'false'}
         tabindex={i === 0 ? 0 : -1}
         class:list={[
-          'label -mb-px cursor-pointer border-b-2 border-transparent py-3 font-semibold transition',
+          'label -mb-px shrink-0 cursor-pointer snap-start border-b-2 border-transparent py-3 font-semibold whitespace-nowrap transition',
           dark
             ? 'text-paper/65 hover:border-lime/40 hover:text-paper aria-selected:border-lime aria-selected:text-paper'
             : 'text-ink/65 hover:border-violet/40 hover:text-ink aria-selected:border-violet aria-selected:text-ink',
@@ -55,7 +56,10 @@ const panels = await Promise.all(tabs.map((t) => Astro.slots.render(t.id)));
     };
     select(0);
     tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('click', () => {
+        select(i);
+        tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+      });
       tab.addEventListener('keydown', (event) => {
         const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
         if (!step) return;

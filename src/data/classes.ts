@@ -160,8 +160,9 @@ export const adultNinja: Offer = {
   // TODO: дни, время и цена (открытый вопрос #10). До старта так и задумано в ТЗ.
   schedule: { days: null, slots: [{ label: 'Время', time: null }] },
   soon: 'Старт продаж совсем скоро',
-  cta: { label: 'Узнать о старте группы', href: '#start' },
-  photo: 'ninja',
+  // Кнопка открывает поп-ап «Узнать о старте группы» (RequestDialog): отдельная форма ниже повторяла её.
+  cta: { label: 'Узнать о старте группы', href: '#ninja', request: 'ninjaStart' },
+  photo: 'adultNinja',
 };
 
 export const firstTraining: { title: string; items: Step[] } = {
@@ -175,8 +176,19 @@ export const firstTraining: { title: string; items: Step[] } = {
   ],
 };
 
+// Для взрослых те же шаги, но без группы «по возрасту» и без родителей.
+export const firstTrainingAdults: { title: string; items: Step[] } = {
+  title: firstTraining.title,
+  items: [
+    { title: 'Запись и консультация', text: 'Вы оставляете заявку, мы подбираем группу по уровню подготовки и удобному времени.' },
+    ...firstTraining.items.slice(1, 4),
+    { title: 'Обратная связь', text: 'После занятия тренер рассказывает о результатах и даёт рекомендации.' },
+  ],
+};
+
 /** photo нет — в карточке нейтральная заглушка «Фото скоро» (Coaches.astro). */
-export type Coach = { name: string; role: string; experience: string; specialization: string; photo?: PhotoKey };
+/** kids — только на детских страницах. */
+export type Coach = { name: string; role: string; experience: string; specialization: string; photo?: PhotoKey; kids?: boolean };
 
 // ЗАГЛУШКА (#9): имена и фото тренеров пришлёт Роман от заказчика. Роли, опыт и специализация — из ТЗ.
 // Пока фото нет, карточка без фото: чужой кадр (аниматор) выглядел как готовый тренер.
@@ -192,5 +204,6 @@ export const coaches: Coach[] = [
     role: 'Инструктор направления детского развития',
     experience: '5 лет, высшее педагогическое / физкультурное образование',
     specialization: 'ОФП для детей от 4 лет, игровое обучение, страховка',
+    kids: true,
   },
 ];

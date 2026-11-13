@@ -20,7 +20,7 @@ const { extras } = birthday;
 const cards: Card[] = [
   { title: facePainting.title, text: extras.items.facePainting, href: url('/prazdniki/dopolnitelno/#akvagrim'), photo: facePainting.photo, meta: 'Раздел «Дополнительно»' },
   { title: photographer.title, text: extras.items.photographer, href: url('/prazdniki/dopolnitelno/#fotograf'), photo: photographer.photo, meta: 'Раздел «Дополнительно»' },
-  { title: 'Стильное оформление стола', text: extras.items.decor, href: url('/kafe/#ukrashenie'), meta: 'Раздел «Семейное кафе»' },
+  { title: 'Стильное оформление стола', text: extras.items.decor, href: url('/kafe/#ukrashenie'), photo: 'decor', meta: 'Раздел «Семейное кафе»' },
 ];
 ---
 
@@ -37,7 +37,7 @@ const cards: Card[] = [
       <h2 class="headline text-[clamp(1.9rem,3.6vw,3.75rem)] leading-[1.02]" data-reveal>Пакеты праздника</h2>
       <div class="mt-10">
         <Tabs tabs={birthday.groups} label="Возраст гостей" tone="dark">
-          {birthday.groups.map((g) => <div slot={g.id}><Packages packages={g.packages} tone="dark" topic={g.id === 'deti-4-7' ? 'День рождения 4–7 лет' : 'День рождения 8–18 лет'} /></div>)}
+          {birthday.groups.map((g) => <div slot={g.id}><Packages packages={g.packages} tone="dark" topic={g.id === 'deti-4-7' ? 'День рождения 4–7 лет' : 'День рождения 8–18 лет'} perHead="с ребёнка" /></div>)}
         </Tabs>
       </div>
       <ul class="grid-site mt-16 gap-y-10">

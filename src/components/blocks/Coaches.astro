@@ -2,8 +2,9 @@
 // «Ваши тренеры» из ТЗ: карточки с фото, именем, ролью, опытом и специализацией.
 // Пока имён и фото нет (открытый вопрос #9) — условное наполнение из src/data/classes.ts,
 // вместо фото нейтральная заглушка «Фото скоро».
-// Заголовок на всю ширину, под ним карточки. До трёх тренеров карточки идут по 6 колонок
-// (фото слева, текст справа), чтобы ряд был полным; от четырёх — по 3, фото сверху.
+// Заголовок на всю ширину, под ним карточки: два тренера — по 6 колонок (фото слева, текст справа),
+// от трёх — по 3, фото сверху. Один тренер — заголовок и карточка в одном ряду, 6 + 6.
+// adults — без тренеров детских направлений (kids в данных).
 import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
@@ -12,20 +13,23 @@ import { photos, alts } from '../../data/photos';
 
 interface Props {
   tone?: 'light' | 'dark';
+  adults?: boolean;
 }
 
-const { tone = 'light' } = Astro.props;
+const { tone = 'light', adults = false } = Astro.props;
+const list = coaches.filter((c) => !adults || !c.kids);
+const single = list.length === 1;
 const dark = tone === 'dark';
 const accent = dark ? 'text-lime' : 'text-violet';
-const wide = coaches.length % 2 === 0 && coaches.length < 4;
+const wide = list.length <= 2;
 const item = wide ? 'lg:col-span-6 lg:grid lg:grid-cols-subgrid lg:items-start' : 'lg:col-span-3';
-const media = ['aspect-[4/5] w-full rounded-md', wide && 'lg:col-span-2'];
+const media = ['aspect-[4/5] w-full rounded-md', wide && 'lg:col-span-2', single && 'max-lg:max-w-sm'];
 ---
 
 <section id="trenery" class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <h2 class="headline headline-fit leading-[1.02] lg:col-span-12" style={fitHeadline('Ваши тренеры', 'clamp(1.9rem,3.6vw,3.75rem)')} data-reveal>Ваши тренеры</h2>
-  <ul class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-12 lg:grid-cols-subgrid">
-    {coaches.map((c, i) => (
+  <h2 class:list={['headline headline-fit leading-[1.02]', single ? 'lg:col-span-6' : 'lg:col-span-12']} style={fitHeadline('Ваши тренеры', 'clamp(1.9rem,3.6vw,3.75rem)', single ? 6 : 12)} data-reveal>Ваши тренеры</h2>
+  <ul class:list={['grid gap-x-gutter gap-y-12 lg:grid-cols-subgrid', single ? 'lg:col-span-6' : 'md:grid-cols-2 lg:col-span-12']}>
+    {list.map((c, i) => (
       <li class={item} data-reveal style={`--i:${i}`}>
         {c.photo ? (
           <Image src={photos[c.photo]} alt={alts[c.photo]} widths={[400, 700]} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw" class:list={[media, 'object-cover']} />

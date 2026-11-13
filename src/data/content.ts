@@ -59,7 +59,9 @@ export const safetyHome = {
   ],
 };
 
-export type PhotoKey = 'jump' | 'jumpTall' | 'arena' | 'ninja' | 'football' | 'party' | 'coach' | 'texture' | 'textureAlt';
+export type PhotoKey =
+  | 'jump' | 'jumpTall' | 'arena' | 'ninja' | 'football' | 'party' | 'coach' | 'texture' | 'textureAlt'
+  | 'cafe' | 'decor' | 'safety' | 'adultNinja' | 'facePainting' | 'photographer' | 'students' | 'newYear';
 
 // Плитка «Что внутри» / фотогида. tag — хештег из ТЗ, у прототипов его нет.
 export type GuideCard = { title: string; tag?: string; text: string; photo?: PhotoKey; path: string };
@@ -82,7 +84,7 @@ export const guide: { title: string; items: GuideCard[] } = {
     { title: 'Ninja-трасса', tag: '#NinjaТрасса', text: 'Полоса препятствий с зачётом времени для проверки силы хватки и баланса', photo: 'ninja', path: '/uslugi/ninja-trassa/' },
     { title: 'Мини-футбол', tag: '#МиниФутбол', text: 'Крытый газон для динамичных матчей и детских эстафет', photo: 'football', path: '/uslugi/mini-futbol/' },
     { title: 'Квесты и анимация', tag: '#АнимацияИИгры', text: 'Авторские программы с ведущими для дней рождения и праздников', photo: 'party', path: '/prazdniki/' },
-    { title: 'Семейное кафе', tag: '#КафеИОтдых', text: 'Уютные банкетные зоны, пицца, бургеры и обзор на весь зал', path: '/kafe/' },
+    { title: 'Семейное кафе', tag: '#КафеИОтдых', text: 'Уютные банкетные зоны, пицца, бургеры и обзор на весь зал', photo: 'cafe', path: '/kafe/' },
     { title: 'Наша команда', tag: '#НашаКоманда', text: 'Опытные инструкторы, которые всегда рядом и следят за безопасностью', photo: 'coach', path: '/uslugi/personalnye-trenirovki/' },
   ],
 };
@@ -103,7 +105,10 @@ export const manifest = {
     { title: 'Организация мероприятий «под ключ»', text: 'Дни рождения, выпускные, детские праздники и взрослые корпоративы (тимбилдинги).' },
     { title: 'Семейное кафе', text: 'Отдельная зона с полноценным меню, где можно перекусить или отпраздновать день рождения.' },
   ],
-  philosophy: 'Это место, где рождаются яркие эмоции, преодолеваются страхи и создаются самые тёплые воспоминания!',
+  // Фраза ТЗ (строка 68) поделена: заголовок философии и вводная под ним. Слоган «Больше чем прыжки»
+  // уже стоит в первом экране, повтор гасил его (дизайн-аудит 13.11.2026).
+  philosophyTitle: 'Место, где рождаются яркие эмоции',
+  philosophy: 'Здесь преодолеваются страхи и создаются самые тёплые воспоминания!',
 };
 
 // Блок 5 главной «Призыв к действию».

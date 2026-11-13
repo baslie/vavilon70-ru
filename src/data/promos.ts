@@ -24,8 +24,7 @@ export const students: Offer = {
     ],
   },
   cta: { label: 'Забронировать' },
-  photo: 'jumpTall',
-  photoPosition: 'top',
+  photo: 'students',
 };
 
 export const birthday: Offer = {

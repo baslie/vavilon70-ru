@@ -7,6 +7,7 @@ import Footer from '../../components/Footer.astro';
 import PageHero from '../../components/blocks/PageHero.astro';
 import RequestForm from '../../components/blocks/RequestForm.astro';
 import Button from '../../components/blocks/Button.astro';
+import CertificateCard from '../../components/blocks/CertificateCard.astro';
 import CardGrid, { type Card } from '../../components/blocks/CardGrid.astro';
 import { certificates, personal, complexTicket, priceFrom } from '../../data/services';
 import { kidsFreestyle } from '../../data/classes';
@@ -25,17 +26,21 @@ const options: Card[] = [
   <Header />
 
   <main id="main">
-    <PageHero title={certificates.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Подарочные сертификаты" lead={certificates.lead} photo="textureAlt">
+    <PageHero title={certificates.title} crumbs={[{ title: 'Услуги и цены', href: url('/uslugi/') }]} current="Подарочные сертификаты" lead={certificates.lead}>
       <Button href="#zayavka" icon="gift">{certificates.cta}</Button>
+      <CertificateCard slot="media" />
     </PageHero>
 
     <section class="grid-site gap-y-12 bg-ink px-4 py-20 text-paper md:px-8 lg:py-24">
-      {certificates.items.map((item, i) => (
-        <div class="lg:col-span-6" data-reveal style={`--i:${i}`}>
-          <span class="dash mb-6 block bg-lime" aria-hidden="true"></span>
-          <h2 class="headline text-[clamp(1.6rem,2.6vw,2.75rem)] leading-[1.02]">{item.title}</h2>
-          <p class="mt-5 max-w-[48ch] text-lg leading-relaxed text-paper/75">{item.text}</p>
-        </div>
+      {/* Один пункт: заголовок слева, текст справа — ряд полный (BRAND, «Баланс блока»). */}
+      {certificates.items.map((item) => (
+        <>
+          <div class="lg:col-span-6" data-reveal>
+            <span class="dash mb-6 block bg-lime" aria-hidden="true"></span>
+            <h2 class="headline text-[clamp(1.6rem,2.6vw,2.75rem)] leading-[1.02]">{item.title}</h2>
+          </div>
+          <p class="max-w-[48ch] text-lg leading-relaxed text-paper/75 lg:col-span-6 lg:self-end" data-reveal>{item.text}</p>
+        </>
       ))}
     </section>
 

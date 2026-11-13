@@ -80,7 +80,7 @@ const height: Partial<Record<Key, number>> = {
   points: offer.points ? pad + 54 + offer.points.items.reduce((h, p) => h + 54 + lines(p.title, 36) * 28 + lines(p.text, 68) * 26 + 24, 0) : undefined,
   includes: offer.includes ? pad + 54 + offer.includes.items.reduce((h, item) => h + lines(item, 54) * 28 + 16, 0) : undefined,
   photo: photo ? 288 : undefined,
-  deal: (offer.soon ? 72 + 32 : 0) + 52 + (offer.terms ? lines(offer.terms, 70) * 22 + 32 : 0),
+  deal: (offer.soon ? 24 + 32 : 0) + 52 + (offer.terms ? lines(offer.terms, 70) * 22 + 32 : 0),
 };
 // Цены карточками (PriceTable): рядов карточек 1–2, высота ряда — по самой высокой карточке.
 // Цены «Будни / Выходные» считаем столбиком: так их ставят узкая карточка и растянутая.
@@ -205,11 +205,11 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
               <div class:list={['flex flex-col gap-8', stretch ? 'lg:flex-1' : col.length > 1 && 'lg:mt-auto']}>
                 {offer.prices && <div class="lg:flex lg:flex-1 lg:flex-col" data-reveal><PriceTable table={offer.prices} tone={tone} stretch={stretch} stack={stack} /></div>}
                 {offer.soon && (
-                  <p class:list={['font-display text-2xl leading-snug font-bold uppercase', accent]} data-reveal>{offer.soon}</p>
+                  <p class:list={['text-sm font-semibold', muted]} data-reveal>{offer.soon}</p>
                 )}
                 {offer.terms && <p class:list={['max-w-[60ch] text-sm leading-relaxed', muted]} data-reveal><span class:list={[field, 'mr-2']}>Условия</span>{offer.terms}</p>}
                 <div class="flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal>
-                  <Button href={offer.cta.href} topic={offer.cta.topic} icon="lightning">{offer.cta.label}</Button>
+                  <Button href={offer.cta.href} request={offer.cta.request} topic={offer.cta.topic} icon="lightning">{offer.cta.label}</Button>
                   <slot />
                 </div>
               </div>

@@ -8,6 +8,14 @@ import BookingLink from '../BookingLink.astro';
 import { planVisit, contacts } from '../../data/content';
 import { partyRequest } from '../../data/nav';
 import { photos, alts } from '../../data/photos';
+import type { PhotoKey } from '../../data/content';
+
+interface Props {
+  /** Другой кадр, если jump уже стоит на странице (BRAND, «Фото»: кадр не повторяется). */
+  photo?: PhotoKey;
+}
+
+const { photo = 'jump' } = Astro.props;
 ---
 
 <section id="plan" class="grid-site gap-y-12 bg-ink px-4 py-24 text-paper md:px-8 lg:min-h-dvh">
@@ -28,5 +36,5 @@ import { photos, alts } from '../../data/photos';
       <a href={contacts.phoneHref} class="font-semibold text-paper underline decoration-paper/25 underline-offset-[6px] transition hover:decoration-lime">{contacts.phone}</a>
     </p>
   </div>
-  <Image src={photos.jump} alt={alts.jump} widths={[600, 900, 1200, 1600]} sizes="(min-width: 1024px) 50vw, 100vw" class="aspect-[4/3] w-full rounded-md object-cover lg:col-span-6 lg:aspect-auto lg:h-full" data-reveal />
+  <Image src={photos[photo]} alt={alts[photo]} widths={[600, 900, 1200, 1600]} sizes="(min-width: 1024px) 50vw, 100vw" class="aspect-[4/3] w-full rounded-md object-cover lg:col-span-6 lg:aspect-auto lg:h-full" data-reveal />
 </section>

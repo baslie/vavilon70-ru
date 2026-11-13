@@ -18,9 +18,10 @@ interface Props {
 const { lead = homeLead } = Astro.props;
 
 const details = [
-  { photo: photos.arena, caption: 'Батутная арена' },
-  { photo: photos.ninja, caption: 'Ninja-трасса' },
-  { photo: photos.party, caption: 'Праздники' },
+  // Кадры не те, что в фотогиде ниже (Inside): на странице кадр не повторяется (BRAND, «Фото»).
+  { photo: photos.students, caption: 'Батутная арена' },
+  { photo: photos.adultNinja, caption: 'Ninja-трасса' },
+  { photo: photos.decor, caption: 'Праздники' },
 ];
 ---
 
