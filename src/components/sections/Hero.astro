@@ -54,18 +54,19 @@ const details = [
   </div>
 
   <figure class="relative lg:col-span-5 lg:min-h-0">
-    <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[4/5] w-full rounded-md object-cover lg:aspect-auto lg:h-full" />
+    <Image src={photos.jumpTall} alt={alts.jumpTall} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" loading="eager" fetchpriority="high" quality={82} class="aspect-[4/5] w-full rounded-md object-cover md:aspect-[4/3] lg:aspect-auto lg:h-full" />
   </figure>
 
-  <aside class="hidden lg:col-span-3 lg:flex lg:min-h-0" aria-label="Детали">
-    <ul class="flex min-h-0 flex-1 flex-col gap-4">
+  {/* На планшете три фото рядом под главным: одно фото на весь экран оставляло на фолде только кромку. */}
+  <aside class="hidden md:block lg:col-span-3 lg:flex lg:min-h-0" aria-label="Детали">
+    <ul class="grid min-h-0 flex-1 grid-cols-3 gap-gutter lg:flex lg:flex-col lg:gap-4">
       {details.map((d) => (
-        <li class="relative flex min-h-0 flex-1 overflow-hidden rounded-md">
-          <Image src={d.photo} alt="" widths={[400, 700]} sizes="22vw" class="min-h-0 w-full flex-1 object-cover" />
+        <li class="relative flex aspect-[4/3] min-h-0 flex-1 overflow-hidden rounded-md lg:aspect-auto">
+          <Image src={d.photo} alt="" widths={[400, 700]} sizes="(min-width: 1024px) 22vw, 33vw" class="min-h-0 w-full flex-1 object-cover" />
           <span class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-ink/85 to-transparent"></span>
           <p class="absolute bottom-4 left-4">
             <span class="dash block bg-violet"></span>
-            <span class="label mt-2 block text-[0.7rem] font-semibold text-paper">{d.caption}</span>
+            <span class="label mt-2 block text-xs font-semibold text-paper">{d.caption}</span>
           </p>
         </li>
       ))}

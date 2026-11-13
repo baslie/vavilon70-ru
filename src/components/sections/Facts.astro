@@ -2,6 +2,7 @@
 // Цифры из v3 «Постер»: крупные чёрные цифры Unbounded, единица в том же заголовке фиолетовым помельче, без линий.
 // Заголовок строчными: капс превратил бы м² в М², а 1-я в 1-Я.
 // На телефоне единица всегда отдельной строкой: в полколонки она то влезает, то нет, и ряд рассыпается.
+// Шире — в строку с цифрой, если все единицы ряда короткие (unitClass).
 // На общей сетке: четыре факта встают в ряд по 3 колонки, шесть — сеткой 3×2 по 4 колонки.
 // Подписи прижаты к низу ячейки: если длинная единица («100% безопасность») уходит на вторую строку,
 // цифры ряда остаются на одной линии сверху, подписи — на одной линии снизу.
@@ -13,6 +14,17 @@ interface Props {
 
 const { items = facts } = Astro.props;
 const four = items.length === 4;
+// Длинная единица («безопасность») рядом с цифрой не влезает в ячейку и уходит на вторую строку,
+// а соседние остаются в одну: в ряду дыра. Поэтому в таком ряду все единицы встают под цифру.
+const rowShort = (i: number, perRow: number) => {
+  const start = i - (i % perRow);
+  return items.slice(start, start + perRow).every((f) => f.unit.length <= 9);
+};
+const unitClass = (i: number) => [
+  'mt-2 block text-[0.42em] text-violet',
+  rowShort(i, 2) && 'md:mt-0 md:inline',
+  rowShort(i, four ? 4 : 3) ? 'lg:mt-0 lg:inline' : 'lg:mt-2 lg:block',
+];
 ---
 
 <section class="px-4 py-20 md:px-8" aria-label="Вавилон в цифрах">
@@ -20,7 +32,7 @@ const four = items.length === 4;
     {items.map((f, i) => (
       <div class:list={['flex flex-col', four ? 'lg:col-span-3' : 'lg:col-span-4']} data-reveal style={`--i:${i % (four ? 4 : 3)}`}>
         <h3 class="headline normal-case text-[2.6rem] sm:text-6xl md:text-7xl">
-          {f.value} <span class="mt-2 block text-[0.42em] text-violet md:mt-0 md:inline">{f.unit}</span>
+          {f.value} <span class:list={unitClass(i)}>{f.unit}</span>
         </h3>
         <p class="mt-auto pt-3 text-sm leading-relaxed text-ink/65">{f.label}</p>
       </div>

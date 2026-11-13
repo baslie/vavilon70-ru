@@ -1,9 +1,9 @@
 ---
 // Цены из ТЗ карточками тарифов, а не таблицей на всю колонку: на широком экране название и цена
 // не разъезжаются по краям, каждая цена стоит рядом со своей подписью.
-// Строк несколько — карточка на строку («1 час», «2 часа»), внутри цены «Будни / Выходные» группой
-// слева. Строка одна, а колонок две (комплексный билет) — карточка на колонку, название строки уходит
-// в подпись над карточками. Зачёркнутая старая цена в строку с новой, чтобы цены соседних карточек
+// Карточка на строку, заголовок — длительность («1 час», «2 часа»), внутри цены «Будни / Выходные»
+// группой слева. Так и при одной строке (комплексный билет, аренда арены): один вид цен на сайте
+// (docs/BRAND.md, «Цены»). Зачёркнутая старая цена в строку с новой, чтобы цены соседних карточек
 // стояли на одной линии; пояснение под названием.
 // Пустая цена (null) — «Уточняется» или своя подпись (table.empty).
 // Ряды полные (docs/BRAND.md, «Баланс блока»): 2 и 4 карточки — по две в ряд, 3 и 6 — по три,
@@ -28,21 +28,14 @@ const muted = dark ? 'text-paper/60' : 'text-ink/60';
 const two = (table.columns?.length ?? 0) > 1;
 
 type Card = { title: string; note?: string; prices: { label?: string; price: Price; old?: number }[] };
-const byColumn = two && table.rows.length === 1;
-const row = table.rows[0];
-const cards: Card[] = byColumn
-  ? [
-      { title: table.columns![0], prices: [{ price: row.price, old: row.old }] },
-      { title: table.columns![1], prices: [{ price: row.weekend ?? null, old: row.oldWeekend }] },
-    ]
-  : table.rows.map((r) => ({
+const cards: Card[] = table.rows.map((r) => ({
       title: r.label,
       note: r.note,
       prices: two
         ? [{ label: table.columns![0], price: r.price, old: r.old }, { label: table.columns![1], price: r.weekend ?? null, old: r.oldWeekend }]
         : [{ price: r.price, old: r.old }],
     }));
-const caption = byColumn ? [table.caption, row.label].filter(Boolean).join(' · ') : table.caption;
+const caption = table.caption;
 const n = cards.length;
 const narrow = (i: number) => n === 3 || n === 6 || (n === 5 && i < 3);
 // Название не рвём переносом посреди слова («ИНДИВИДУА/ЛЬНАЯ»): в узкой карточке кегль ограничен шириной
@@ -53,7 +46,6 @@ const span = (i: number) => (n === 1 || stack ? 'sm:col-span-6' : narrow(i) ? 's
 
 <div class:list={[stretch && 'lg:flex lg:flex-1 lg:flex-col']}>
   {caption && <p class:list={['label mb-4 font-semibold', dark ? 'text-paper/65' : 'text-ink/65']}>{caption}</p>}
-  {byColumn && row.note && <p class:list={['-mt-2 mb-4 text-sm', muted]}>{row.note}</p>}
   <ul class:list={['grid gap-3 sm:grid-cols-6', stretch && 'lg:flex-1 lg:auto-rows-fr']}>
     {cards.map((c, i) => (
       <li class:list={['@container flex flex-col justify-between gap-6 rounded-md p-5 md:p-6', span(i), dark ? 'bg-ink-soft' : 'bg-paper']}>
@@ -61,7 +53,8 @@ const span = (i: number) => (n === 1 || stack ? 'sm:col-span-6' : narrow(i) ? 's
           <p class:list={['font-display text-lg leading-tight font-bold uppercase', narrow(i) ? 'text-[min(1.125rem,calc(100cqi/var(--n)))]' : 'md:text-xl']} style={narrow(i) ? fit(c.title) : undefined}>{c.title}</p>
           {c.note && <p class:list={['mt-1.5 text-sm leading-snug', muted]}>{c.note}</p>}
         </div>
-        <dl class:list={['flex flex-wrap gap-x-10 gap-y-4', stretch && !stack && 'lg:flex-col lg:gap-y-5']}>
+        {/* Две цены — двумя равными колонками: «Выходные» соседних карточек на одной вертикали. */}
+        <dl class:list={['grid gap-x-6 gap-y-4', c.prices.length > 1 && 'grid-cols-2', stretch && !stack && 'lg:grid-cols-1 lg:gap-y-5']}>
           {c.prices.map((p) => (
             <div>
               <dt class:list={p.label ? ['label mb-1.5 font-semibold', muted] : 'sr-only'}>{p.label ?? 'Цена'}</dt>

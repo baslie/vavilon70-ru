@@ -10,13 +10,13 @@ export const promos = {
 
 // Заказчик просил разместить обязательно. Скидки не действуют в осенние, зимние и весенние каникулы,
 // летом действуют (подтвердила заказчица 13.11.2026).
-const terms = { label: 'Условия', value: 'Скидки и промокоды не действуют в выходные, праздничные дни и школьные каникулы, кроме летних.' };
+const terms = 'Скидки и промокоды не действуют в выходные, праздничные дни и школьные каникулы, кроме летних.';
 
 export const students: Offer = {
   id: 'studentam',
   title: 'Скидка для студентов',
   badges: ['По будням'],
-  meta: [terms],
+  terms,
   prices: {
     rows: [
       { label: 'Батутная арена', note: '1 час', price: 350, old: 500 },
@@ -25,13 +25,14 @@ export const students: Offer = {
   },
   cta: { label: 'Забронировать' },
   photo: 'jumpTall',
+  photoPosition: 'top',
 };
 
 export const birthday: Offer = {
   id: 'imeninniku',
   title: 'Скидка имениннику',
   badges: ['В день рождения и рядом с ним'],
-  meta: [terms],
+  terms,
   points: {
     title: 'На свободное посещение батутов и Ninja-трассы',
     items: [

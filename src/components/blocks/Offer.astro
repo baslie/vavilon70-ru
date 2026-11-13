@@ -80,21 +80,20 @@ const height: Partial<Record<Key, number>> = {
   points: offer.points ? pad + 54 + offer.points.items.reduce((h, p) => h + 54 + lines(p.title, 36) * 28 + lines(p.text, 68) * 26 + 24, 0) : undefined,
   includes: offer.includes ? pad + 54 + offer.includes.items.reduce((h, item) => h + lines(item, 54) * 28 + 16, 0) : undefined,
   photo: photo ? 288 : undefined,
-  deal: (offer.soon ? 72 + 32 : 0) + 52,
+  deal: (offer.soon ? 72 + 32 : 0) + 52 + (offer.terms ? lines(offer.terms, 70) * 22 + 32 : 0),
 };
 // Цены карточками (PriceTable): рядов карточек 1–2, высота ряда — по самой высокой карточке.
 // Цены «Будни / Выходные» считаем столбиком: так их ставят узкая карточка и растянутая.
 if (offer.prices) {
   const t = offer.prices;
   const two = (t.columns?.length ?? 0) > 1;
-  const byColumn = two && t.rows.length === 1;
-  const n = byColumn ? 2 : t.rows.length;
+  const n = t.rows.length;
   const card = (r: (typeof t.rows)[number]) => {
-    const price = (two && !byColumn ? 22 : 0) + 36;
-    return 48 + 28 + (r.note && !byColumn ? 26 : 0) + 24 + (two && !byColumn ? price * 2 + 16 : price);
+    const price = (two ? 22 : 0) + 36;
+    return 48 + 28 + (r.note ? 26 : 0) + 24 + (two ? price * 2 + 16 : price);
   };
   const rows = n <= 3 ? 1 : 2;
-  height.deal = height.deal! + (t.caption || byColumn ? 32 : 0) + rows * Math.max(...t.rows.map(card)) + (rows - 1) * 12 + 32;
+  height.deal = height.deal! + (t.caption ? 32 : 0) + rows * Math.max(...t.rows.map(card)) + (rows - 1) * 12 + 32;
 }
 const has = (k: Key) => height[k] !== undefined;
 const sum = (keys: Key[]) => keys.reduce((h, k) => h + (height[k] ?? 0), 0) + Math.max(0, keys.length - 1) * gap;
@@ -105,16 +104,20 @@ const sum = (keys: Key[]) => keys.reduce((h, k) => h + (height[k] ?? 0), 0) + Ma
 // При равенстве — привычный порядок: списки справа, фото слева.
 const movable = (['points', 'includes', 'photo'] as Key[]).filter(has);
 let best = { left: [] as Key[], right: [] as Key[], score: Infinity };
-for (let mask = 0; mask < 1 << movable.length; mask++) {
-  const toLeft = movable.filter((_, i) => mask & (1 << i));
+// Ещё вариант для услуги с коротким описанием (допуслуги): всё слева, справа одно фото во всю высоту.
+// Иначе фото с ценами под ним выше левой колонки, и над прижатым вниз описанием остаётся дыра.
+const layouts: { toLeft: Key[]; dealLeft: boolean }[] = [];
+for (let mask = 0; mask < 1 << movable.length; mask++) layouts.push({ toLeft: movable.filter((_, i) => mask & (1 << i)), dealLeft: false });
+if (photo) layouts.push({ toLeft: movable.filter((k) => k !== 'photo'), dealLeft: true });
+for (const { toLeft, dealLeft } of layouts) {
   const toRight = movable.filter((k) => !toLeft.includes(k));
-  const left = (['head', 'facts'] as Key[]).filter(has).concat(toLeft);
-  const right = toRight.includes('photo') ? ['photo' as Key, ...toRight.filter((k) => k !== 'photo'), 'deal' as Key] : [...toRight, 'deal' as Key];
+  const left = (['head', 'facts'] as Key[]).filter(has).concat(toLeft, dealLeft ? ['deal'] : []);
+  const right = dealLeft ? ['photo' as Key] : toRight.includes('photo') ? ['photo' as Key, ...toRight.filter((k) => k !== 'photo'), 'deal' as Key] : [...toRight, 'deal' as Key];
   const [l, r] = [sum(left), sum(right)];
   const diff = Math.abs(l - r);
   const photoElastic = (toLeft.includes('photo') && l <= r) || (toRight.includes('photo') && r <= l);
-  const pricesElastic = !!offer.prices && !toRight.includes('photo') && r <= l;
-  const habit = (toLeft.includes('points') ? 1 : 0) + (toLeft.includes('includes') ? 1 : 0) + (toRight.includes('photo') ? 1 : 0);
+  const pricesElastic = !!offer.prices && !dealLeft && !toRight.includes('photo') && r <= l;
+  const habit = (toLeft.includes('points') ? 1 : 0) + (toLeft.includes('includes') ? 1 : 0) + (toRight.includes('photo') ? 1 : 0) + (dealLeft ? 2 : 0);
   const stretchCost = Math.min(diff, 80) * 0.2 + Math.max(0, diff - 80);
   const score = (photoElastic ? 0 : pricesElastic ? stretchCost : diff) + Math.max(l, r) * 0.05 + habit * 10;
   if (score < best.score) best = { left, right, score };
@@ -123,7 +126,7 @@ const columns = [best.left, best.right];
 // Цены — весь правый столбец, а левый выше больше чем на 120 px: две карточки рядом вытянулись бы
 // пустыми колоннами. Тогда они встают друг под другом на всю ширину, растяжение делится на две.
 const t = offer.prices;
-const priceCards = !t ? 0 : (t.columns?.length ?? 0) > 1 && t.rows.length === 1 ? 2 : t.rows.length;
+const priceCards = !t ? 0 : t.rows.length;
 const stack = priceCards === 2 && !best.right.includes('photo') && sum(best.left) - sum(best.right) > 120;
 // Последний блок колонки без фото прижимаем к низу: углы блока заняты, воздух уходит в середину.
 const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col.length - 1] && col.length > 1;
@@ -191,7 +194,7 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
           case 'photo':
             return (
               <div class="relative aspect-[4/3] overflow-hidden rounded-md lg:aspect-auto lg:min-h-72 lg:flex-1" data-reveal>
-                <Image src={photos[offer.photo]} alt={alts[offer.photo]} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 45vw, 100vw" class="absolute inset-0 size-full object-cover" />
+                <Image src={photos[offer.photo]} alt={alts[offer.photo]} widths={[600, 900, 1200]} sizes="(min-width: 1024px) 45vw, 100vw" class="absolute inset-0 size-full object-cover" style={offer.photoPosition && `object-position: center ${offer.photoPosition}`} />
               </div>
             );
           // Цены и кнопка одной группой, без разрыва. В колонке без фото карточки тянутся до низа
@@ -204,6 +207,7 @@ const anchored = (col: Key[], k: Key) => !col.includes('photo') && k === col[col
                 {offer.soon && (
                   <p class:list={['font-display text-2xl leading-snug font-bold uppercase', accent]} data-reveal>{offer.soon}</p>
                 )}
+                {offer.terms && <p class:list={['max-w-[60ch] text-sm leading-relaxed', muted]} data-reveal><span class:list={[field, 'mr-2']}>Условия</span>{offer.terms}</p>}
                 <div class="flex flex-wrap items-center gap-x-7 gap-y-4" data-reveal>
                   <Button href={offer.cta.href} topic={offer.cta.topic} icon="lightning">{offer.cta.label}</Button>
                   <slot />

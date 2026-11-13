@@ -6,9 +6,11 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Headline from '../components/blocks/Headline.astro';
-import { Content } from '../data/privacy.md';
+import { Content, getHeadings } from '../data/privacy.md';
 
 const edition = '28.10.2026';
+// Оглавление справа: на 1440 правые 4 колонки пустовали на весь документ.
+const toc = getHeadings().filter((h) => h.depth === 2);
 ---
 
 <Layout
@@ -31,9 +33,17 @@ const edition = '28.10.2026';
     </section>
 
     <section class="grid-site border-t border-ink/10 px-4 pt-6 pb-20 md:px-8">
-      <article class="doc lg:col-span-8">
+      <article class="doc max-w-[65ch] lg:col-span-8">
         <Content />
       </article>
+      <nav class="hidden lg:col-span-4 lg:block" aria-label="Содержание">
+        <div class="sticky top-28 rounded-md bg-paper p-6">
+          <p class="label mb-4 font-semibold text-ink/65">Содержание</p>
+          <ol class="grid gap-1 text-sm leading-snug">
+            {toc.map((h) => <li><a href={`#${h.slug}`} class="block py-1.5 text-ink/75 transition hover:text-violet">{h.text}</a></li>)}
+          </ol>
+        </div>
+      </nav>
     </section>
   </main>
   <Footer />

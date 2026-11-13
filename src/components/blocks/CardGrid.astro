@@ -1,6 +1,6 @@
 ---
 // Плитка карточек-ссылок для разделов «Услуги и цены» и «Праздники»: фото, название со стрелкой,
-// подпись и «от N ₽». Ниже lg — две в ряд. От lg раскладку выбирает число карточек, чтобы в сетке
+// подпись и «от N ₽». На md — три в ряд (mdSpan, src/lib/grid.ts). От lg раскладку выбирает число карточек, чтобы в сетке
 // не оставалось пустых ячеек: 2 — по 6 колонок, 4 — по 3, остальные по 4, а лишние до кратного трём
 // добираются широкими карточками сверху (5 = 6 + 6 и 4 + 4 + 4) или четвёркой снизу (7 = 4 × 3 и 3 × 4).
 import Headline from './Headline.astro';
@@ -8,6 +8,7 @@ import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import { photos, alts } from '../../data/photos';
 import type { PhotoKey } from '../../data/content';
+import { mdSpan } from '../../lib/grid';
 
 export type Card = { title: string; text: string; href: string; photo?: PhotoKey; meta?: string };
 
@@ -31,14 +32,15 @@ const sizes = { 3: '25vw', 4: '33vw', 6: '50vw' };
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
   <Headline text={title} tone={tone} size="clamp(1.9rem,3.6vw,3.75rem)" class="leading-[1.02]" data-reveal />
   {lead && <p class:list={['mt-6 max-w-[60ch] text-lg leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
-  <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-2">
+  <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-6">
     {items.map((c, i) => (
-      <li class={spanClass[span(i)]} data-reveal style={`--i:${i % 3}`}>
+      <li class:list={[spanClass[span(i)], mdSpan(i, n), '@container']} data-reveal style={`--i:${i % 3}`}>
         <a href={c.href} class="group block">
           <div class="overflow-hidden rounded-md">
-            <Image src={photos[c.photo ?? 'textureAlt']} alt={c.photo ? alts[c.photo] : ''} widths={[480, 800, 1200]} sizes={`(min-width: 1024px) ${sizes[span(i)]}, (min-width: 768px) 50vw, 100vw`} class:list={['w-full object-cover transition-transform duration-700 group-hover:scale-105', span(i) === 6 ? 'aspect-[4/3] lg:aspect-[16/9]' : 'aspect-[4/3]']} />
+            <Image src={photos[c.photo ?? 'textureAlt']} alt={c.photo ? alts[c.photo] : ''} widths={[480, 800, 1200]} sizes={`(min-width: 1024px) ${sizes[span(i)]}, (min-width: 768px) 33vw, 100vw`} class:list={['w-full object-cover transition-transform duration-700 group-hover:scale-105', span(i) === 6 ? 'aspect-[4/3] lg:aspect-[16/9]' : 'aspect-[4/3]']} />
           </div>
-          <h3 class="mt-6 flex items-start justify-between gap-4 font-display text-xl font-bold uppercase">
+          {/* Кегль названия не больше, чем нужно, чтобы самое длинное слово влезло рядом со стрелкой. */}
+          <h3 class="mt-6 flex items-start justify-between gap-4 font-display text-[min(1.25rem,calc((100cqi-2.5rem)/var(--n)))] font-bold uppercase" style={`--n: ${Math.max(...c.title.split(/\s+/).map((w) => w.length)) * 0.9}`}>
             {c.title}
             <Icon name="arrowUpRight" class:list={['size-6 shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1', dark ? 'text-lime' : 'text-violet']} />
           </h3>

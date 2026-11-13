@@ -2,7 +2,8 @@
 // Форма заявки внизу страницы (src/data/forms.ts). Слева заголовок и пояснение, справа поля
 // (RequestFields). Форма выше текста, поэтому крупный телефон — якорь внизу левой колонки,
 // на линии кнопки отправки. Кнопки, которые ведут на #id этой секции, открывают ту же форму
-// поп-апом (RequestDialog); topic — повод, выбранный по умолчанию.
+// поп-апом (RequestDialog); topic — повод, выбранный по умолчанию. Светлая форма — на подложке paper,
+// чтобы не сливаться с подвалом на поле mist.
 import Headline from './Headline.astro';
 import RequestFields from './RequestFields.astro';
 import Icon from '../Icon.astro';
@@ -22,7 +23,7 @@ const dark = tone === 'dark';
 const muted = dark ? 'text-paper/70' : 'text-ink/70';
 ---
 
-<section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']} data-request-section={formKey} data-topic={topic}>
+<section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark ? 'bg-ink text-paper' : 'bg-paper']} data-request-section={formKey} data-topic={topic}>
   <div class="flex flex-col gap-10 lg:col-span-5">
     <div>
       <Headline text={form.title} tone={tone} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />

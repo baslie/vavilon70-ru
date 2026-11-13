@@ -2,10 +2,11 @@
 // Нумерованные шаги: подготовка к визиту (3), первая тренировка (5), предзаказ банкета (4),
 // праздник по шагам (6). Заголовок слева на 4 колонки, шаги справа на 8, номера на линии верха
 // заголовка: верхние углы блока заняты и без вводной. Внутри восьми колонок три шага — в ряд,
-// четыре — по два, пять — три и два пошире, шесть — два ряда по три. Вводная, если есть, — под заголовком, у низа ряда.
+// четыре — по два, пять — три и два под первыми двумя, шесть — два ряда по три. На md так же, но пять — три и два пошире. Вводная, если есть, — под заголовком, у низа ряда.
 import Headline from './Headline.astro';
 import DownloadLink from './DownloadLink.astro';
 import type { Step } from '../../data/services';
+import { mdSpan } from '../../lib/grid';
 
 interface Props {
   id?: string;
@@ -18,7 +19,8 @@ interface Props {
 const { id, title, lead, items, tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
 const n = items.length;
-const span = (i: number) => (n === 4 || (n === 5 && i > 2) ? 'lg:col-span-3' : 'lg:col-span-2');
+// Пять шагов — три и два под первыми двумя: номера второго ряда на тех же вертикалях, что и первого.
+const span = (i: number) => (n === 4 ? 'lg:col-span-3' : 'lg:col-span-2');
 ---
 
 <section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
@@ -28,9 +30,9 @@ const span = (i: number) => (n === 4 || (n === 5 && i > 2) ? 'lg:col-span-3' : '
     {/* Слот — финальный призыв страницы (кнопка записи), у низа колонки заголовка. */}
     {Astro.slots.has('default') && <div class:list={[!lead && 'lg:mt-auto']} data-reveal><slot /></div>}
   </div>
-  <ol class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-8 lg:grid-cols-6">
+  <ol class="grid gap-x-gutter gap-y-12 md:grid-cols-6 lg:col-span-8">
     {items.map((s, i) => (
-      <li class={span(i)} data-reveal style={`--i:${i % 4}`}>
+      <li class:list={[span(i), mdSpan(i, n)]} data-reveal style={`--i:${i % 4}`}>
         <span class:list={['block font-display text-5xl leading-none font-extrabold italic', dark ? 'text-lime' : 'text-violet']} aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
         <h3 class="subhead mt-5">{s.title}</h3>
         <p class:list={['mt-3 max-w-[48ch] leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{s.text}</p>

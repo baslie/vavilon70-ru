@@ -6,6 +6,7 @@
 // Название — как у карточки цены (PriceTable), цветом текста: акцентный капс остаётся у плашки над заголовком.
 import Button from './Button.astro';
 import { formatPrice } from '../../lib/format';
+import { mdSpan } from '../../lib/grid';
 import type { Package } from '../../data/parties';
 
 interface Props {
@@ -21,11 +22,11 @@ const muted = dark ? 'text-paper/65' : 'text-ink/65';
 const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:col-span-6';
 ---
 
-<ul class="grid-site gap-y-gutter md:max-lg:grid-cols-2">
-  {packages.map((p) => (
-    <li class:list={['flex flex-col rounded-md p-6 md:p-7', span, dark ? 'bg-ink-soft' : 'bg-paper']}>
+<ul class="grid-site gap-y-gutter md:max-lg:grid-cols-6">
+  {packages.map((p, i) => (
+    <li class:list={['@container flex flex-col rounded-md p-6 md:p-7', span, mdSpan(i, packages.length), dark ? 'bg-ink-soft' : 'bg-paper']}>
       {p.label && <p class:list={['label mb-3 font-semibold', dark ? 'text-lime' : 'text-violet']}>{p.label}</p>}
-      <h3 class="font-display text-lg leading-tight font-bold uppercase md:text-xl">{p.name}</h3>
+      <h3 class="font-display text-[min(1.125rem,calc(100cqi/var(--n)))] leading-tight font-bold uppercase lg:text-[min(1.25rem,calc(100cqi/var(--n)))]" style={`--n: ${Math.max(...p.name.split(/\s+/).map((w) => w.length)) * 0.9}`}>{p.name}</h3>
       {p.guests && <p class:list={['mt-2 text-sm font-semibold', muted]}>{p.guests}</p>}
       <ul class="mt-6 mb-8 grid gap-3">
         {p.items.map((item) => (

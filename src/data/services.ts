@@ -49,7 +49,11 @@ export type Offer = {
   /** Кнопка: без href — онлайн-запись (BookingLink), с href — якорь формы на странице. */
   /** topic — повод в поп-апе заявки (src/data/forms.ts, partyTopics). */
   cta: { label: string; href?: string; topic?: string };
+  /** Условия акции мелко под ценами, над кнопкой: сначала скидка, потом оговорки. */
+  terms?: string;
   photo: PhotoKey;
+  /** object-position фото, если важное в кадре сверху (лицо): 'top'. */
+  photoPosition?: string;
 };
 
 export const ninja: Offer = {
