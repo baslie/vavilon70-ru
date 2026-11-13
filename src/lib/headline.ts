@@ -17,5 +17,8 @@ export const splitHeadline = (text: string) => {
   const key = headlineKeys[text];
   const at = key ? text.indexOf(key) : -1;
   if (at < 0) return null;
-  return { before: text.slice(0, at).trim(), key, after: text.slice(at + key.length).trim() };
+  // Знак препинания сразу после ключа остаётся с ключом: контекст не начинается с запятой.
+  const rest = text.slice(at + key.length);
+  const mark = rest.match(/^[,.;:!?…]+/)?.[0] ?? '';
+  return { before: text.slice(0, at).trim(), key: key + mark, after: rest.slice(mark.length).trim() };
 };

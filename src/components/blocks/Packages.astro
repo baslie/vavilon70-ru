@@ -1,17 +1,21 @@
 ---
 // Пакеты праздника колонками: номер пакета, название и число гостей, состав, общее время, цена
 // и доплата за следующего участника. Четыре пакета — по 3 колонки, три — по 4, два — по 6, один — на 6.
-// Пустая цена — «Цена по запросу».
+// Пустая цена — «Цена по запросу». С topic под ценой кнопка «Выбрать пакет»: открывает поп-ап заявки
+// (RequestDialog) с этим поводом и названием пакета в комментарии.
 // Название — как у карточки цены (PriceTable), цветом текста: акцентный капс остаётся у плашки над заголовком.
+import Button from './Button.astro';
 import { formatPrice } from '../../lib/format';
 import type { Package } from '../../data/parties';
 
 interface Props {
   packages: Package[];
   tone?: 'light' | 'dark';
+  /** Повод в поп-апе заявки (src/data/forms.ts, partyTopics). */
+  topic?: string;
 }
 
-const { packages, tone = 'light' } = Astro.props;
+const { packages, tone = 'light', topic } = Astro.props;
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/65' : 'text-ink/65';
 const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:col-span-6';
@@ -39,6 +43,9 @@ const span = { 4: 'lg:col-span-3', 3: 'lg:col-span-4' }[packages.length] ?? 'lg:
         </p>
         {p.extra !== undefined && (
           <p class:list={['mt-2 text-sm', dark ? 'text-paper/60' : 'text-ink/60']}>Каждый следующий участник: {p.extra === null ? 'уточняется' : `+${formatPrice(p.extra)}`}</p>
+        )}
+        {topic && (
+          <Button href="#zayavka" request="party" topic={topic} note={`Пакет: ${p.label ? `${p.label}, ` : ''}${p.name}`} variant="outline" tone={tone} class="mt-6 sm:w-full">Выбрать пакет</Button>
         )}
       </div>
     </li>

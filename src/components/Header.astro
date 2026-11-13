@@ -179,7 +179,12 @@ const light = tone === 'light';
 
   dropdowns.forEach((dd) => {
     const button = dd.querySelector('button')!;
-    button.addEventListener('click', () => {
+    // Панель открыта наведением мыши: клик по тому же пункту её не закрывает, иначе
+    // кто навёл и кликнул, видит мигание. Закрывается уходом курсора, Esc или кликом мимо.
+    let openedByHover = false;
+    button.addEventListener('click', (e) => {
+      if (openedByHover && (e as PointerEvent).pointerType === 'mouse' && dd.hasAttribute('data-open')) return;
+      openedByHover = false;
       const open = !dd.hasAttribute('data-open');
       closeAll(dd);
       setOpen(dd, open);
@@ -188,12 +193,16 @@ const light = tone === 'light';
       if (e.pointerType !== 'mouse' || !hoverable.matches) return;
       clearTimeout(closeTimer);
       closeAll(dd);
+      if (!dd.hasAttribute('data-open')) openedByHover = true;
       setOpen(dd, true);
     });
     // Небольшая задержка, чтобы курсор успел дойти от пункта до панели.
     dd.addEventListener('pointerleave', (e) => {
       if (e.pointerType !== 'mouse' || !hoverable.matches) return;
-      closeTimer = window.setTimeout(() => setOpen(dd, false), 200);
+      closeTimer = window.setTimeout(() => {
+        setOpen(dd, false);
+        openedByHover = false;
+      }, 200);
     });
     dd.addEventListener('focusout', (e) => {
       if (!dd.contains(e.relatedTarget as Node)) setOpen(dd, false);

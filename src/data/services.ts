@@ -47,7 +47,8 @@ export type Offer = {
   /** Цены ещё нет и не будет до старта: подпись вместо таблицы. */
   soon?: string;
   /** Кнопка: без href — онлайн-запись (BookingLink), с href — якорь формы на странице. */
-  cta: { label: string; href?: string };
+  /** topic — повод в поп-апе заявки (src/data/forms.ts, partyTopics). */
+  cta: { label: string; href?: string; topic?: string };
   photo: PhotoKey;
 };
 

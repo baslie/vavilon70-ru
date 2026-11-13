@@ -13,9 +13,16 @@ interface Props {
   tone?: 'light' | 'dark';
   icon?: ComponentProps<typeof Icon>['name'];
   class?: string;
+  /** Открыть поп-ап заявки (RequestDialog) с этой формой из src/data/forms.ts. */
+  request?: string;
+  /** Повод, выбранный в поп-апе. */
+  topic?: string;
+  /** Текст в комментарий поп-апа. */
+  note?: string;
 }
 
-const { href, submit = false, variant = 'primary', tone = 'light', icon, class: className } = Astro.props;
+const { href, submit = false, variant = 'primary', tone = 'light', icon, class: className, request, topic, note } = Astro.props;
+const data = { 'data-request': request, 'data-topic': topic, 'data-note': note };
 const classes = [
   'btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md px-4 py-4 text-center font-semibold tracking-[0.12em] transition active:scale-[0.98] sm:w-auto sm:px-6 sm:tracking-[0.22em]',
   variant === 'primary' && 'bg-violet text-paper hover:bg-violet-deep',
@@ -27,7 +34,7 @@ const classes = [
 {submit ? (
   <button type="submit" class:list={[classes, 'cursor-pointer']}><span>{icon && <Icon name={icon} class="size-4" />}<slot /></span></button>
 ) : href ? (
-  <a href={href} class:list={classes}><span>{icon && <Icon name={icon} class="size-4" />}<slot /></span></a>
+  <a href={href} class:list={classes} {...data}><span>{icon && <Icon name={icon} class="size-4" />}<slot /></span></a>
 ) : (
   <BookingLink class:list={classes}><span>{icon && <Icon name={icon} class="size-4" />}<slot /></span></BookingLink>
 )}

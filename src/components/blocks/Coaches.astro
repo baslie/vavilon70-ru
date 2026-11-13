@@ -1,10 +1,12 @@
 ---
 // «Ваши тренеры» из ТЗ: карточки с фото, именем, ролью, опытом и специализацией.
-// Пока имён и фото нет (открытый вопрос #9) — условное наполнение из src/data/classes.ts.
-// Карточки по 3 колонки. Пока тренеров меньше четырёх, заголовок встаёт с ними в один ряд
-// на свободные колонки слева, чтобы справа не оставалось пустой половины сетки.
+// Пока имён и фото нет (открытый вопрос #9) — условное наполнение из src/data/classes.ts,
+// вместо фото нейтральная заглушка «Фото скоро».
+// Заголовок на всю ширину, под ним карточки. До трёх тренеров карточки идут по 6 колонок
+// (фото слева, текст справа), чтобы ряд был полным; от четырёх — по 3, фото сверху.
 import { fitHeadline } from '../../lib/headline';
 import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
 import { coaches } from '../../data/classes';
 import { photos, alts } from '../../data/photos';
 
@@ -15,23 +17,32 @@ interface Props {
 const { tone = 'light' } = Astro.props;
 const dark = tone === 'dark';
 const accent = dark ? 'text-lime' : 'text-violet';
-const n = Math.min(coaches.length, 4);
-const head = ({ 1: 'lg:col-span-9', 2: 'lg:col-span-6', 3: 'lg:col-span-3' } as Record<number, string>)[n] ?? 'lg:col-span-12';
-const list = ({ 1: 'lg:col-span-3', 2: 'lg:col-span-6', 3: 'lg:col-span-9' } as Record<number, string>)[n] ?? 'lg:col-span-12';
+const wide = coaches.length % 2 === 0 && coaches.length < 4;
+const item = wide ? 'lg:col-span-6 lg:grid lg:grid-cols-subgrid lg:items-start' : 'lg:col-span-3';
+const media = ['aspect-[4/5] w-full rounded-md', wide && 'lg:col-span-2'];
 ---
 
 <section id="trenery" class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <h2 class:list={['headline headline-fit leading-[1.02]', head]} style={fitHeadline('Ваши тренеры', 'clamp(1.9rem,3.6vw,3.75rem)', n < 4 ? 12 - 3 * n : 12)} data-reveal>Ваши тренеры</h2>
-  <ul class:list={['grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:grid-cols-subgrid', list]}>
+  <h2 class="headline headline-fit leading-[1.02] lg:col-span-12" style={fitHeadline('Ваши тренеры', 'clamp(1.9rem,3.6vw,3.75rem)')} data-reveal>Ваши тренеры</h2>
+  <ul class="grid gap-x-gutter gap-y-12 md:grid-cols-2 lg:col-span-12 lg:grid-cols-subgrid">
     {coaches.map((c, i) => (
-      <li class="lg:col-span-3" data-reveal style={`--i:${i}`}>
-        <Image src={photos[c.photo]} alt={alts[c.photo]} widths={[400, 700]} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw" class="aspect-[4/5] w-full rounded-md object-cover" />
-        <h3 class="mt-6 font-display text-xl font-bold uppercase">{c.name}</h3>
-        <p class:list={['label mt-3 font-semibold', accent]}>{c.role}</p>
-        <dl class:list={['mt-5 grid gap-3 text-sm leading-relaxed', dark ? 'text-paper/75' : 'text-ink/75']}>
-          <div><dt class="inline font-semibold">Опыт: </dt><dd class="inline">{c.experience}</dd></div>
-          <div><dt class="inline font-semibold">Специализация: </dt><dd class="inline">{c.specialization}</dd></div>
-        </dl>
+      <li class={item} data-reveal style={`--i:${i}`}>
+        {c.photo ? (
+          <Image src={photos[c.photo]} alt={alts[c.photo]} widths={[400, 700]} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw" class:list={[media, 'object-cover']} />
+        ) : (
+          <div class:list={[media, 'grid place-items-center content-center gap-3', dark ? 'bg-ink-soft text-paper/40' : 'bg-paper text-ink/35']}>
+            <Icon name="user" class="size-14" />
+            <span class="label font-semibold">Фото скоро</span>
+          </div>
+        )}
+        <div class:list={[wide && 'lg:col-span-4']}>
+          <h3 class:list={['mt-6 font-display text-xl font-bold uppercase', wide && 'lg:mt-0']}>{c.name}</h3>
+          <p class:list={['label mt-3 font-semibold', accent]}>{c.role}</p>
+          <dl class:list={['mt-5 grid gap-3 text-sm leading-relaxed', dark ? 'text-paper/75' : 'text-ink/75']}>
+            <div><dt class="inline font-semibold">Опыт: </dt><dd class="inline">{c.experience}</dd></div>
+            <div><dt class="inline font-semibold">Специализация: </dt><dd class="inline">{c.specialization}</dd></div>
+          </dl>
+        </div>
       </li>
     ))}
   </ul>

@@ -175,22 +175,22 @@ export const firstTraining: { title: string; items: Step[] } = {
   ],
 };
 
-export type Coach = { name: string; role: string; experience: string; specialization: string; photo: PhotoKey };
+/** photo нет — в карточке нейтральная заглушка «Фото скоро» (Coaches.astro). */
+export type Coach = { name: string; role: string; experience: string; specialization: string; photo?: PhotoKey };
 
-// ЗАГЛУШКА (#9): имена и фото тренеров от заказчика. Роли, опыт и специализация — из ТЗ.
+// ЗАГЛУШКА (#9): имена и фото тренеров пришлёт Роман от заказчика. Роли, опыт и специализация — из ТЗ.
+// Пока фото нет, карточка без фото: чужой кадр (аниматор) выглядел как готовый тренер.
 export const coaches: Coach[] = [
   {
-    name: 'Имя Фамилия',
+    name: 'Тренер',
     role: 'Старший тренер по батутному фристайлу',
     experience: '8 лет, КМС по спортивной гимнастике / акробатике',
     specialization: 'Сложная акробатика, трюковая подготовка, работа со страхами',
-    photo: 'coach',
   },
   {
-    name: 'Имя Фамилия',
+    name: 'Тренер',
     role: 'Инструктор направления детского развития',
     experience: '5 лет, высшее педагогическое / физкультурное образование',
     specialization: 'ОФП для детей от 4 лет, игровое обучение, страховка',
-    photo: 'party',
   },
 ];

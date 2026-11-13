@@ -1,7 +1,7 @@
 ---
 // Взрослые мероприятия: день рождения 18+ (#den-rozhdeniya), тимбилдинг и корпоративы
 // (#korporativy) с пакетами из редакции ТЗ 06.11.2026 и депозитом кафе, ночная тренировка
-// (#nochnaya-trenirovka) с формой «Узнать дату ближайшей ночи» и общая форма расчёта.
+// (#nochnaya-trenirovka) и общая форма расчёта: кнопки открывают её поп-апом с нужным поводом.
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -26,11 +26,10 @@ const cta = { label: forms.party.title, href: '#zayavka' };
         {[adultBirthday, corporate, night].map((e) => <li><a href={`#${e.id}`} class="underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet">{e.title}</a></li>)}
       </ul>
     </PageHero>
-    <EventSection event={adultBirthday} tone="dark" cta={cta} />
-    <EventSection event={corporate} cta={cta} />
+    <EventSection event={adultBirthday} tone="dark" cta={{ ...cta, topic: 'День рождения 18+' }} />
+    <EventSection event={corporate} cta={{ ...cta, topic: 'Тимбилдинг или корпоратив' }} />
     <Offer offer={night} tone="dark" photo />
-    <RequestForm id="noch" form={forms.night} tone="light" />
-    <RequestForm id="zayavka" form={forms.party} />
+    <RequestForm id="zayavka" form={forms.party} tone="light" />
   </main>
   <Footer />
 </Layout>

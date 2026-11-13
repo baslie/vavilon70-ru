@@ -4,6 +4,7 @@ import '@fontsource-variable/onest';
 import '../styles/global.css';
 import { yclientsId } from '../data/booking';
 import CookieConsent from '../components/CookieConsent.astro';
+import RequestDialog from '../components/blocks/RequestDialog.astro';
 
 interface Props {
   title: string;
@@ -32,6 +33,7 @@ const {
   </head>
   <body class:list={['min-h-dvh overflow-x-clip font-sans', bodyClass]}>
     <slot />
+    <RequestDialog />
     <CookieConsent />
     <script>
       // Элемент под clip-path: inset(0 0 100% 0) имеет нулевую видимую площадь

@@ -32,7 +32,7 @@ import { url } from '../../data/nav';
           {newYear.groups.map((g) => (
             <div slot={g.id}>
               {g.note && <p class="label mb-6 font-semibold text-paper/65">{g.note}</p>}
-              <Packages packages={g.packages} tone="dark" />
+              <Packages packages={g.packages} tone="dark" topic="Новый год" />
             </div>
           ))}
         </Tabs>
@@ -40,7 +40,7 @@ import { url } from '../../data/nav';
     </section>
 
     <Safety />
-    <RequestForm id="zayavka" form={forms.party} />
+    <RequestForm id="zayavka" form={forms.party} topic="Новый год" />
   </main>
   <Footer />
 </Layout>

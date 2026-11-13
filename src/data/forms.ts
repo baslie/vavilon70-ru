@@ -29,6 +29,9 @@ const date: Field = { name: 'date', label: 'Желаемая дата', type: 'd
 const guests: Field = { name: 'guests', label: 'Сколько гостей', type: 'number' };
 const comment: Field = { name: 'comment', label: 'Комментарий', type: 'textarea', wide: true };
 
+// Поводы праздника. Кнопки и формы страниц выбирают пункт по умолчанию (topic у RequestForm, data-topic у кнопки).
+export const partyTopics = ['День рождения 4–7 лет', 'День рождения 8–18 лет', 'Выпускной', 'Новый год', 'День рождения 18+', 'Тимбилдинг или корпоратив', 'Ночная тренировка', 'Другое'];
+
 export const forms = {
   party: {
     title: 'Рассчитать стоимость праздника',
@@ -36,7 +39,7 @@ export const forms = {
     fields: [
       name,
       phone,
-      { name: 'event', label: 'Что празднуем', type: 'select', options: ['День рождения 4–7 лет', 'День рождения 8–18 лет', 'Выпускной', 'День рождения 18+', 'Тимбилдинг или корпоратив', 'Другое'] },
+      { name: 'event', label: 'Что празднуем', type: 'select', required: true, placeholder: 'Выберите повод', options: partyTopics },
       date,
       guests,
       comment,
@@ -48,12 +51,6 @@ export const forms = {
     text: 'Оставьте контакты — администратор перезвонит, подтвердит время и назовёт стоимость аренды.',
     fields: [name, phone, date, guests, comment],
     submit: 'Забронировать арену',
-  },
-  night: {
-    title: 'Узнать дату ближайшей ночи',
-    text: 'Оставьте телефон — сообщим, когда пройдёт ближайшая ночная тренировка.',
-    fields: [name, phone, guests],
-    submit: 'Узнать дату',
   },
   ninjaStart: {
     title: 'Узнать о старте группы',
@@ -73,7 +70,7 @@ export const forms = {
     fields: [
       name,
       phone,
-      { name: 'service', label: 'На что сертификат', type: 'select', options: ['Абонемент в секцию', 'Персональная тренировка', 'Комплексный билет'] },
+      { name: 'service', label: 'На что сертификат', type: 'select', placeholder: 'Выберите услугу', options: ['Абонемент в секцию', 'Персональная тренировка', 'Комплексный билет'] },
       comment,
     ],
     submit: 'Оформить сертификат',

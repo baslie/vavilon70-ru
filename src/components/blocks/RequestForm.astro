@@ -1,31 +1,28 @@
 ---
-// Форма заявки (src/data/forms.ts). Слева заголовок и пояснение, справа поля. Форма выше текста,
-// поэтому крупный телефон — якорь внизу левой колонки, на линии кнопки отправки.
-// Пока formEndpoint пустой (открытый вопрос #22), отправка не уходит: показываем телефон
-// администратора. Когда адрес появится, форма шлёт FormData POST-запросом.
+// Форма заявки внизу страницы (src/data/forms.ts). Слева заголовок и пояснение, справа поля
+// (RequestFields). Форма выше текста, поэтому крупный телефон — якорь внизу левой колонки,
+// на линии кнопки отправки. Кнопки, которые ведут на #id этой секции, открывают ту же форму
+// поп-апом (RequestDialog); topic — повод, выбранный по умолчанию.
 import Headline from './Headline.astro';
-import Button from './Button.astro';
+import RequestFields from './RequestFields.astro';
 import Icon from '../Icon.astro';
 import { contacts } from '../../data/content';
-import { privacyPolicyHref, type RequestFormConfig } from '../../data/forms';
+import { forms, type RequestFormConfig } from '../../data/forms';
 
 interface Props {
   id: string;
   form: RequestFormConfig;
   tone?: 'light' | 'dark';
+  topic?: string;
 }
 
-const { id, form, tone = 'dark' } = Astro.props;
+const { id, form, tone = 'dark', topic } = Astro.props;
+const formKey = Object.entries(forms).find(([, f]) => f === form)?.[0] ?? 'party';
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/70' : 'text-ink/70';
-const input = [
-  'w-full rounded-md border px-4 py-3 text-base transition focus:outline-none',
-  dark ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/40 focus:border-lime [color-scheme:dark] [&>option]:text-ink' : 'border-ink/20 bg-paper text-ink placeholder:text-ink/40 focus:border-violet',
-];
-const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transition hover:decoration-lime' : 'underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet';
 ---
 
-<section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
+<section id={id} class:list={['grid-site gap-y-12 px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']} data-request-section={formKey} data-topic={topic}>
   <div class="flex flex-col gap-10 lg:col-span-5">
     <div>
       <Headline text={form.title} tone={tone} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="leading-[1.02]" data-reveal />
@@ -39,73 +36,5 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
     </div>
   </div>
 
-  {/* ym-hide-content: Вебвизор Метрики не записывает, что вводят в поля заявки. */}
-  <form class="ym-hide-content grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2 lg:col-span-6 lg:col-start-7" data-request-form data-reveal>
-    {form.fields.map((f) => {
-      const fieldId = `${id}-${f.name}`;
-      return (
-        <div class:list={[f.wide && 'sm:col-span-2']}>
-          <label for={fieldId} class:list={['label mb-2 block font-semibold', dark ? 'text-paper/70' : 'text-ink/70']}>
-            {f.label}{f.required && <span class={dark ? 'text-lime' : 'text-violet'} aria-hidden="true"> *</span>}
-          </label>
-          {f.type === 'select' ? (
-            <select id={fieldId} name={f.name} required={f.required} class:list={input}>
-              {f.options?.map((o) => <option>{o}</option>)}
-            </select>
-          ) : f.type === 'textarea' ? (
-            <textarea id={fieldId} name={f.name} rows="3" class:list={input}></textarea>
-          ) : (
-            <input id={fieldId} name={f.name} type={f.type} required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} min={f.type === 'number' ? 1 : undefined} inputmode={f.type === 'tel' ? 'tel' : undefined} class:list={input} />
-          )}
-        </div>
-      );
-    })}
-
-    <label class:list={['flex items-start gap-3 text-sm leading-relaxed sm:col-span-2', muted]}>
-      <input type="checkbox" name="consent" required class="mt-1 size-4 shrink-0 accent-violet" />
-      <span>
-        Согласен на обработку персональных данных
-        {privacyPolicyHref && <>в соответствии с <a href={privacyPolicyHref} target="_blank" rel="noopener" class={link}>политикой конфиденциальности</a></>}
-      </span>
-    </label>
-
-    <div class="sm:col-span-2">
-      <Button submit icon="lightning">{form.submit}</Button>
-    </div>
-
-    <div class="sm:col-span-2" role="status" aria-live="polite">
-      <p data-form-status="offline" hidden class:list={['rounded-md border p-4 leading-relaxed', dark ? 'border-lime/40' : 'border-violet/30 bg-violet/5']}>
-        Онлайн-заявки скоро заработают. Пока позвоните администратору: <a href={contacts.phoneHref} class:list={['font-semibold', link]}>{contacts.phone}</a>
-      </p>
-      <p data-form-status="ok" hidden class:list={['rounded-md border p-4 leading-relaxed', dark ? 'border-lime/40' : 'border-violet/30 bg-violet/5']}>
-        Заявка отправлена. Администратор перезвонит в рабочее время.
-      </p>
-      <p data-form-status="error" hidden class:list={['rounded-md border p-4 leading-relaxed', dark ? 'border-paper/30' : 'border-ink/20']}>
-        Не получилось отправить заявку. Позвоните администратору: <a href={contacts.phoneHref} class:list={['font-semibold', link]}>{contacts.phone}</a>
-      </p>
-    </div>
-  </form>
+  <RequestFields id={id} form={form} formKey={formKey} tone={tone} topic={topic} class="lg:col-span-6 lg:col-start-7" reveal />
 </section>
-
-<script>
-  import { formEndpoint } from '../../data/forms';
-
-  document.querySelectorAll<HTMLFormElement>('[data-request-form]').forEach((form) => {
-    const show = (state: 'offline' | 'ok' | 'error') =>
-      form.querySelectorAll<HTMLElement>('[data-form-status]').forEach((el) => (el.hidden = el.dataset.formStatus !== state));
-
-    // Событие submit приходит только после встроенной проверки полей браузером.
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      if (!formEndpoint) return show('offline');
-      try {
-        const response = await fetch(formEndpoint, { method: 'POST', body: new FormData(form) });
-        if (!response.ok) throw new Error(String(response.status));
-        form.reset();
-        show('ok');
-      } catch {
-        show('error');
-      }
-    });
-  });
-</script>

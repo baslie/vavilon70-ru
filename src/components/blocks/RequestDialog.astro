@@ -1,0 +1,79 @@
+---
+// Поп-ап заявки на всех страницах (Layout). Внутри все формы из src/data/forms.ts, видна одна.
+// Открывается кликом:
+// - по ссылке на секцию формы на этой же странице (href="#zayavka" и т. п., у секции
+//   data-request-section) — форма той секции, повод из data-topic ссылки или секции;
+// - по любому элементу с data-request="<ключ формы>" (ссылка на форму другой страницы),
+//   data-topic — пункт списка «Что празднуем», data-note — текст в комментарий (например, пакет).
+// Без JS ссылка работает как обычно: прокручивает к форме внизу страницы.
+import RequestFields from './RequestFields.astro';
+import Icon from '../Icon.astro';
+import { forms } from '../../data/forms';
+---
+
+<dialog id="request-dialog" class="request-dialog m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-3xl overflow-y-auto overscroll-contain rounded-lg bg-ink p-0 text-paper" aria-labelledby="request-dialog-title">
+  <button type="button" class="absolute top-3 right-3 grid size-11 cursor-pointer place-items-center rounded-md text-paper/70 transition hover:text-lime md:top-5 md:right-5" data-dialog-close aria-label="Закрыть">
+    <Icon name="close" class="size-5" />
+  </button>
+  {Object.entries(forms).map(([key, form]) => (
+    <div class="p-6 md:p-10" data-dialog-panel={key} hidden>
+      <h2 class="headline pr-12 text-[clamp(1.6rem,4vw,2.5rem)] leading-[1.02]" data-dialog-title>{form.title}</h2>
+      <p class="mt-4 mb-8 max-w-[52ch] leading-relaxed text-paper/70">{form.text}</p>
+      <RequestFields id={`dlg-${key}`} form={form} formKey={key} tone="dark" />
+    </div>
+  ))}
+</dialog>
+
+<style>
+  .request-dialog::backdrop { background: rgb(14 14 17 / 0.72); }
+  @media (prefers-reduced-motion: no-preference) {
+    .request-dialog[open] { animation: dialog-in 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  }
+  @keyframes dialog-in { from { opacity: 0; transform: translateY(1rem); } }
+</style>
+
+<script>
+  const dialog = document.getElementById('request-dialog') as HTMLDialogElement;
+  const panels = [...dialog.querySelectorAll<HTMLElement>('[data-dialog-panel]')];
+
+  const open = (key: string, topic?: string, note?: string) => {
+    const panel = panels.find((p) => p.dataset.dialogPanel === key);
+    if (!panel) return false;
+    panels.forEach((p) => {
+      const active = p === panel;
+      p.hidden = !active;
+      p.querySelector('[data-dialog-title]')?.toggleAttribute('id', false);
+      if (active) p.querySelector('[data-dialog-title]')?.setAttribute('id', 'request-dialog-title');
+    });
+    const form = panel.querySelector<HTMLFormElement>('form')!;
+    form.hidden = false;
+    form.querySelectorAll<HTMLElement>('[data-form-status]').forEach((el) => (el.hidden = true));
+    const select = form.querySelector('select');
+    if (select) select.value = topic && [...select.options].some((o) => o.value === topic) ? topic : '';
+    const comment = form.querySelector<HTMLTextAreaElement>('textarea[name="comment"]');
+    if (comment && note) comment.value = note;
+    dialog.showModal();
+    document.documentElement.classList.add('overflow-hidden');
+    return true;
+  };
+
+  document.addEventListener('click', (e) => {
+    const el = (e.target as Element).closest<HTMLElement>('[data-request], a[href*="#"]');
+    if (!el || dialog.contains(el)) return;
+    let key = el.dataset.request;
+    let topic = el.dataset.topic;
+    if (!key && el instanceof HTMLAnchorElement) {
+      const target = new URL(el.href, location.href);
+      if (target.pathname !== location.pathname || !target.hash) return;
+      const section = document.getElementById(decodeURIComponent(target.hash.slice(1)));
+      key = section?.dataset.requestSection;
+      topic ??= section?.dataset.topic;
+    }
+    if (key && open(key, topic, el.dataset.note)) e.preventDefault();
+  });
+
+  dialog.addEventListener('close', () => document.documentElement.classList.remove('overflow-hidden'));
+  dialog.querySelector('[data-dialog-close]')!.addEventListener('click', () => dialog.close());
+  // Клик по затемнению вокруг окна закрывает его.
+  dialog.addEventListener('click', (e) => e.target === dialog && dialog.close());
+</script>

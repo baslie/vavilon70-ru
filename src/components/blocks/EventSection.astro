@@ -10,7 +10,7 @@ import type { EventBlock } from '../../data/parties';
 interface Props {
   event: EventBlock;
   tone?: 'light' | 'dark';
-  cta?: { label: string; href: string };
+  cta?: { label: string; href: string; topic?: string };
 }
 
 const { event, tone = 'light', cta } = Astro.props;
@@ -36,8 +36,8 @@ const muted = dark ? 'text-paper/70' : 'text-ink/70';
     </ul>
   )}
   <div class="lg:col-span-12" data-reveal>
-    <Packages packages={event.packages} tone={tone} />
+    <Packages packages={event.packages} tone={tone} topic={cta?.topic} />
   </div>
   {event.note && <p class:list={['max-w-[72ch] leading-relaxed lg:col-span-8', muted]} data-reveal>{event.note}</p>}
-  {cta && <div class="lg:col-span-12" data-reveal><Button href={cta.href} icon="confetti">{cta.label}</Button></div>}
+  {cta && <div class="lg:col-span-12" data-reveal><Button href={cta.href} topic={cta.topic} icon="confetti">{cta.label}</Button></div>}
 </section>

@@ -45,6 +45,9 @@ const cards: Card[] = byColumn
 const caption = byColumn ? [table.caption, row.label].filter(Boolean).join(' · ') : table.caption;
 const n = cards.length;
 const narrow = (i: number) => n === 3 || n === 6 || (n === 5 && i < 3);
+// Название не рвём переносом посреди слова («ИНДИВИДУА/ЛЬНАЯ»): в узкой карточке кегль ограничен шириной
+// карточки (@container), делённой на длину самого длинного слова (Unbounded bold капсом ≈ 0,9em на букву).
+const fit = (title: string) => `--n: ${Math.max(...title.split(/\s+/).map((w) => w.length)) * 0.9}`;
 const span = (i: number) => (n === 1 || stack ? 'sm:col-span-6' : narrow(i) ? 'sm:col-span-2' : 'sm:col-span-3');
 ---
 
@@ -53,9 +56,9 @@ const span = (i: number) => (n === 1 || stack ? 'sm:col-span-6' : narrow(i) ? 's
   {byColumn && row.note && <p class:list={['-mt-2 mb-4 text-sm', muted]}>{row.note}</p>}
   <ul class:list={['grid gap-3 sm:grid-cols-6', stretch && 'lg:flex-1 lg:auto-rows-fr']}>
     {cards.map((c, i) => (
-      <li class:list={['flex flex-col justify-between gap-6 rounded-md p-5 md:p-6', span(i), dark ? 'bg-ink-soft' : 'bg-paper']}>
+      <li class:list={['@container flex flex-col justify-between gap-6 rounded-md p-5 md:p-6', span(i), dark ? 'bg-ink-soft' : 'bg-paper']}>
         <div>
-          <p class:list={['font-display text-lg leading-tight font-bold uppercase', narrow(i) ? 'hyphens-auto break-words' : 'md:text-xl']}>{c.title}</p>
+          <p class:list={['font-display text-lg leading-tight font-bold uppercase', narrow(i) ? 'text-[min(1.125rem,calc(100cqi/var(--n)))]' : 'md:text-xl']} style={narrow(i) ? fit(c.title) : undefined}>{c.title}</p>
           {c.note && <p class:list={['mt-1.5 text-sm leading-snug', muted]}>{c.note}</p>}
         </div>
         <dl class:list={['flex flex-wrap gap-x-10 gap-y-4', stretch && !stack && 'lg:flex-col lg:gap-y-5']}>

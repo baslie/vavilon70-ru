@@ -19,7 +19,7 @@ import { photos, alts } from '../../data/photos';
       <BookingLink class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md bg-violet px-4 py-4 font-semibold tracking-[0.12em] text-center sm:tracking-[0.16em] text-paper transition hover:bg-violet-deep active:scale-[0.98] sm:px-6">
         <span><Icon name="lightning" class="size-4" />{planVisit.book}</span>
       </BookingLink>
-      <a href={partyRequest} class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md border border-paper/30 px-4 py-4 tracking-[0.12em] text-center sm:tracking-[0.16em] sm:px-6 font-semibold transition hover:border-paper hover:bg-paper hover:text-ink active:scale-[0.98]">
+      <a href={partyRequest} data-request="party" class="btn-skew label inline-flex w-full items-center justify-center gap-3 rounded-md border border-paper/30 px-4 py-4 tracking-[0.12em] text-center sm:tracking-[0.16em] sm:px-6 font-semibold transition hover:border-paper hover:bg-paper hover:text-ink active:scale-[0.98]">
         <span><Icon name="confetti" class="size-4" />{planVisit.party}</span>
       </a>
     </div>
