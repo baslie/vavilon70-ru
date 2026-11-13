@@ -5,21 +5,21 @@
 // кнопкой «Настройки cookie» в подвале. Без JS плашка не показывается: без JS и Метрики нет.
 import { privacyPolicyHref } from '../data/forms';
 
-const button = 'label rounded-md px-5 py-3 font-semibold transition active:scale-[0.98]';
+const button = 'label rounded-md px-4 py-3 font-semibold transition active:scale-[0.98]';
 ---
 
 <section
-  class="fixed inset-x-4 bottom-4 z-40 rounded-lg border border-ink/15 bg-paper p-5 text-ink shadow-[0_16px_48px_-16px_rgb(14_14_17/0.45)] sm:right-auto sm:max-w-[30rem] md:bottom-8 md:left-8 md:p-6 lg:right-8 lg:left-auto motion-safe:transition-[opacity,translate] motion-safe:duration-500 motion-safe:ease-out-expo motion-safe:starting:translate-y-6 motion-safe:starting:opacity-0"
+  class="fixed inset-x-4 bottom-4 z-40 rounded-lg border border-ink/15 bg-paper p-4 text-ink shadow-[0_16px_48px_-16px_rgb(14_14_17/0.45)] sm:right-auto sm:max-w-[30rem] md:bottom-8 md:left-8 md:p-6 lg:right-8 lg:left-auto motion-safe:transition-[opacity,translate] motion-safe:duration-500 motion-safe:ease-out-expo motion-safe:starting:translate-y-6 motion-safe:starting:opacity-0"
   aria-label="Согласие на cookie"
   data-cookie-banner
   hidden
 >
   <p class="label font-semibold text-violet">Файлы cookie</p>
-  <p class="mt-3 text-sm leading-relaxed text-ink/75">
+  <p class="mt-2 text-sm leading-snug text-ink/75 md:mt-3 md:leading-relaxed">
     Мы используем cookie и Яндекс Метрику, чтобы считать посещения и понимать, какие разделы сайта полезны.
     Метрика включится, только если вы согласитесь. Подробнее — в <a href={privacyPolicyHref} class="underline decoration-ink/25 underline-offset-4 transition hover:decoration-violet">политике конфиденциальности</a>.
   </p>
-  <div class="mt-5 grid grid-cols-2 gap-3">
+  <div class="mt-4 grid grid-cols-2 gap-3 md:mt-5">
     <button type="button" class:list={[button, 'bg-violet text-paper hover:bg-violet-deep']} data-consent="accept">Принять</button>
     <button type="button" class:list={[button, 'border border-ink/25 hover:border-ink']} data-consent="reject">Отказаться</button>
   </div>

@@ -24,9 +24,11 @@ export type Field = {
 export type RequestFormConfig = { title: string; text: string; fields: Field[]; submit: string };
 
 const name: Field = { name: 'name', label: 'Имя', type: 'text', required: true, autocomplete: 'name' };
-const phone: Field = { name: 'phone', label: 'Телефон', type: 'tel', required: true, autocomplete: 'tel', placeholder: '+7' };
+// Телефон без +7: префикс «+7» стоит внутри поля подписью, при отправке добавляется к номеру (RequestFields).
+const phone: Field = { name: 'phone', label: 'Телефон', type: 'tel', required: true, autocomplete: 'tel-national', placeholder: '900 000-00-00' };
 const date: Field = { name: 'date', label: 'Желаемая дата', type: 'date' };
-const guests: Field = { name: 'guests', label: 'Сколько гостей', type: 'number' };
+// Число гостей — текстом с цифровой клавиатурой: у type=number стрелки и прокрутка колесом меняют значение.
+const guests: Field = { name: 'guests', label: 'Сколько гостей', type: 'number', placeholder: 'Например, 8' };
 const comment: Field = { name: 'comment', label: 'Комментарий', type: 'textarea', wide: true };
 
 // Поводы праздника. Кнопки и формы страниц выбирают пункт по умолчанию (topic у RequestForm, data-topic у кнопки).
@@ -39,7 +41,8 @@ export const forms = {
     fields: [
       name,
       phone,
-      { name: 'event', label: 'Что празднуем', type: 'select', required: true, placeholder: 'Выберите повод', options: partyTopics },
+      // Повод на всю ширину: имя и телефон, повод, дата и гости — полные ряды без сиротской ячейки.
+      { name: 'event', label: 'Что празднуем', type: 'select', required: true, placeholder: 'Выберите повод', options: partyTopics, wide: true },
       date,
       guests,
       comment,

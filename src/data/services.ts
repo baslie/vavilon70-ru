@@ -134,7 +134,7 @@ export const complexTicket: Offer = {
 
 export const arena: Offer = {
   id: 'arena',
-  title: 'Аренда футбольной арены',
+  title: 'Аренда арены для мини-футбола',
   badges: [],
   intro: { label: 'Для кого', text: 'Компании друзей, дни рождения 8–18 лет, корпоративные турниры, тренировки.' },
   meta: [

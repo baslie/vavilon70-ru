@@ -23,14 +23,17 @@ const { id, form, formKey, tone = 'dark', topic, class: className, hidden, revea
 const dark = tone === 'dark';
 const muted = dark ? 'text-paper/70' : 'text-ink/70';
 const input = [
-  'w-full rounded-md border px-4 py-3 text-base transition focus:outline-none',
-  dark ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/40 focus:border-lime [color-scheme:dark] [&>option]:text-ink' : 'border-ink/20 bg-mist/50 text-ink placeholder:text-ink/40 focus:border-violet',
+  'w-full rounded-md border px-4 py-3 text-base transition focus:outline-none aria-invalid:border-signal',
+  dark ? 'border-paper/20 bg-paper/5 text-paper placeholder:text-paper/50 focus:border-lime [color-scheme:dark] [&>option]:text-ink' : 'border-ink/20 bg-mist/50 text-ink placeholder:text-ink/50 focus:border-violet',
 ];
+const accent = dark ? 'text-lime' : 'text-violet';
+const error = ['mt-2 text-sm font-semibold', dark ? 'text-lime' : 'text-signal'];
 const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transition hover:decoration-lime' : 'underline decoration-ink/25 underline-offset-[6px] transition hover:decoration-violet';
 ---
 
 {/* ym-hide-content: Вебвизор Метрики не записывает, что вводят в поля заявки. */}
-<form class:list={['ym-hide-content grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2', className]} data-request-form={formKey} hidden={hidden} data-reveal={reveal ? '' : undefined}>
+{/* novalidate: проверяет скрипт ниже — сообщение под полем словами сайта, а не всплывашка браузера. */}
+<form novalidate class:list={['ym-hide-content grid content-start gap-x-gutter gap-y-6 sm:grid-cols-2', className]} data-request-form={formKey} hidden={hidden} data-reveal={reveal ? '' : undefined}>
   {form.fields.map((f) => {
     const fieldId = `${id}-${f.name}`;
     return (
@@ -39,26 +42,41 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
           {f.label}{f.required && <span class={dark ? 'text-lime' : 'text-violet'} aria-hidden="true"> *</span>}
         </label>
         {f.type === 'select' ? (
-          <select id={fieldId} name={f.name} required={f.required} class:list={input}>
+          <select id={fieldId} name={f.name} required={f.required} aria-describedby={`${fieldId}-error`} data-message="Выберите вариант" class:list={input}>
             <option value="" selected={!topic}>{f.placeholder ?? 'Выберите'}</option>
             {f.options?.map((o) => <option value={o} selected={o === topic}>{o}</option>)}
           </select>
         ) : f.type === 'textarea' ? (
           <textarea id={fieldId} name={f.name} rows="3" class:list={input}></textarea>
         ) : (
-          <input id={fieldId} name={f.name} type={f.type} required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} min={f.type === 'number' ? 1 : undefined} inputmode={f.type === 'tel' ? 'tel' : undefined} class:list={input} />
+          f.type === 'tel' ? (
+            <div class="relative">
+              <span class:list={['pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold', accent]} aria-hidden="true">+7</span>
+              <input id={fieldId} name={f.name} type="tel" required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} inputmode="tel" pattern="[0-9\s\(\)\-]{10,}" aria-describedby={`${fieldId}-error`} data-message="Введите номер: 10 цифр после +7" class:list={[input, 'pl-11!']} />
+            </div>
+          ) : (
+            <input id={fieldId} name={f.name} type={f.type === 'number' ? 'text' : f.type} required={f.required} autocomplete={f.autocomplete} placeholder={f.placeholder} inputmode={f.type === 'number' ? 'numeric' : undefined} pattern={f.type === 'number' ? '[0-9]*' : undefined} aria-describedby={`${fieldId}-error`} data-message={f.type === 'number' ? 'Только цифры' : 'Заполните поле'} class:list={input} />
+          )
         )}
+        <p id={`${fieldId}-error`} class:list={error} hidden></p>
       </div>
     );
   })}
 
-  <label class:list={['flex items-start gap-3 text-sm leading-relaxed sm:col-span-2', muted]}>
-    <input type="checkbox" name="consent" required class="mt-1 size-4 shrink-0 accent-violet" />
+  <div class="sm:col-span-2">
+  <label class:list={['flex items-start gap-3 text-sm leading-relaxed', muted]}>
+    {/* Свой чекбокс: квадрат в цветах поля, галочка — акцентом (лайм на тёмном, сиреневый на светлом). */}
+    <span class="relative mt-0.5 grid size-5 shrink-0 place-items-center">
+      <input type="checkbox" name="consent" required aria-describedby={`${id}-consent-error`} data-message="Нужно согласие на обработку данных" class:list={['peer absolute inset-0 cursor-pointer appearance-none rounded-sm border transition focus-visible:outline-2 focus-visible:outline-offset-2', dark ? 'border-paper/40 checked:border-lime checked:bg-lime focus-visible:outline-lime' : 'border-ink/35 bg-paper checked:border-violet checked:bg-violet focus-visible:outline-violet']} />
+      <svg viewBox="0 0 16 16" class:list={['pointer-events-none relative hidden size-3.5 peer-checked:block', dark ? 'text-ink' : 'text-paper']} aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </span>
     <span>
       Согласен на обработку персональных данных{' '}
       {privacyPolicyHref && <>в соответствии с <a href={privacyPolicyHref} target="_blank" rel="noopener" class={link}>политикой конфиденциальности</a></>}
     </span>
   </label>
+  <p id={`${id}-consent-error`} class:list={[error, 'pl-8']} hidden></p>
+  </div>
 
   <div class="sm:col-span-2">
     <Button submit icon="lightning">{form.submit}</Button>
@@ -84,12 +102,31 @@ const link = dark ? 'underline decoration-paper/25 underline-offset-[6px] transi
     const show = (state: 'offline' | 'ok' | 'error') =>
       form.querySelectorAll<HTMLElement>('[data-form-status]').forEach((el) => (el.hidden = el.dataset.formStatus !== state));
 
-    // Событие submit приходит только после встроенной проверки полей браузером.
+    // Проверка своими сообщениями (form novalidate): текст из data-message под полем, aria-invalid на поле.
+    const fields = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[data-message]')];
+    const check = (field: (typeof fields)[number]) => {
+      const valid = field.checkValidity();
+      const message = document.getElementById(field.getAttribute('aria-describedby') ?? '');
+      field.toggleAttribute('aria-invalid', !valid);
+      if (message) {
+        message.textContent = valid ? '' : field.dataset.message!;
+        message.hidden = valid;
+      }
+      return valid;
+    };
+    fields.forEach((field) => field.addEventListener(field.type === 'checkbox' || field.tagName === 'SELECT' ? 'change' : 'blur', () => field.hasAttribute('aria-invalid') && check(field)));
+    fields.forEach((field) => field.addEventListener('input', () => field.hasAttribute('aria-invalid') && check(field)));
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      const invalid = fields.filter((field) => !check(field));
+      if (invalid.length) return invalid[0].focus();
       if (!formEndpoint) return show('offline');
+      const data = new FormData(form);
+      const phone = data.get('phone');
+      if (typeof phone === 'string' && phone) data.set('phone', `+7 ${phone.trim()}`);
       try {
-        const response = await fetch(formEndpoint, { method: 'POST', body: new FormData(form) });
+        const response = await fetch(formEndpoint, { method: 'POST', body: data });
         if (!response.ok) throw new Error(String(response.status));
         form.reset();
         show('ok');

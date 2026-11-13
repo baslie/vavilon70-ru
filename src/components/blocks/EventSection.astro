@@ -22,8 +22,10 @@ const muted = dark ? 'text-paper/70' : 'text-ink/70';
   <div class="lg:col-span-5">
     <p data-reveal><Badge tone={tone}>{event.title}</Badge></p>
     <Headline text={event.tagline} tone={tone} size="clamp(1.9rem,3.2vw,3.5rem)" span={5} class="mt-6 leading-[1.02]" data-reveal />
-    <p class:list={['mt-6 max-w-[52ch] text-lg leading-relaxed', muted]} data-reveal>{event.text}</p>
+    {event.points && <p class:list={['mt-6 max-w-[52ch] text-lg leading-relaxed', muted]} data-reveal>{event.text}</p>}
   </div>
+  {/* Без преимуществ текст встаёт справа по нижней линии слогана: правый верх не пустует (BRAND, п. 8). */}
+  {!event.points && <p class:list={['max-w-[52ch] text-lg leading-relaxed lg:col-span-6 lg:col-start-7 lg:self-end', muted]} data-reveal>{event.text}</p>}
   {event.points && (
     <ul class="grid content-end gap-8 lg:col-span-6 lg:col-start-7">
       {event.points.map((p, i) => (

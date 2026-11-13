@@ -37,9 +37,9 @@ const classes: Card[] = [
       <Button icon="lightning">Забронировать</Button>
       <Button href="#kompleksnyj-bilet" variant="outline">Комплексный билет</Button>
     </PageHero>
-    <CardGrid title="Свободные посещения" items={visits} tone="dark" />
+    <CardGrid title="Свободные посещения" lead="Разовое посещение: батутная арена, Ninja-трасса и мини-футбол." items={visits} tone="dark" />
     <Offer offer={complexTicket} photo />
-    <CardGrid title="Тренировки и секции" items={classes} tone="dark" />
+    <CardGrid title="Тренировки и секции" lead="Тренировки с инструктором, детские и взрослые секции." items={classes} tone="dark" />
     <Steps id="podgotovka" title={visitSteps.title} items={visitSteps.items} />
     <PlanVisit photo="cafe" />
   </main>

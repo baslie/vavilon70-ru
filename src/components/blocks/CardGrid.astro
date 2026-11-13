@@ -30,12 +30,16 @@ const sizes = { 3: '25vw', 4: '33vw', 6: '50vw' };
 ---
 
 <section id={id} class:list={['px-4 py-20 md:px-8 lg:py-24', dark && 'bg-ink text-paper']}>
-  <Headline text={title} tone={tone} size="clamp(1.9rem,3.6vw,3.75rem)" class="leading-[1.02]" data-reveal />
-  {lead && <p class:list={['mt-6 max-w-[60ch] text-lg leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
+  {/* Заголовок слева, вводная справа по нижней линии: правый верх не пустует (BRAND, «Баланс блока», п. 8). */}
+  <div class="grid-site gap-y-6">
+    <Headline text={title} tone={tone} size="clamp(1.9rem,3.6vw,3.75rem)" span={lead ? 6 : 12} class:list={['leading-[1.02]', lead ? 'lg:col-span-6' : 'lg:col-span-12']} data-reveal />
+    {lead && <p class:list={['max-w-[52ch] text-lg leading-relaxed lg:col-span-6 lg:self-end', dark ? 'text-paper/70' : 'text-ink/70']} data-reveal>{lead}</p>}
+  </div>
   <ul class="grid-site mt-12 gap-y-12 md:max-lg:grid-cols-6">
     {items.map((c, i) => (
-      <li class:list={[spanClass[span(i)], mdSpan(i, n), '@container']} data-reveal style={`--i:${i % 3}`}>
-        <a href={c.href} class="group block">
+      <li class:list={[spanClass[span(i)], mdSpan(i, n), '@container flex']} data-reveal style={`--i:${i % 3}`}>
+        {/* Карточка на высоту ряда, «от N ₽» прижата к низу: цены соседних карточек на одной линии. */}
+        <a href={c.href} class="group flex w-full flex-col">
           <div class="overflow-hidden rounded-md">
             <Image src={photos[c.photo ?? 'textureAlt']} alt={c.photo ? alts[c.photo] : ''} widths={[480, 800, 1200]} sizes={`(min-width: 1024px) ${sizes[span(i)]}, (min-width: 768px) 33vw, 100vw`} class:list={['w-full object-cover transition-transform duration-700 group-hover:scale-105', span(i) === 6 ? 'aspect-[4/3] lg:aspect-[16/9]' : 'aspect-[4/3]']} />
           </div>
@@ -45,7 +49,7 @@ const sizes = { 3: '25vw', 4: '33vw', 6: '50vw' };
             <Icon name="arrowUpRight" class:list={['size-6 shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1', dark ? 'text-lime' : 'text-violet']} />
           </h3>
           <p class:list={['mt-3 leading-relaxed', dark ? 'text-paper/70' : 'text-ink/70']}>{c.text}</p>
-          {c.meta && <p class:list={['label mt-4 font-semibold', dark ? 'text-lime' : 'text-violet']}>{c.meta}</p>}
+          {c.meta && <p class:list={['label mt-auto pt-4 font-semibold', dark ? 'text-lime' : 'text-violet']}>{c.meta}</p>}
         </a>
       </li>
     ))}

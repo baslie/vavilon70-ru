@@ -60,7 +60,7 @@ const span = (i: number) => (n === 1 || stack ? 'sm:col-span-6' : narrow(i) ? 's
               <dt class:list={p.label ? ['label mb-1.5 font-semibold', muted] : 'sr-only'}>{p.label ?? 'Цена'}</dt>
               <dd class="flex flex-wrap items-baseline gap-x-2.5">
                 <span class:list={['whitespace-nowrap', p.price === null ? ['text-sm font-semibold', muted] : ['font-display text-2xl font-bold md:text-3xl', stretch && !narrow(i) && 'lg:text-4xl']]}>{formatPrice(p.price, table.empty)}</span>
-                {p.old && <span class:list={['text-sm whitespace-nowrap', muted]}><span class="sr-only">вместо </span><s>{formatPrice(p.old)}</s></span>}
+                {p.old && <span class:list={['text-base font-semibold whitespace-nowrap', dark ? 'text-paper/65' : 'text-ink/65']}><span class="sr-only">вместо </span><s>{formatPrice(p.old)}</s></span>}
               </dd>
             </div>
           ))}

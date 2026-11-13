@@ -12,11 +12,11 @@ import { privacyPolicyHref } from '../data/forms';
 
 // Подвал — карта страниц из того же меню, что и шапка: по ссылке на страницу. Разделы с подменю
 // раскладываются в колонки, группа со своей страницей сворачивается в ссылку на неё (href).
-// Пункты без подменю — в колонку «Комплекс», кроме «Контактов»: подвал и есть контакты.
+// Пункты без подменю — в колонку «Комплекс», вместе с «Контактами»: на них ищут ссылку по привычке.
 const columns = menu
   .filter((item) => item.groups)
   .map((item) => ({ ...item, links: item.groups!.flatMap((g) => (g.href ? [{ title: g.title, href: g.href }] : g.links)) }));
-const complex = menu.filter((item) => !item.groups && !item.href.startsWith('#'));
+const complex = menu.filter((item) => !item.groups);
 const year = new Date().getFullYear();
 // Правовые ссылки нижней строки. «Настройки cookie» снова открывает плашку согласия (CookieConsent.astro).
 const legal = 'underline decoration-ink/25 underline-offset-[6px] transition hover:text-ink hover:decoration-violet';
@@ -32,15 +32,15 @@ const legal = 'underline decoration-ink/25 underline-offset-[6px] transition hov
       {columns.map((col) => (
         <div class="lg:col-span-3">
           <h2 class="label font-semibold text-violet"><a href={col.href} class="transition hover:text-ink">{col.title}</a></h2>
-          <ul class="mt-5 grid gap-3 text-ink/75">
-            {col.links.map((l) => <li><a href={l.href} class="transition hover:text-ink">{l.title}</a></li>)}
+          <ul class="mt-3 grid text-ink/75">
+            {col.links.map((l) => <li><a href={l.href} class="inline-block py-2 transition hover:text-ink">{l.title}</a></li>)}
           </ul>
         </div>
       ))}
       <div class="lg:col-span-3">
         <h2 class="label font-semibold text-violet">Комплекс</h2>
-        <ul class="mt-5 grid gap-3 text-ink/75">
-          {complex.map((l) => <li><a href={l.href} class="transition hover:text-ink">{l.title}</a></li>)}
+        <ul class="mt-3 grid text-ink/75">
+          {complex.map((l) => <li><a href={l.href} class="inline-block py-2 transition hover:text-ink">{l.title}</a></li>)}
         </ul>
       </div>
     </nav>
@@ -79,7 +79,8 @@ const legal = 'underline decoration-ink/25 underline-offset-[6px] transition hov
       </p>
     </div>
     <p class="label flex flex-wrap gap-x-3 font-semibold text-ink" aria-hidden="true">
-      {slogans.values.map((w, i) => <>{i > 0 && <span class="text-violet">/</span>}<span>{w}</span></>)}
+      {/* «/» держится в конце своего слова: строка не начинается с косой черты. */}
+      {slogans.values.map((w, i) => <span class="whitespace-nowrap">{w}{i < slogans.values.length - 1 && <span class="ml-3 text-violet">/</span>}</span>)}
     </p>
   </div>
 </footer>
